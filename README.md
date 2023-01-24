@@ -4,10 +4,10 @@
 
 Course project for EPAM JAVA BASIC 2022.
 
-Regarding the technical conditions https://github.com/DenysFilimonov/library/blob/029ccf88d5e3dc8fcd479d2964066dfd23e36d4b/Library.docx
-project implements solution for automatisation basical process of offline library.
+Regarding the project description https://github.com/DenysFilimonov/library/blob/029ccf88d5e3dc8fcd479d2964066dfd23e36d4b/Library.docx
+app implements solution of automation of basic processes for offline library.
 
-Using the features of Library app readers can easely look for books in library catalog and operate with them. the library staff can perfom operations with catalogisation, storing, releasing and retreaving books.
+Using features of Library-app readers can easily look for books in library catalog and operate with them. the library staff can perform operations with catalog, storing, releasing and retrieving books.
 
 <h5>Technology stack used in this project:</h5>
 
@@ -28,7 +28,7 @@ BD scheme
   <li>Build with MVC scheme</li>
   <li>PRG pattern used for processing input forms</li>
   <li>dbcp2 connection pool</li>
-  <li>SHA-256 passwords encription</li>
+  <li>SHA-256 passwords encryption</li>
   <li>Custom jstl tags</li>
   <li>Server side pagination</li>
   <li>Server side page validation</li>
@@ -38,7 +38,7 @@ BD scheme
 
 <ul>
   <li>Css styling and modal windows based on Bootstrap</li>
-  <li>Get requests dispatching, form front-end form validations with Java Script</li>
+  <li>Requests dispatching, front-end form validations with Java Script</li>
 </ul>  
 
 

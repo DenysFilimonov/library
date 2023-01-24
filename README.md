@@ -43,8 +43,10 @@ BD scheme
 
 
 <h5>How install & launch</h5>
-- Clone repository
-- In Local or remote PostgreSQL instance restore from dump: dump-library-202301241406
-- Set your DB credentials in resource/db.properties 
-- Build package with maven
-- Rollover Library.war on Apache Tomcat
+<ul>
+  <li>Clone repository</li>
+  <li>In Local or remote PostgreSQL instance restore from dump: dump-library-202301241406</li>
+  <li>Set your DB credentials in resource/db.properties</li> 
+  <li>Build package with maven</li>
+  <li>Rollover Library.war on Apache Tomcat</li>
+</ul>

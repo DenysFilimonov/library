@@ -4,8 +4,8 @@
 
 Course project for EPAM JAVA BASIC 2022.
 
-Regarding the project description https://github.com/DenysFilimonov/library/blob/029ccf88d5e3dc8fcd479d2964066dfd23e36d4b/Library.docx
-app implements solution of automation of basic processes for offline library.
+Regarding the <a href= "https://github.com/DenysFilimonov/library/blob/029ccf88d5e3dc8fcd479d2964066dfd23e36d4b/Library.docx">project description</a>, 
+application implements solution of basic processes automation for offline library.
 
 Using features of Library-app readers can easily look for books in library catalog and operate with them. the library staff can perform operations with catalog, storing, releasing and retrieving books.
 
@@ -45,7 +45,7 @@ BD scheme
 <h5>How install & launch</h5>
 <ul>
   <li>Clone repository</li>
-  <li>In Local or remote PostgreSQL instance restore from dump: dump-library-202301241406</li>
+  <li>In Local or remote PostgreSQL instance restore from <a href = "https://github.com/DenysFilimonov/library/blob/master/dump-library-202301241406">dump</a></li>
   <li>Set your DB credentials in resource/db.properties</li> 
   <li>Build package with maven</li>
   <li>Rollover Library.war on Apache Tomcat</li>

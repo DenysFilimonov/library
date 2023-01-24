@@ -38,7 +38,7 @@ BD scheme
 
 <ul>
   <li>Css styling and modal windows based on Bootstrap</li>
-  <li>Requests dispatching, front-end form validations with Java Script</li>
+  <li>Links dispatching, front-end form validations with Java Script</li>
 </ul>  
 
 

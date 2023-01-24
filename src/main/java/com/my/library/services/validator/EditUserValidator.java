@@ -1,0 +1,127 @@
+package com.my.library.services;
+
+
+
+import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.entities.*;
+import com.my.library.db.DAO.*;
+import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+
+public class EditUserValidator implements Validator{
+
+    /**
+     * Validate form data for AccountCommand
+     * @param  req      HttpServletRequest request with form data
+     * @return errors   Map with errors of form validation
+     * @see             com.my.library.servlets.CommandMapper
+     * @see             com.my.library.servlets.AccountCommand
+     * @see             ErrorManager
+     * @throws          SQLException can be thrown during password validation
+     * @throws          UnsupportedEncodingException can be thrown during password encryption
+     * @throws          NoSuchAlgorithmException can be thrown during password encryption
+     */
+
+    public  Map<String, Map<String,String>> validate(HttpServletRequest req) throws SQLException,
+            UnsupportedEncodingException, NoSuchAlgorithmException {
+        Map<String, Map<String,String>> errors = new HashMap<>();
+        String login = req.getParameter("login");
+        String firstName = req.getParameter("firstName");
+        String secondName = req.getParameter("secondName");
+        String email = req.getParameter("email");
+        String phone = req.getParameter("phone");
+        String oldPassword = req.getParameter("oldPassword");
+        String password = req.getParameter("password");
+        String passwordConfirmation = req.getParameter("passwordConfirmation");
+        User user = (User) req.getSession().getAttribute("user");
+        if (user==null) {
+            ErrorManager.add(errors, "overall", "There is not user registered in this sesssion",
+                    "Такого користувача не зареєстровано в системі");
+            return errors;
+        }
+        if ((Objects.equals(login, "") || login == null)
+                || (Objects.equals(firstName, "") || firstName == null)
+                || (Objects.equals(secondName, "") || secondName == null)
+                || (Objects.equals(email, "") || email == null)
+                || (Objects.equals(phone, "") ||phone == null))
+            ErrorManager.add(errors, "overall", "All the fields are mandatory",
+                    "Усі поля є обов'язковими");
+        if(!Objects.equals(oldPassword, "") && oldPassword!=null) {
+            if (!checkOldPassword(oldPassword, user.getId()))
+                ErrorManager.add(errors, "oldPassword", "Password is incorrect",
+                        "Не корректний пароль");
+            if (!checkPasswords(password, passwordConfirmation)){
+                ErrorManager.add(errors, "password", "Password fields does not have the same values",
+                        "Значення полей з паролями не співпадають");
+            }
+        }
+        if (!checkEmail(email))
+            ErrorManager.add(errors, "email", "Email field does not have a valid value",
+                    "Не коректне значення поля email");
+        else{
+            SQLSmartQuery sq = new SQLSmartQuery();
+            sq.source(new User().table);
+            sq.filter("email", email, SQLSmartQuery.Operators.E);
+            sq.logicOperator(SQLSmartQuery.LogicOperators.AND);
+            sq.filter("id", user.getId(), SQLSmartQuery.Operators.NE);
+            if(!UserDAO.getInstance().get(sq).isEmpty())
+                ErrorManager.add(errors, "email","Email number already belongs to another user "
+                        , "Адресу вже привязано до іншого користувача");
+        }
+
+        if (!checkPhone(phone)) ErrorManager.add(errors, "phone","Phone should have format +380XXXXXXXXX "
+                , "Номер повинен мати формат +380XXXXXXXXX");
+        else{
+            SQLSmartQuery sq = new SQLSmartQuery();
+            sq.source(new User().table);
+            sq.filter("phone", phone, SQLSmartQuery.Operators.E);
+            sq.logicOperator(SQLSmartQuery.LogicOperators.AND);
+            sq.filter("id", user.getId(), SQLSmartQuery.Operators.NE);
+            if(!UserDAO.getInstance().get(sq).isEmpty())
+                ErrorManager.add(errors, "phone","Phone number already belongs to another user "
+                        , "Номер вже привязано до іншого користувача");
+        }
+
+
+
+        return errors;
+    }
+
+
+    private static boolean checkEmail(String email) {
+        if (email==null) return false;
+        final String regex = "^([^\\x00-\\x20\\x22\\x28\\x29\\x2c\\x2e\\x3a-\\x3c\\x3e\\x40\\x5b-\\x5d\\x7f-\\xff]+|\\x22([^\\x0d\\x22\\x5c\\x80-\\xff]|\\x5c[\\x00-\\x7f])*\\x22)(\\x2e([^\\x00-\\x20\\x22\\x28\\x29\\x2c\\x2e\\x3a-\\x3c\\x3e\\x40\\x5b-\\x5d\\x7f-\\xff]+|\\x22([^\\x0d\\x22\\x5c\\x80-\\xff]|\\x5c[\\x00-\\x7f])*\\x22))*\\x40([^\\x00-\\x20\\x22\\x28\\x29\\x2c\\x2e\\x3a-\\x3c\\x3e\\x40\\x5b-\\x5d\\x7f-\\xff]+|\\x5b([^\\x0d\\x5b-\\x5d\\x80-\\xff]|\\x5c[\\x00-\\x7f])*\\x5d)(\\x2e([^\\x00-\\x20\\x22\\x28\\x29\\x2c\\x2e\\x3a-\\x3c\\x3e\\x40\\x5b-\\x5d\\x7f-\\xff]+|\\x5b([^\\x0d\\x5b-\\x5d\\x80-\\xff]|\\x5c[\\x00-\\x7f])*\\x5d))*$";
+        final Pattern pattern = Pattern.compile(regex);
+        final Matcher matcher = pattern.matcher(email);
+        return matcher.find();
+    }
+
+    private static boolean checkPasswords(String password, String passwordConfirmation){
+        return password != null && password.equals(passwordConfirmation);
+    }
+
+    private static boolean checkPhone(String phone) {
+        if (phone==null) return false;
+        final String regex = "^\\+?3?8?(0\\d{9})$";
+        final Pattern pattern = Pattern.compile(regex);
+        final Matcher matcher = pattern.matcher(phone);
+        return matcher.find();
+    }
+
+    private static boolean checkOldPassword(String password, int id) throws SQLException, UnsupportedEncodingException, NoSuchAlgorithmException {
+        SQLSmartQuery sq = new SQLSmartQuery();
+        sq.source(new User().table);
+        sq.filter("pass_word", PasswordHash.doHash(password), SQLSmartQuery.Operators.E);
+        sq.logicOperator(SQLSmartQuery.LogicOperators.AND);
+        sq.filter("id", id, SQLSmartQuery.Operators.E);
+        List<User> user =  UserDAO.getInstance().get(sq);
+        return (user.size()>0);
+    }
+
+}

@@ -1,0 +1,37 @@
+.error {
+  color: red!important ;
+}
+
+.center {
+    margin:0 auto;
+}
+
+.userTable{
+display: grid;
+grid-template-columns: 1fr 2fr 3fr 2fr 2fr;
+}
+
+.tableHeader{
+    border: 1px solid rgb(255,255,255);
+    background-color: #bbdefb;
+    padding: 0.5em 1em 0.5em 1em;
+}
+
+.tableCell{
+    border: 1px solid rgb(255,255,255);
+    background-color: #e9ecef;
+    text-align: left;
+    padding: 0.5em 1em 0.5em 1em;
+}
+
+.blueLogo{
+     filter: invert(77%) sepia(41%) saturate(2532%) hue-rotate(189deg) brightness(112%) contrast(124%);
+     height: 75%;
+     width: 75%;
+}
+
+.greyLogo{
+    filter: invert(99%) sepia(1%) saturate(1316%) hue-rotate(177deg) brightness(99%) contrast(90%);
+    height: 75%;
+    width: 75%;
+}

@@ -1,0 +1,11 @@
+.errorHeader{
+    text-align: left;
+    color: blue;
+    font-size: 2em;
+}
+.errorMessage{
+    text-align: left;
+}
+.errorAdvise{
+    text-align: left;
+}

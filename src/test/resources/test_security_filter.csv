@@ -1,0 +1,17 @@
+String login, String password, String passwordConfirmation, String firstName, String secondName, String email, String phone, String Page
+administrator,administrator,administrator,pavlo, pavelko,test@test.som,+380123456789,login
+adminiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiistrator,administrator,administrator,pavlo, pavelko,test@test.som,+380123456789,register
+,administrator,administrator,pavlo,pavelko,test@test.som,+380123456789,register
+administrator,,administrator,pavlo,pavelko,test@test.som,+380123456789,register
+administrator,administrator,administrator,,pavelko,test@test.som,+380123456789,register
+administrator,administrator,administrator,pavlo,,test@test.som,+380123456789,register
+administrator,administrator,administrator,pavlo,pavelko,test.test.som,+380123456789,register
+administrator,administrator,administrator,pavlo,pavelko,,+380123456789,register
+administrator,administrator,administrator,pavlo,pavelko,@.,+380123456789,register
+administrator,administrator,administrator,pavlo,pavelko,,+380123456789,register
+administrator,administrator,administrator,pavlo,pavelko,test@test.som,+38012345678,register
+administrator,administrator,administrator,pavlo,pavelko,test@test.som,+3801234567m9,register
+administrator,administrator,administrator,pavlo,pavelko,test@test.som,+3801234567m9,register
+
+
+

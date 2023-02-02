@@ -1,26 +1,46 @@
 package com.my.library.db.DTO;
 
 import com.my.library.db.entities.Author;
+import com.my.library.db.entities.IssueType;
+import com.my.library.db.entities.UsersBooks;
 
 import javax.naming.OperationNotSupportedException;
+import javax.servlet.http.HttpServletRequest;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
-interface AutorDTO {
+public interface UsersBooksDTO {
 
     static Author toView(Author author) throws OperationNotSupportedException {
         throw new OperationNotSupportedException();
-    };
-
-    static Author toModel(ResultSet rs) throws SQLException {
-        Author author = new Author();
-        author.setId(rs.getInt("author_id"));
-        author.setFirstName(rs.getString("first_name"));
-        author.setSecondName(rs.getString("second_name"));
-        //System.out.println(author.getSecondName());
-        author.setBirthday(LocalDate.parse(rs.getString("birthday")));
-        author.setCountry(rs.getString("author_country"));
-        return author;
     }
+
+    static UsersBooks toModel(ResultSet rs) throws SQLException {
+        Map<String, String> title = new HashMap<>();
+        Map<String, String> author = new HashMap<>();
+        UsersBooks usersBooks = new UsersBooks();
+        usersBooks.setId(rs.getInt("id"));
+        usersBooks.setBookId(rs.getInt("book_id"));
+        usersBooks.setUserId(rs.getInt("user_id"));
+        usersBooks.setLibrarianId(rs.getInt("librarian_id"));
+        title.put("en", rs.getString("title"));
+        title.put("ua", rs.getString("title_ua"));
+        usersBooks.setTitle(title);
+        author.put("en", rs.getString("author"));
+        author.put("ua", rs.getString("author_ua"));
+        usersBooks.setAuthor(author);
+        usersBooks.setIssueType(IssueTypeDTO.toModel(rs));
+        usersBooks.setStatus(StatusDTO.toModel(rs));
+        usersBooks.setBookStore(BookStoreDTO.toModel(rs));
+        usersBooks.setIssueDate(rs.getDate("issue_date"));
+        usersBooks.setReturnDate(rs.getDate("return_date"));
+        usersBooks.setTargetDate(rs.getDate("target_date"));
+        return usersBooks;
+    }
+
+
+
 }

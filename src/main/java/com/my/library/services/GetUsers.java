@@ -1,24 +1,32 @@
 package com.my.library.services;
 
 import com.my.library.db.SQLSmartQuery;
-import com.my.library.db.entities.Genre;
-import com.my.library.db.entities.Status;
-import com.my.library.db.repository.GenreRepository;
-import com.my.library.db.repository.StatusRepository;
-
+import com.my.library.db.entities.User;
+import com.my.library.db.DAO.UserDAO;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class GetGenres {
+public class GetUsers {
 
-    public static Map<String, Genre> get() throws SQLException {
+    /**
+     * Return map with users that registered in system, mapped by user_id,
+     * users password hiding while collecting map
+     * @see     User
+     * @see     com.my.library.db.entities.Entity
+     * @see     UserDAO
+     * @throws  SQLException can be thrown while retrieving users data
+     */
+
+    public static Map<Integer, User> get(UserDAO userDAO) throws SQLException {
         SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(new Genre().table);
-        ArrayList<Genre> st = GenreRepository.getInstance().get(sq);
-        Map<String, Genre> issueMap=st.stream().collect(Collectors.toMap(x->x.getGenre().get("en"), x->x));
-        return issueMap;
+        sq.source(new User().table);
+        ArrayList<User> st = userDAO.get(sq);
+        return st.stream().collect(Collectors.toMap(User::getId, x->{
+            x.setPassword("");
+            return x;
+        }));
     }
 
 }

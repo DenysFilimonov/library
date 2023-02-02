@@ -1,30 +1,38 @@
-package com.my.library.db.repository;
+package com.my.library.db.DAO;
 import com.my.library.db.ConnectionPool;
 import com.my.library.db.DTO.UsersBooksDTO;
 import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.entities.Author;
 import com.my.library.db.entities.Book;
+import com.my.library.db.entities.Publisher;
 import com.my.library.db.entities.UsersBooks;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.stream.Collectors;
 
-public class UsersBookRepository implements Repository<UsersBooks> {
+public class UsersBookDAO implements DAO<UsersBooks> {
 
-    private static UsersBookRepository instance = null;
+    private final BasicDataSource dataSource;
+    private static UsersBookDAO instance = null;
 
-    public static UsersBookRepository getInstance(){
-        if (instance==null) instance = new UsersBookRepository();
+    public static UsersBookDAO getInstance(BasicDataSource dataSource){
+        if (instance==null) instance = new UsersBookDAO(dataSource);
         return instance;
     }
-   private UsersBookRepository(){
 
+    public static void destroyInstance(){
+        instance = null;
+    }
+
+   private UsersBookDAO(BasicDataSource dataSource){
+        this.dataSource =dataSource;
    }
 
    @Override
    public int count(SQLSmartQuery query) throws SQLException {
-       return 0;
+       ArrayList<UsersBooks> list = get(query);
+       return list.isEmpty()? 0: list.size();
    }
 
     @Override
@@ -32,19 +40,8 @@ public class UsersBookRepository implements Repository<UsersBooks> {
         String INSERT_STRING = "insert into users_books " +
                 "(user_id, book_id, issue_type_id, status_id, issue_date, target_date, return_date, librarian_id)"+
                 "values (?, ?, ?, ?, ?, ?, ?, ?)";
-        Connection connection = null;
-        PreparedStatement insertBook = null;
-        try {
-            SQLSmartQuery sq = new SQLSmartQuery();
-            sq.source(new Book().table);
-            sq.filter("id", usersBook.getBookId() , SQLSmartQuery.Operators.E );
-            ArrayList<Book> books = BookRepository.getInstance().get(sq);
-            if(books==null | books.size()==0 | books.get(0).getAvailableQuantity()<0){
-                throw new SQLException("Creating order failed, the book already is not available.");
-            }
-
-            connection = ConnectionPool.dataSource.getConnection();
-            insertBook = connection.prepareStatement(INSERT_STRING, Statement.RETURN_GENERATED_KEYS);
+        try (Connection connection = dataSource.getConnection();
+                PreparedStatement insertBook = connection.prepareStatement(INSERT_STRING, Statement.RETURN_GENERATED_KEYS)){
             connection.setAutoCommit(false);
             insertBook.setInt(1, usersBook.getUserId());
             insertBook.setInt(2, usersBook.getBookId());
@@ -75,22 +72,15 @@ public class UsersBookRepository implements Repository<UsersBooks> {
         catch (SQLException e) {
             throw new SQLException(e);
         }
-        finally {
-            assert insertBook != null;
-            insertBook.close();
-            connection.close();
-        }
+        
     }
 
 
     @Override
     public void delete(UsersBooks userBook) throws SQLException {
         String DELETE_STRING = "DELETE FROM users_books WHERE id=?";
-        Connection connection = null;
-        PreparedStatement deleteBook = null;
-        try {
-            connection = ConnectionPool.dataSource.getConnection();
-            deleteBook = connection.prepareStatement(DELETE_STRING, Statement.RETURN_GENERATED_KEYS);
+        try (Connection connection = dataSource.getConnection();
+            PreparedStatement deleteBook = connection.prepareStatement(DELETE_STRING, Statement.RETURN_GENERATED_KEYS)){
             connection.setAutoCommit(false);
             deleteBook.setInt(1, userBook.getId());
             int affectedRows = deleteBook.executeUpdate();
@@ -102,11 +92,6 @@ public class UsersBookRepository implements Repository<UsersBooks> {
         catch (SQLException e) {
             throw new SQLException(e);
         }
-        finally {
-            deleteBook.close();
-            connection.close();
-        }
-
     }
 
 
@@ -122,11 +107,8 @@ public class UsersBookRepository implements Repository<UsersBooks> {
                 "return_date=?,"+
                 "librarian_id=? "+
                 " WHERE id = ?";
-        Connection connection = null;
-        PreparedStatement updateBook = null;
-        try {
-            connection = ConnectionPool.dataSource.getConnection();
-            updateBook = connection.prepareStatement(UPDATE_STRING, Statement.RETURN_GENERATED_KEYS);
+        try (Connection connection = dataSource.getConnection();
+            PreparedStatement updateBook = connection.prepareStatement(UPDATE_STRING, Statement.RETURN_GENERATED_KEYS)){
             connection.setAutoCommit(false);
             updateBook.setInt(1, usersBook.getUserId());
             updateBook.setInt(2, usersBook.getBookId());
@@ -151,34 +133,29 @@ public class UsersBookRepository implements Repository<UsersBooks> {
         catch (SQLException e) {
             throw new SQLException(e);
         }
-        finally {
-            updateBook.close();
-            connection.close();
-        }
     }
 
     @Override
     public ArrayList<UsersBooks> get(SQLSmartQuery query) throws SQLException {
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet resultSet = null;
         ArrayList<UsersBooks> usersBooks = new ArrayList<>();
-        try {
-            connection = ConnectionPool.dataSource.getConnection();
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery(query.build());
+        try (Connection connection = dataSource.getConnection();
+            Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery(query.build());
             while (resultSet.next()) {
                 usersBooks.add(UsersBooksDTO.toModel(resultSet));
             }
-        } finally {
-            assert resultSet != null;
-            resultSet.close();
-            statement.close();
-            connection.close();
-        }
+        } 
     return usersBooks;
     }
 
+    @Override
+    public UsersBooks getOne(int id) throws SQLException {
+        SQLSmartQuery sq = new SQLSmartQuery();
+        sq.source(new Publisher().table);
+        sq.filter("id", id, SQLSmartQuery.Operators.E);
+        ArrayList<UsersBooks> usersBooks = get(sq);
+        return usersBooks.isEmpty()? null: usersBooks.get(0);
+    }
 
 }
 

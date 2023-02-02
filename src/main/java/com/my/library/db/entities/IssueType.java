@@ -1,11 +1,23 @@
 package com.my.library.db.entities;
 
-public class Role extends Entity{
+import java.util.Map;
+
+public class IssueType extends Entity{
 
     {
-        table = "entities";
+        table = "issue_types";
     }
-    private String roleName;
+    private Map<String,String> issueType;
+
+    public Float getPenalty() {
+        return penalty;
+    }
+
+    public void setPenalty(Float penalty) {
+        this.penalty = penalty;
+    }
+
+    private Float penalty;
 
     public int getId() {
         return id;
@@ -15,11 +27,11 @@ public class Role extends Entity{
         this.id = id;
     }
 
-    public String getRoleName() {
-        return roleName;
+    public Map<String,String> getIssueType() {
+        return issueType;
     }
 
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
+    public void setIssueType(Map<String,String> issueType) {
+        this.issueType = issueType;
     }
 }

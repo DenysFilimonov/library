@@ -1,4 +1,4 @@
-package com.my.library.services;
+package com.my.library.services.validator;
 
 
 import com.my.library.db.SQLSmartQuery;
@@ -6,6 +6,8 @@ import com.my.library.db.entities.Book;
 import com.my.library.db.entities.BookStore;
 import com.my.library.db.DAO.BookDAO;
 import com.my.library.db.DAO.BookStoreDAO;
+import com.my.library.services.AppContext;
+import com.my.library.services.ErrorManager;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Date;
@@ -19,37 +21,45 @@ public class EditBookValidator implements Validator{
 
     /**
      * Validate form data for EditBookCommand
-     * @param  req      HttpServletRequest request with form data
+     *
+     * @param req     HttpServletRequest request with form data
+     * @param context AppContxt
      * @return errors   Map with errors of form validation
-     * @see             com.my.library.servlets.CommandMapper
-     * @see             com.my.library.servlets.EditeBookCommand
-     * @see             ErrorManager
-     * @throws          SQLException while redirect
+     * @throws SQLException while redirect
+     * @see com.my.library.servlets.CommandMapper
+     * @see com.my.library.servlets.EditeBookCommand
+     * @see ErrorManager
      */
 
 
-    public Map<String, Map<String,String>> validate(HttpServletRequest req)
+    public Map<String, Map<String,String>> validate(HttpServletRequest req, AppContext context)
             throws SQLException{
 
         Map<String, Map<String,String>> errors = new HashMap<>();
+        Book book = new Book();
+        BookDAO bookDAO = (BookDAO) context.getDAO(book);
+        BookStore bookStore = new BookStore();
+        BookStoreDAO bookStoreDAO = (BookStoreDAO) context.getDAO(bookStore);
         if(req.getParameter("id")==null || req.getParameter("id").equals("")){
             ErrorManager.add(errors, "id", "Id should be present",
                     "ID обовязкове поле");
             return errors;
         }
         else{
-            SQLSmartQuery sq = new SQLSmartQuery();
-            sq.source(new Book().table);
-            sq.filter("id", req.getParameter("id"), SQLSmartQuery.Operators.E);
-            if (BookDAO.getInstance().get(sq).isEmpty()) {
-                ErrorManager.add(errors, "id", "There isn't book with giving ID in library",
-                        "Книги з таким ID нема в каталозі");
+            try{
+                int id = Integer.parseInt(req.getParameter("id"));
+                if (bookDAO.getOne(id)==null) {
+                    ErrorManager.add(errors, "id", "There isn't book with giving ID in library",
+                            "Книги з таким ID нема в каталозі");
+                    return errors;
+                }
+            }catch(NumberFormatException e ){
+                ErrorManager.add(errors, "id", "Illegal id format, should be integer",
+                        "Некорректний формат ID, може бути тільки цілим");
                 return errors;
-
             }
+
         }
-
-
 
         if(req.getParameter("isbn")==null || req.getParameter("isbn").equals("")){
             ErrorManager.add(errors, "isbn", "ISBN field does not have a valid value",
@@ -61,7 +71,7 @@ public class EditBookValidator implements Validator{
             sq.filter("isbn", req.getParameter("isbn"), SQLSmartQuery.Operators.E);
             sq.logicOperator(SQLSmartQuery.LogicOperators.AND);
             sq.filter("id", req.getParameter("id"), SQLSmartQuery.Operators.NE);
-            if(BookDAO.getInstance().get(sq).size()>0) {
+            if(bookDAO.get(sq).size()>0) {
                 ErrorManager.add(errors, "isbn", "Book with same ISBN already present",
                         "Книга з цим ISBN вже представлена");
             }
@@ -160,24 +170,23 @@ public class EditBookValidator implements Validator{
                     "Поля адресного зберігання обовязкові");
         else try {
             SQLSmartQuery sqBs = new SQLSmartQuery();
-            BookStore bs = new BookStore();
-            sqBs.source(bs.table);
+            sqBs.source(bookStore.table);
             sqBs.filter("case_num", Integer.parseInt(req.getParameter("caseNum")), SQLSmartQuery.Operators.E);
             sqBs.logicOperator(SQLSmartQuery.LogicOperators.AND);
             sqBs.filter("shelf_num", Integer.parseInt(req.getParameter("shelf")), SQLSmartQuery.Operators.E);
             sqBs.logicOperator(SQLSmartQuery.LogicOperators.AND);
             sqBs.filter("cell_num", Integer.parseInt(req.getParameter("cell")), SQLSmartQuery.Operators.E);
-            ArrayList<BookStore> bookStores = BookStoreDAO.getInstance().get(sqBs);
+            ArrayList<BookStore> bookStores = bookStoreDAO.get(sqBs);
             if (bookStores.isEmpty())
                 ErrorManager.add(errors, "cell", "This storing address is incorrect ",
                         "Не корректний адрес зберігання");
             else {
                 SQLSmartQuery sq = new SQLSmartQuery();
-                sq.source(new Book().table);
+                sq.source(book.table);
                 sq.filter("book_store_id", bookStores.get(0).getId(), SQLSmartQuery.Operators.E);
                 sq.logicOperator(SQLSmartQuery.LogicOperators.AND);
                 sq.filter("id", req.getParameter("id"), SQLSmartQuery.Operators.NE);
-                if (!BookDAO.getInstance().get(sq).isEmpty())
+                if (!bookDAO.get(sq).isEmpty())
                     ErrorManager.add(errors, "cell", "This storing address is occupied ",
                             "Адрес зберігання вже зайнято");
             }

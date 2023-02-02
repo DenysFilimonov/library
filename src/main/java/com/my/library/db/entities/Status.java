@@ -1,11 +1,23 @@
 package com.my.library.db.entities;
 
-public class Role extends Entity{
+import java.util.HashMap;
+import java.util.Map;
+
+public class Status extends Entity {
 
     {
-        table = "entities";
+        table = "statuses";
     }
-    private String roleName;
+
+    public HashMap<String, String> getStatus() {
+        return status;
+    }
+
+    public void setStatus(HashMap<String, String> status) {
+        this.status = status;
+    }
+
+    private HashMap<String, String> status;
 
     public int getId() {
         return id;
@@ -14,12 +26,5 @@ public class Role extends Entity{
     public void setId(int id) {
         this.id = id;
     }
-
-    public String getRoleName() {
-        return roleName;
-    }
-
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
-    }
 }
+

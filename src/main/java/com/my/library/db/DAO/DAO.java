@@ -1,14 +1,14 @@
-package com.my.library.db.repository;
+package com.my.library.db.DAO;
 
-import com.my.library.db.SQLQuery;
 import com.my.library.db.SQLSmartQuery;
-import com.my.library.db.entities.Book;
 import com.my.library.db.entities.Entity;
 
+import javax.naming.OperationNotSupportedException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-interface Repository <T extends Entity> {
+public interface DAO<T extends Entity> {
+
 
     void add(T entity) throws SQLException;
 
@@ -18,5 +18,7 @@ interface Repository <T extends Entity> {
 
     int count(SQLSmartQuery query) throws SQLException;
 
-    ArrayList<T> get(SQLSmartQuery query) throws SQLException;
+    T getOne(int id) throws SQLException;
+
+    ArrayList<T> get(SQLSmartQuery query) throws SQLException, OperationNotSupportedException;
 }

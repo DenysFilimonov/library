@@ -1,22 +1,25 @@
-package com.my.library.db.repository;
+package com.my.library.db.DAO;
 import com.my.library.db.ConnectionPool;
 import com.my.library.db.DTO.BookStoreDTO;
 import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.entities.Book;
 import com.my.library.db.entities.BookStore;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.sql.*;
 import java.util.ArrayList;
 
-public class BookStoreRepository implements Repository<BookStore> {
+public class BookStoreDAO implements DAO<BookStore> {
 
-    private static BookStoreRepository instance = null;
+    private final BasicDataSource dataSource;
+    private static BookStoreDAO instance = null;
 
-    public static BookStoreRepository getInstance(){
-        if (instance==null) instance = new BookStoreRepository();
+    public static BookStoreDAO getInstance(BasicDataSource dataSource){
+        if (instance==null) instance = new BookStoreDAO(dataSource);
         return instance;
     }
-   private BookStoreRepository(){
-
+   private BookStoreDAO(BasicDataSource dataSource){
+        this.dataSource = dataSource;
    }
 
 
@@ -25,7 +28,8 @@ public class BookStoreRepository implements Repository<BookStore> {
         String INSERT_STRING = "insert into book_store " +
                 "(case_num, shelf_num, cell_num) "+
                 "values (?, ?, ?)";
-        try (Connection connection = ConnectionPool.dataSource.getConnection(); PreparedStatement insertBookStore = connection.prepareStatement(INSERT_STRING, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection connection = dataSource.getConnection(); 
+             PreparedStatement insertBookStore = connection.prepareStatement(INSERT_STRING, Statement.RETURN_GENERATED_KEYS)) {
             connection.setAutoCommit(false);
             insertBookStore.setInt(1, bookStore.getCaseNum());
             insertBookStore.setInt(2, bookStore.getShelfNum());
@@ -52,7 +56,8 @@ public class BookStoreRepository implements Repository<BookStore> {
     @Override
     public void delete(BookStore bookStore) throws SQLException {
     String DELETE_STRING = "DELETE FROM "+bookStore.table+"WHERE ID=?";
-        try (Connection connection = ConnectionPool.dataSource.getConnection(); PreparedStatement deleteBookStore = connection.prepareStatement(DELETE_STRING, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection connection = dataSource.getConnection(); 
+             PreparedStatement deleteBookStore = connection.prepareStatement(DELETE_STRING, Statement.RETURN_GENERATED_KEYS)) {
             connection.setAutoCommit(false);
             deleteBookStore.setInt(1, bookStore.getId());
             int affectedRows = deleteBookStore.executeUpdate();
@@ -74,7 +79,7 @@ public class BookStoreRepository implements Repository<BookStore> {
                 "shelf_num =?, "+
                 "cell_num =? "+
                 " WHERE id = ?";
-        try (Connection connection = ConnectionPool.dataSource.getConnection(); PreparedStatement updateBookStore = connection.prepareStatement(UPDATE_STRING, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection connection = dataSource.getConnection(); PreparedStatement updateBookStore = connection.prepareStatement(UPDATE_STRING, Statement.RETURN_GENERATED_KEYS)) {
             connection.setAutoCommit(false);
             updateBookStore.setInt(1, bookStore.getCaseNum());
             updateBookStore.setInt(2, bookStore.getShelfNum());
@@ -100,47 +105,38 @@ public class BookStoreRepository implements Repository<BookStore> {
 
     @Override
     public int count(SQLSmartQuery query) throws SQLException {
-            Connection connection = null;
-            Statement statement = null;
-            ResultSet resultSet = null;
             int count=0;
-            try {
-                connection = ConnectionPool.dataSource.getConnection();
-                statement = connection.createStatement();
-                resultSet = statement.executeQuery(query.buildCount());
+            try (Connection connection = dataSource.getConnection();
+                Statement statement = connection.createStatement()){
+                ResultSet resultSet = statement.executeQuery(query.buildCount());
                 while (resultSet.next()) {
                     count = resultSet.getInt(1);
                 }
-            } finally {
-                assert resultSet != null;
-                resultSet.close();
-                statement.close();
-                connection.close();
-            }
+            } 
             return count;
         }
 
 
     @Override
     public ArrayList<BookStore> get(SQLSmartQuery query) throws SQLException {
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet resultSet = null;
         ArrayList<BookStore> books = new ArrayList<>();
-        try {
-            connection = ConnectionPool.dataSource.getConnection();
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery(query.build());
+        try (Connection connection = dataSource.getConnection();
+            Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery(query.build());
             while (resultSet.next()) {
                 books.add(BookStoreDTO.toModel(resultSet));
             }
-        } finally {
-            assert resultSet != null;
-            resultSet.close();
-            statement.close();
-            connection.close();
-        }
+        } 
     return books;
+    }
+
+    @Override
+    public BookStore getOne(int id) throws SQLException {
+        SQLSmartQuery sq = new SQLSmartQuery();
+        sq.source(new BookStore().table);
+        sq.filter("id", id, SQLSmartQuery.Operators.E);
+        ArrayList<BookStore> bookStores = get(sq);
+        return bookStores.isEmpty()? null: bookStores.get(0);
     }
 
 }

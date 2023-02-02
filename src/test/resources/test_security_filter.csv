@@ -1,17 +1,14 @@
-String login, String password, String passwordConfirmation, String firstName, String secondName, String email, String phone, String Page
-administrator,administrator,administrator,pavlo, pavelko,test@test.som,+380123456789,login
-adminiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiistrator,administrator,administrator,pavlo, pavelko,test@test.som,+380123456789,register
-,administrator,administrator,pavlo,pavelko,test@test.som,+380123456789,register
-administrator,,administrator,pavlo,pavelko,test@test.som,+380123456789,register
-administrator,administrator,administrator,,pavelko,test@test.som,+380123456789,register
-administrator,administrator,administrator,pavlo,,test@test.som,+380123456789,register
-administrator,administrator,administrator,pavlo,pavelko,test.test.som,+380123456789,register
-administrator,administrator,administrator,pavlo,pavelko,,+380123456789,register
-administrator,administrator,administrator,pavlo,pavelko,@.,+380123456789,register
-administrator,administrator,administrator,pavlo,pavelko,,+380123456789,register
-administrator,administrator,administrator,pavlo,pavelko,test@test.som,+38012345678,register
-administrator,administrator,administrator,pavlo,pavelko,test@test.som,+3801234567m9,register
-administrator,administrator,administrator,pavlo,pavelko,test@test.som,+3801234567m9,register
-
-
+Role, URI, command, check
+guest,controller?command=catalog,catalog,true
+user,controller?command=catalog, catalog, true
+librarian,controller?command=catalog,catalog,true
+administrator,controller?command=catalog,catalog,true
+guest,controller?command=orders,orders,false
+administrator,controller?command=orders,orders,false
+guest,/Library/main.css,,true
+guest,/Library/includes/,,true
+guest,/Library/login.jsp,controller,false
+administrator,/Library/login.jsp,,false
+administrator,/Library/index.jsp,,true
+administrator,/COVER/*.jsp,,false
 

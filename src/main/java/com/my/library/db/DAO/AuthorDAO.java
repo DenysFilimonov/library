@@ -1,24 +1,32 @@
-package com.my.library.db.repository;
+package com.my.library.db.DAO;
 
 import com.my.library.db.ConnectionPool;
 import com.my.library.db.DTO.AuthorDTO;
 import com.my.library.db.SQLSmartQuery;
 import com.my.library.db.entities.Author;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.sql.*;
 import java.util.ArrayList;
 
-public class AuthorRepository implements Repository<Author> {
+public class AuthorDAO implements DAO<Author> {
 
-    private static AuthorRepository instance = null;
+    private static AuthorDAO instance = null;
+    
+    private final BasicDataSource dataSource;
 
-    private AuthorRepository(){
+    private AuthorDAO(BasicDataSource dataSource){
+        this.dataSource = dataSource;
 
     }
 
-    public static AuthorRepository getInstance(){
-        if (instance==null) instance=new AuthorRepository();
+    public static AuthorDAO getInstance(BasicDataSource dataSource){
+        if (instance==null) instance=new AuthorDAO(dataSource);
         return instance;
+    }
+
+    public static void destroyInstance(){
+        instance = null;
     }
 
     @Override
@@ -28,7 +36,9 @@ public class AuthorRepository implements Repository<Author> {
                 "(first_name, first_name_ua, second_name, second_name_ua,"+
                 "birthday, country, country_ua ) "+
                 "values (?, ?, ?, ?, ?, ?, ?)";
-        try (Connection connection = ConnectionPool.dataSource.getConnection(); PreparedStatement insertAuthor = connection.prepareStatement(INSERT_STRING, Statement.RETURN_GENERATED_KEYS)) {
+
+        try (Connection connection = dataSource.getConnection();
+            PreparedStatement insertAuthor = connection.prepareStatement(INSERT_STRING, Statement.RETURN_GENERATED_KEYS)){
             connection.setAutoCommit(false);
             insertAuthor.setString(1, author.getFirstName().get("en"));
             insertAuthor.setString(2, author.getFirstName().get("ua"));
@@ -50,18 +60,13 @@ public class AuthorRepository implements Repository<Author> {
                 }
             }
             connection.commit();
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
-
-
     }
 
     @Override
     public void delete(Author author) throws SQLException{
         String DELETE_STRING = "DELETE FROM authors WHERE ID=?";
-        try (Connection connection = ConnectionPool.dataSource.getConnection(); PreparedStatement deleteAuthor = connection.prepareStatement(DELETE_STRING, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection connection = dataSource.getConnection(); PreparedStatement deleteAuthor = connection.prepareStatement(DELETE_STRING, Statement.RETURN_GENERATED_KEYS)) {
             connection.setAutoCommit(false);
             deleteAuthor.setInt(1, author.getId());
             int affectedRows = deleteAuthor.executeUpdate();
@@ -69,9 +74,6 @@ public class AuthorRepository implements Repository<Author> {
                 throw new SQLException("Delete author failed, no rows affected.");
             }
             connection.commit();
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -86,11 +88,9 @@ public class AuthorRepository implements Repository<Author> {
                 "country = ?, " +
                 "country_ua = ?, " +
                 " WHERE id = ?";
-        Connection connection = null;
-        PreparedStatement updateAuthor = null;
-        try {
-            connection = ConnectionPool.dataSource.getConnection();
-            updateAuthor = connection.prepareStatement(UPDATE_STRING, Statement.RETURN_GENERATED_KEYS);
+      
+        try (Connection connection = dataSource.getConnection();
+            PreparedStatement updateAuthor = connection.prepareStatement(UPDATE_STRING, Statement.RETURN_GENERATED_KEYS)){
             connection.setAutoCommit(false);
             updateAuthor.setString(1, author.getFirstName().get("en"));
             updateAuthor.setString(2, author.getFirstName().get("ua"));
@@ -99,56 +99,41 @@ public class AuthorRepository implements Repository<Author> {
             updateAuthor.setDate(5, Date.valueOf(author.getBirthday()));
             updateAuthor.setString(6, author.getCountry().get("en"));
             updateAuthor.setString(7, author.getCountry().get("ua"));
+            updateAuthor.setInt(8, author.getId());
             int affectedRows = updateAuthor.executeUpdate();
             if (affectedRows == 0) {
                 throw new SQLException("Updating author failed, no rows affected.");
             }
-            try (ResultSet generatedKeys = updateAuthor.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    author.setId(generatedKeys.getInt(1));
-                }
-                else {
-                    throw new SQLException("Updating book failed, no ID obtained.");
-                }
-            }
             connection.commit();
 
-        }
-        catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        finally {
-            assert updateAuthor != null;
-            updateAuthor.close();
-            connection.close();
         }
     }
 
     @Override
     public int count(SQLSmartQuery query) throws SQLException {
-        return 0;
+        ArrayList<Author> list = get(query);
+        return list.isEmpty()? 0: list.size();
     }
 
     @Override
     public ArrayList<Author> get(SQLSmartQuery query) throws SQLException{
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet resultSet = null;
         ArrayList<Author> authors = new ArrayList<>();
-        try {
-            connection = ConnectionPool.dataSource.getConnection();
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery(query.build());
+        try (Connection connection = dataSource.getConnection();
+            Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery(query.build());
             while (resultSet.next()) {
                 authors.add(AuthorDTO.toModel(resultSet));
             }
         }
-        finally {
-            assert resultSet != null;
-            resultSet.close();
-            statement.close();
-            connection.close();
-        }
         return authors;
+    }
+
+    @Override
+    public Author getOne(int id) throws SQLException {
+        SQLSmartQuery sq = new SQLSmartQuery();
+        sq.source(new Author().table);
+        sq.filter("id", id, SQLSmartQuery.Operators.E);
+        ArrayList<Author> authors = get(sq);
+        return authors.isEmpty()? null: authors.get(0);
     }
 }

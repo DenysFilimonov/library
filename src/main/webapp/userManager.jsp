@@ -1,7 +1,7 @@
 
     <%@include file="includes/header.jsp" %>
 
-    <%@include file="includes/subscriptions_body.jsp" %>
+    <%@include file="includes/userManager_body.jsp" %>
 
 </body>
 </html>

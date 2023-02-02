@@ -1,55 +1,79 @@
 package com.my.library.servlets;
-import com.my.library.db.SQLQuery;
+import com.my.library.db.DAO.*;
 import com.my.library.db.entities.User;
-import com.my.library.db.repository.UserRepository;
-import com.my.library.services.MessageManager;
-import com.my.library.services.PasswordHash;
+import com.my.library.services.*;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import javax.naming.OperationNotSupportedException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-public class LoginCommands implements Command {
-    public String execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
-            IOException, SQLException, NoSuchAlgorithmException {
-        String page = null;
-        if (login(req)) {
-            req.setAttribute("user", req.getParameter("login"));
+public class LoginCommand implements Command {
+
+    AppContext context;
+    UserDAO userDAO;
+
+    /**
+     * Serve the requests for login user
+     *
+     * @param req     HttpServletRequest request
+     * @param resp    HttpServletResponse request
+     * @param context AppContext with dependency injection
+     * @return String with jsp page name
+     * @throws SQLException                   throw to upper level, where it will be caught
+     * @throws ServletException               throw to upper level, where it will be caught
+     * @throws SQLException                   throw to upper level, where it will be caught
+     * @throws IOException                    throw to upper level, where it will be caught
+     * @throws OperationNotSupportedException throw to upper level, where it will be caught
+     * @throws NoSuchAlgorithmException       throw to upper level, where it will be caught
+     * @throws CloneNotSupportedException     throw to upper level, where it will be caught
+     * @see com.my.library.servlets.CommandMapper
+     */
+    public String execute(HttpServletRequest req, HttpServletResponse resp, AppContext context) throws ServletException,
+            IOException, SQLException, NoSuchAlgorithmException, OperationNotSupportedException, CloneNotSupportedException {
+        this.context = context;
+        this.userDAO = (UserDAO) context.getDAO(new User());
+        String page = "";
+        User user = new User();
+        Map<String, String> errorMessage = new HashMap<>();
+
+        if (req.getMethod().equals("GET"))
             page = ConfigurationManager.getInstance()
-                    .getProperty(ConfigurationManager.MAIN_PAGE_PATH);
-        } else {
-            req.setAttribute("errorMessage",
-                    MessageManager.getInstance()
-                            .getProperty(MessageManager.LOGIN_ERROR_MESSAGE));
-            page = ConfigurationManager.getInstance()
-                    .getProperty(ConfigurationManager.ERROR_PAGE_PATH);
+                    .getProperty(ConfigurationManager.LOGIN_PAGE_PATH);
+        else {
+            user = Login.login(req, context);
+            if (user != null && user.isActive()) {
+                req.getSession().setAttribute("user", user);
+                page = ConfigurationManager.getInstance()
+                        .getProperty(ConfigurationManager.MAIN_PAGE_PATH);
+            }
+            else if (user != null && !user.isActive()) {
+                errorMessage.put("en", MessageManager.getInstance()
+                        .getProperty(MessageManager.USER_BLOCKED_MESSAGE));
+                errorMessage.put("ua", MessageManager.getInstance()
+                        .getProperty(MessageManager.USER_BLOCKED_MESSAGE_UA));
+                req.setAttribute("errorMessage", errorMessage);
+                page = ConfigurationManager.getInstance()
+                        .getProperty(ConfigurationManager.LOGIN_PAGE_PATH);
+            }
+            else{
+                errorMessage.put("en", MessageManager.getInstance()
+                        .getProperty(MessageManager.LOGIN_ERROR_MESSAGE));
+                errorMessage.put("ua", MessageManager.getInstance()
+                        .getProperty(MessageManager.LOGIN_ERROR_MESSAGE_UA));
+                req.setAttribute("errorMessage", errorMessage);
+                page = ConfigurationManager.getInstance()
+                        .getProperty(ConfigurationManager.LOGIN_PAGE_PATH);
+            }
+
         }
+        String page1 = page;
+        req.setAttribute("commandUrl", req.getContextPath()+
+                "/controller?command="+page1.replace(".jsp","" ).replace("/", "") );
         return page;
     }
-
-    private boolean login(HttpServletRequest req) throws SQLException, UnsupportedEncodingException, NoSuchAlgorithmException {
-        String login = req.getParameter("login");
-        String password = req.getParameter("password");
-        User user = new User();
-        ArrayList<User> userList = new ArrayList<>();
-        UserRepository ur = new UserRepository();
-        SQLQuery sq = new SQLQuery();
-        System.out.println("Password "+ PasswordHash.doHash(password));
-        sq.filter("login='"+login+"' and " + "pass_word = '"+ PasswordHash.doHash(password)+"'");
-        sq.source(user.table);
-        userList = ur.get(sq);
-        if (userList.isEmpty() || userList.size()>1) {
-           // LOGGER.log(Level.SEVERE, "Authorization error: login {0} IP {1}", new Object[]{login});
-            return false;
-        }
-        //LOGGER.log(Level.SEVERE, "Authorization successful: login {0} IP {1}", new Object[]{login});
-        req.getSession().setAttribute("user", user);
-        return true;
-    }
-
-
 }

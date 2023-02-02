@@ -1,67 +1,108 @@
 package com.my.library.servlets;
 
+import com.my.library.db.ConnectionPool;
+import com.my.library.db.DAO.StatusDAO;
+import com.my.library.db.DAO.UserDAO;
 import com.my.library.db.SQLSmartQuery;
-import com.my.library.db.entities.Book;
+import com.my.library.db.entities.Status;
 import com.my.library.db.entities.User;
-import com.my.library.db.repository.BookRepository;
+import com.my.library.db.entities.UsersBooks;
+import com.my.library.db.DAO.UsersBookDAO;
 import com.my.library.services.*;
+import com.my.library.services.validator.BookIssueValidator;
+import com.my.library.services.validator.CancelOrderValidator;
+import com.my.library.services.validator.EditBookValidator;
 
+import javax.naming.OperationNotSupportedException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
-public class BooksManagerCommand implements Command {
-    public String execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
-             SQLException {
-        System.out.println("Executing bookManager");
-        SQLSmartQuery bookQuery;
-        BookRepository br = BookRepository.getInstance();
-        if(req.getParameter("delete")!=null) new DeleteBookCommand().execute(req, resp);
-        if(req.getMethod().equals("POST")) {
-            bookQuery = prepareCatalogSQl(req);
-            AppContext.getInstance().setContext(req.getSession(), req.getParameter("command"), bookQuery);
+public class CurrentOrdersCommand implements Command {
+
+    private AppContext context;
+    private UsersBookDAO usersBookDAO;
+
+    private StatusDAO statusDAO;
+
+    private UserDAO userDAO;
+
+    /**
+     * Processing the requests for working with orders catalog of reader
+     *
+     * @param req     HttpServletRequest request
+     * @param resp    HttpServletResponse request
+     * @param context
+     * @return String with jsp page name
+     * @throws SQLException     throw to upper level, where it will be caught
+     * @throws ServletException throw to upper level, where it will be caught
+     * @see com.my.library.servlets.CommandMapper
+     */
+    public String execute(HttpServletRequest req, HttpServletResponse resp, AppContext context) throws ServletException,
+            SQLException, OperationNotSupportedException, IOException, NoSuchAlgorithmException, CloneNotSupportedException {
+        this.context = context;
+        this.usersBookDAO =(UsersBookDAO) context.getDAO(new UsersBooks());
+        this.statusDAO = (StatusDAO) context.getDAO(new Status());
+        this.userDAO =(UserDAO) context.getDAO(new User());
+        Map<String, Map<String,String>> errors=new HashMap<>();
+        if(req.getParameter("userBookId")!=null)
+        {
+            return CommandMapper.getInstance().getCommand("issueOrder").execute(req, resp, context);
         }
-        else{
-            if (AppContext.getInstance().getContext(req.getSession(), req.getParameter("command"))!=null)
-                bookQuery = AppContext.getInstance().getContext(req.getSession(), req.getParameter("command"));
-            else {
-                bookQuery = prepareCatalogSQl(req);
-            }
+        if(req.getParameter("cancelOrderId")!=null)
+        {   errors= context.getValidator(req).validate(req, context);
+            if(errors.isEmpty())
+                cancelOrder(req);
         }
-        req.setAttribute("pagination", new PaginationManager(req, bookQuery));
-        SortManager.SortManager(req, bookQuery);
-        ArrayList<Book> books = br.get(bookQuery);
-        req.setAttribute("books", books);
-        req.setAttribute("genres", GetGenres.get());
-        req.setAttribute("bookStorage", GetStorage.get());
-        String page = ConfigurationManager.getInstance().getProperty(ConfigurationManager.BOOK_MANAGER_PAGE_PATH);
+        req.setAttribute("users", GetUsers.get(userDAO));
+        req.setAttribute("usersBooks", usersBookDAO.get(prepareOrdersSQl(req)));
+        req.setAttribute("errors", errors);
+        String page = ConfigurationManager.getInstance().getProperty(ConfigurationManager.ORDERS_PAGE_PATH);
         SetWindowUrl.setUrl(page, req);
         return page;
     }
 
-    private SQLSmartQuery prepareCatalogSQl(HttpServletRequest req) {
+    /**
+     * Prepare request string to get readers orders including sorting, ordering and pagination
+     * @param  req      HttpServletRequest request
+     * @return          SQLSmartQuery
+     * @throws          SQLException throw to upper level, where it will be caught
+     */
+    private SQLSmartQuery prepareOrdersSQl(HttpServletRequest req) throws SQLException {
         SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(new Book().table);
-        String title= req.getParameter("title");
-        String author = req.getParameter("author");
-        String local = (String) req.getSession().getAttribute("language");
-        if (local!=null) {
-            local = local.equals("ua") ? "_ua" : "";
-        }
-        else local="";
-
-        if (title!=null && !title.equals("")) {
-            sq.filter("title"+local, title, SQLSmartQuery.Operators.ILIKE);
-            if (author != null && !author.equals("")) sq.logicOperator(SQLSmartQuery.LogicOperators.OR);
-        }
-        if (author != null && !author.equals("")) {
-            sq.filter("first_name"+local, author, SQLSmartQuery.Operators.ILIKE);
-            sq.logicOperator(SQLSmartQuery.LogicOperators.OR);
-            sq.filter("second_name"+local, author, SQLSmartQuery.Operators.ILIKE);
-        }
-        sq.order("title"+local, SQLSmartQuery.SortOrder.ASC);
+        sq.source(new UsersBooks().table);
+        sq.filter("status", "order", SQLSmartQuery.Operators.E);
+        sq.logicOperator(SQLSmartQuery.LogicOperators.OR);
+        sq.groupOperator(SQLSmartQuery.GroupOperators.GROUP);
+        sq.filter("status", "process", SQLSmartQuery.Operators.E);
+        sq.logicOperator(SQLSmartQuery.LogicOperators.AND);
+        User user =(User) req.getSession().getAttribute("user");
+        sq.filter("librarian_id", user.getId(), SQLSmartQuery.Operators.E );
+        sq.groupOperator(SQLSmartQuery.GroupOperators.UNGROUP);
+        sq.order("case_num");
+        SortManager.SortManager(req, sq);
+        System.out.println(sq.build());
         return sq;
+    }
+
+    /**
+     * Performing request to cancel particular order
+     * @param  req      HttpServletRequest request
+     * @throws          SQLException throw to upper level, where it will be caught
+     */
+    private void cancelOrder(HttpServletRequest req) throws SQLException {
+        UsersBooks userBook = new UsersBooks();
+        userBook = usersBookDAO.getOne(Integer.parseInt(req.getParameter("cancelOrderId")));
+        if (userBook!=null) {
+            userBook.setStatus(GetStatuses.get(statusDAO).get("canceled"));
+            usersBookDAO.update(userBook);
+        }
     }
 }

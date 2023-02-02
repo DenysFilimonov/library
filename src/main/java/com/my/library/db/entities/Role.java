@@ -1,11 +1,13 @@
-package com.library.db.entities;
+package com.my.library.db.entities;
+
+import java.util.Map;
 
 public class Role extends Entity{
 
     {
-        table = "entities";
+        table = "roles";
     }
-    private String roleName;
+    private Map<String,String> roleName;
 
     public int getId() {
         return id;
@@ -15,11 +17,11 @@ public class Role extends Entity{
         this.id = id;
     }
 
-    public String getRoleName() {
+    public Map<String,String> getRoleName() {
         return roleName;
     }
 
-    public void setRoleName(String roleName) {
+    public void setRoleName(Map<String,String> roleName) {
         this.roleName = roleName;
     }
 }

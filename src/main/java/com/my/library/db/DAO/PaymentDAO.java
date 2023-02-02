@@ -1,22 +1,27 @@
-package com.my.library.db.repository;
+package com.my.library.db.DAO;
 import com.my.library.db.ConnectionPool;
 import com.my.library.db.DTO.PaymentDTO;
 import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.entities.Book;
+import com.my.library.db.entities.IssueType;
 import com.my.library.db.entities.Payment;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.sql.*;
 import java.util.ArrayList;
 
-public class PaymentRepository implements Repository<Payment> {
+public class PaymentDAO implements DAO<Payment> {
 
-    private static PaymentRepository instance = null;
+    private static PaymentDAO instance = null;
+    
+    private final BasicDataSource dataSource;
 
-    public static PaymentRepository getInstance(){
-        if (instance==null) instance = new PaymentRepository();
+    public static PaymentDAO getInstance(BasicDataSource dataSource){
+        if (instance==null) instance = new PaymentDAO(dataSource);
         return instance;
     }
-    private PaymentRepository(){
-
+    private PaymentDAO(BasicDataSource dataSource){
+        this.dataSource = dataSource;
     }
 
     @Override
@@ -24,7 +29,8 @@ public class PaymentRepository implements Repository<Payment> {
         String INSERT_STRING = "insert into payments " +
                 "(amount, payment_date, order_id)"+
                 " values (?, ?, ?)";
-        try (Connection connection = ConnectionPool.dataSource.getConnection(); PreparedStatement addPayment = connection.prepareStatement(INSERT_STRING, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection connection = dataSource.getConnection(); 
+             PreparedStatement addPayment = connection.prepareStatement(INSERT_STRING, Statement.RETURN_GENERATED_KEYS)) {
             connection.setAutoCommit(false);
             addPayment.setFloat(1, payment.getAmount());
             addPayment.setDate(2, payment.getDate());
@@ -51,7 +57,8 @@ public class PaymentRepository implements Repository<Payment> {
     @Override
     public void delete(Payment payment) throws SQLException {
     String DELETE_STRING = "DELETE FROM "+payment.table+"WHERE ID=?";
-        try (Connection connection = ConnectionPool.dataSource.getConnection(); PreparedStatement deletePayment = connection.prepareStatement(DELETE_STRING, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection connection = dataSource.getConnection(); 
+             PreparedStatement deletePayment = connection.prepareStatement(DELETE_STRING, Statement.RETURN_GENERATED_KEYS)) {
             connection.setAutoCommit(false);
             deletePayment.setInt(1, payment.getId());
             int affectedRows = deletePayment.executeUpdate();
@@ -72,7 +79,8 @@ public class PaymentRepository implements Repository<Payment> {
                 "payment_date=?," +
                 "order_id=?," +
                 " WHERE id = ?";
-        try (Connection connection = ConnectionPool.dataSource.getConnection(); PreparedStatement updatePayment = connection.prepareStatement(UPDATE_STRING, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection connection = dataSource.getConnection(); 
+                PreparedStatement updatePayment = connection.prepareStatement(UPDATE_STRING, Statement.RETURN_GENERATED_KEYS)) {
             connection.setAutoCommit(false);
             updatePayment.setFloat(1, payment.getAmount());
             updatePayment.setDate(2, payment.getDate());
@@ -88,30 +96,30 @@ public class PaymentRepository implements Repository<Payment> {
 
     @Override
     public int count(SQLSmartQuery query) throws SQLException {
-        return 0;
+        ArrayList<Payment> list = get(query);
+        return list.isEmpty()? 0: list.size();
     }
 
     @Override
     public ArrayList<Payment> get(SQLSmartQuery query) throws SQLException {
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet resultSet = null;
         ArrayList<Payment> payments = new ArrayList<>();
-        try {
-            connection = ConnectionPool.dataSource.getConnection();
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery(query.build());
+        try (Connection connection = dataSource.getConnection();
+            Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery(query.build());
             while (resultSet.next()) {
                 payments.add(PaymentDTO.toModel(resultSet));
             }
         }
-        finally {
-            assert resultSet != null;
-            resultSet.close();
-            statement.close();
-            connection.close();
-        }
-    return payments;
+        return payments;
+    }
+
+    @Override
+    public Payment getOne(int id) throws SQLException {
+        SQLSmartQuery sq = new SQLSmartQuery();
+        sq.source(new Payment().table);
+        sq.filter("id", id, SQLSmartQuery.Operators.E);
+        ArrayList<Payment> payments = get(sq);
+        return payments.isEmpty()? null: payments.get(0);
     }
 
 }

@@ -1,5 +1,10 @@
-<html>
-<body>
-<h2>Hello World!</h2>
-</body>
-</html>
+ <!DOCTYPE html>
+ <html>
+    <head>
+       <title>HTML Meta Tag</title>
+       <meta http-equiv = "refresh" content = "1; url = /Library/controller?command=catalog" />
+    </head>
+    <body>
+       <p>Redirecting to another URL</p>
+    </body>
+ </html>

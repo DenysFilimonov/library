@@ -2,12 +2,39 @@ package com.my.library.db.entities;
 
 import java.util.Map;
 
-public class Genre extends Entity {
+public class BookStore extends Entity {
 
     {
-        table = "genres";
+        table = "book_store";
     }
-    private Map<String,String> genre;
+
+    int caseNum;
+    int shelfNum;
+    int cellNum;
+
+    public int getCaseNum() {
+        return caseNum;
+    }
+
+    public void setCaseNum(int caseNum) {
+        this.caseNum = caseNum;
+    }
+
+    public int getShelfNum() {
+        return shelfNum;
+    }
+
+    public void setShelfNum(int shelfNum) {
+        this.shelfNum = shelfNum;
+    }
+
+    public int getCellNum() {
+        return cellNum;
+    }
+
+    public void setCellNum(int cellNum) {
+        this.cellNum = cellNum;
+    }
 
     public int getId() {
         return id;
@@ -17,11 +44,5 @@ public class Genre extends Entity {
         this.id = id;
     }
 
-    public Map<String,String> getGenre() {
-        return genre;
-    }
 
-    public void setGenre(Map<String,String> genre) {
-        this.genre = genre;
-    }
 }

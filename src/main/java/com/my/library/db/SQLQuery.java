@@ -1,10 +1,10 @@
-package com.library.db;
+package com.my.library.db;
 
 import java.util.Objects;
 
 public class SQLQuery {
 
-    private String query = "SELECT ";
+    private final String query = "SELECT ";
 
     private String table = "";
 
@@ -37,7 +37,6 @@ public class SQLQuery {
 
 
     public String build(){
-        System.out.println(query+(filter.length()==0 ? "* ": "!")+table+filter+order+limit+offset);
-        return query+(filter.length()==0 ? "* ": "!")+table+filter+order+limit+offset;
+        return query+" * "+table+filter+order+limit+offset;
     }
 }

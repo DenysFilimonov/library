@@ -1,0 +1,30 @@
+<taglib>
+    <tlib-version>1.0</tlib-version>
+    <jsp-version>2.0</jsp-version>
+    <short-name>User TLD</short-name>
+
+    <tag>
+        <name>UserName</name>
+        <tag-class>com.my.library.jstl.UserName</tag-class>
+        <body-content>scriptless</body-content>
+
+
+        <attribute>
+            <name>user</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+    <tag>
+        <name>DateFormat</name>
+        <tag-class>com.my.library.jstl.DateFormat</tag-class>
+        <body-content>scriptless</body-content>
+
+
+        <attribute>
+            <name>date</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+</taglib>

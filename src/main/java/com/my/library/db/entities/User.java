@@ -1,9 +1,9 @@
-package com.library.db.entities;
+package com.my.library.db.entities;
 
 public class User extends Entity implements Cloneable {
 
     {
-        table = "users";
+        table = "users_view";
     }
     private int id;
     private String login;

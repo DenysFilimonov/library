@@ -1,23 +1,31 @@
 package com.my.library.db.DTO;
 
-import com.my.library.db.entities.Genre;
 import com.my.library.db.entities.IssueType;
+import com.my.library.db.entities.Status;
 
 import javax.naming.OperationNotSupportedException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
-interface IssueTypeDTO {
+public interface StatusDTO {
 
-    static IssueType toView(IssueType type) throws OperationNotSupportedException {
+    static Status toView(Status status) throws OperationNotSupportedException {
         throw new OperationNotSupportedException();
-    };
+    }
 
-    static IssueType toModel(ResultSet rs) throws  SQLException {
-        IssueType type = new IssueType();
-        type.setId(rs.getInt("issue_type_id"));
-        type.setIssueType(rs.getString("issue_type"));
-        type.setPenalty(rs.getFloat("penalty_fee"));
-        return type;
+    static Status toModel(ResultSet rs) throws  SQLException {
+        Status status = new Status();
+        try{
+            status.setId(rs.getInt("status_id"));
+        }catch (SQLException e){
+            status.setId(rs.getInt("id"));
+        }
+        HashMap<String, String> st = new HashMap<>();
+        st.put("en", rs.getString("status"));
+        st.put("ua", rs.getString("status"));
+        status.setStatus(st);
+        return status;
     }
 }

@@ -1,10 +1,15 @@
-package com.my.library.services;
+package com.my.library.services.validator;
 
 
 
+import com.my.library.db.ConnectionPool;
 import com.my.library.db.SQLSmartQuery;
 import com.my.library.db.entities.*;
 import com.my.library.db.DAO.*;
+import com.my.library.services.AppContext;
+import com.my.library.services.ErrorManager;
+import com.my.library.services.GetIssueTypes;
+import com.my.library.services.GetStatuses;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Date;
@@ -16,15 +21,19 @@ public class BookIssueValidator implements Validator{
 
     /**
      * Validate form data for IssueOrderCommand
-     * @param  req      HttpServletRequest request with form data
+     *
+     * @param req     HttpServletRequest request with form data
+     * @param context
      * @return errors   Map with errors of form validation
-     * @see             com.my.library.servlets.CommandMapper
-     * @see             com.my.library.servlets.IssueOrderCommand
-     * @see             ErrorManager
-     * @throws          SQLException
+     * @throws SQLException
+     * @see com.my.library.servlets.CommandMapper
+     * @see com.my.library.servlets.IssueOrderCommand
+     * @see ErrorManager
      */
 
-    public Map<String, Map<String,String>> validate(HttpServletRequest req) throws SQLException {
+    public Map<String, Map<String,String>> validate(HttpServletRequest req, AppContext context) throws SQLException {
+        StatusDAO statusDAO = (StatusDAO) context.getDAO(new Status());
+        IssueTypeDAO issueTypeDAO = (IssueTypeDAO) context.getDAO(new IssueType());
         Map<String, Map<String, String>> errors = new HashMap<>();
         UsersBooks userBook = new UsersBooks();
         try {
@@ -38,9 +47,9 @@ public class BookIssueValidator implements Validator{
         sq.source(new UsersBooks().table);
         sq.filter("id", req.getParameter("userBookId"), SQLSmartQuery.Operators.E);
         sq.logicOperator(SQLSmartQuery.LogicOperators.AND);
-        sq.filter("status_id", GetStatuses.get().get("process").getId(), SQLSmartQuery.Operators.E);
-
-        ArrayList<UsersBooks> usersBooks = UsersBookDAO.getInstance().get(sq);
+        sq.filter("status_id", GetStatuses.get(statusDAO).get("process").getId(), SQLSmartQuery.Operators.E);
+        UsersBookDAO usersBookDAO = (UsersBookDAO) context.getDAO(new UsersBooks());
+        ArrayList<UsersBooks> usersBooks = usersBookDAO.get(sq);
         if (usersBooks.isEmpty()){
             ErrorManager.add(errors, "userId", "There isn`t order with this parameter or already processed by other user",
                     "Заказа з такими параметрами не існує або обслуговується іншим користувачем");
@@ -54,21 +63,22 @@ public class BookIssueValidator implements Validator{
         }
 
         else{
+            Book book = new Book();
             SQLSmartQuery sqb =new SQLSmartQuery();
-            sqb.source(new Book().table);
+            sqb.source(book.table);
             sqb.filter("id", Integer.parseInt(req.getParameter("bookId")), SQLSmartQuery.Operators.E);
-            ArrayList<Book> books = BookDAO.getInstance().get(sqb);
+            BookDAO bookDAO = (BookDAO) context.getDAO(book);
+            ArrayList<Book> books = BookDAO.getInstance(ConnectionPool.dataSource).get(sqb);
             if(!books.get(0).getIsbn().equals(req.getParameter("isbn"))){
                 ErrorManager.add(errors,"isbn", "ISBN  does not equal the stored value",
                         "ISBN не співпадає із збереженим значенням" );
             }
         }
-
         try {
             Date targetDate = Date.valueOf(req.getParameter("targetDate"));
             Date issueDate = Date.valueOf(req.getParameter("issueDate"));
             long days = (targetDate.getTime() - issueDate.getTime()) / 1000 / 60 / 60 / 24;
-            if (GetIssueTypes.get().get("subscription").getId() == usersBooks.get(0).getIssueType().getId()) {
+            if (GetIssueTypes.get(issueTypeDAO).get("subscription").getId() == usersBooks.get(0).getIssueType().getId()) {
                 if (days > 30) {
                     ErrorManager.add(errors, "returnDate", "Book cant be subscribed for more than 30 days",
                             "Не можна видати книгу на дім більш ніж на 30 діб");

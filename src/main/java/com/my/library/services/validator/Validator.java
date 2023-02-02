@@ -1,4 +1,6 @@
-package com.my.library.services;
+package com.my.library.services.validator;
+
+import com.my.library.services.AppContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -7,8 +9,8 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.*;
 
-interface Validator{
-    Map<String, Map<String,String>> validate (HttpServletRequest req) throws SQLException,
+public interface Validator{
+    Map<String, Map<String,String>> validate (HttpServletRequest req, AppContext context) throws SQLException,
             NoSuchAlgorithmException, IOException, ServletException;
 }
 

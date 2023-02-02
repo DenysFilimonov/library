@@ -1,64 +1,84 @@
 package com.my.library.servlets;
 
-import com.my.library.db.SQLQuery;
+import com.my.library.db.DAO.BookStoreDAO;
+import com.my.library.db.DAO.GenreDAO;
 import com.my.library.db.SQLSmartQuery;
 import com.my.library.db.entities.*;
-import com.my.library.db.repository.BookRepository;
-import com.my.library.db.repository.IssueTypeRepository;
-import com.my.library.db.repository.UsersBookRepository;
-import com.my.library.services.*;
+import com.my.library.db.DAO.BookDAO;
+import com.my.library.services.AppContext;
+import com.my.library.services.ConfigurationManager;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
 
-public class OrderBookCommand implements Command {
-    public String execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
+public class DeleteBookCommand implements Command {
+
+    private AppContext context;
+    BookDAO bookDAO;
+  
+    
+    /**
+     * Serve the requests for delete book. Delete it instance if there aren't issued book or mark as
+     * deleted to avoid new operations. When all the released books will be returned  - book would be deleted instantly.
+     *
+     * @param req     HttpServletRequest request
+     * @param resp    HttpServletResponse request
+     * @param context AppContext with dependency injection
+     * @return String with jsp page name
+     * @throws SQLException     throw to upper level, where it will be caught
+     * @throws ServletException throw to upper level, where it will be caught
+     * @see com.my.library.servlets.CommandMapper
+     */
+    public String execute(HttpServletRequest req, HttpServletResponse resp, AppContext context) throws ServletException,
              SQLException {
-
-        System.out.println("Try to add new order");
-
-        ArrayList<Book> books = BookRepository.getInstance().get(prepareSQL(req));
-        if (books == null || books.size() == 0) {
-            throw new ServletException("There was an error while order the book");
+        this.context = context;
+        this.bookDAO = (BookDAO) context.getDAO(new Book());
+        
+        ArrayList<Book> books = bookDAO.get(prepareSQL(req));
+        performDeletedClean();
+        if(books.size()>0){
+            Book book = books.get(0);
+            if(book.getAvailableQuantity()<book.getQuantity()){
+                book.setDeleted(true);
+                bookDAO.update(book);
+            }
+            else{
+                bookDAO.delete(books.get(0));
+            }
         }
-        SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(new IssueType().table);
-
-        Map<String, IssueType> issueMap = GetIssueTypes.get();
-        Map<String, Status> statusMap = GetStatuses.get();
-        Book book = books.get(0);
-        String issueType = req.getParameter("issueType");
-        book.setAvailableQuantity(book.getAvailableQuantity() - 1);
-        BookRepository.getInstance().update(book);
-        UsersBooks ub = new UsersBooks();
-        User user = ( User) req.getSession().getAttribute("user");
-        IssueType it = issueMap.get(issueType);
-        ub.setIssueType(it);
-        Status status = statusMap.get("order");
-        ub.setStatus(status);
-        ub.setUserId(user.getId());
-        ub.setBookId(book.getId());
-        ub.setStatus(status);
-        UsersBookRepository.getInstance().add(ub);
-        return ConfigurationManager.getInstance().getProperty(ConfigurationManager.CATALOG_PAGE_PATH);
+        return ConfigurationManager.getInstance().getProperty(ConfigurationManager.BOOK_MANAGER_PAGE_PATH);
     }
 
 
-
+    /**
+     * Prepare query str to get book to delete
+     * @param  req      HttpServletRequest request
+     * @return          SQLSmartQuery object
+     */
     private SQLSmartQuery prepareSQL(HttpServletRequest req){
         SQLSmartQuery sq = new SQLSmartQuery();
         sq.source(new Book().table);
-        sq.filter("id", Integer.parseInt(req.getParameter("book")), SQLSmartQuery.Operators.E);
-        sq.logicOperator(SQLSmartQuery.LogicOperators.AND);
-        sq.filter("available_quantity", 0, SQLSmartQuery.Operators.G);
+        sq.filter("id", Integer.parseInt(req.getParameter("delete")), SQLSmartQuery.Operators.E);
         return sq;
     }
+
+    /**
+     * Perform cleanup operation with the books that marked as deleted
+     */
+    private void performDeletedClean() throws SQLException {
+        SQLSmartQuery sq = new SQLSmartQuery();
+        sq.source(new Book().table);
+        sq.filter("deleted", true, SQLSmartQuery.Operators.E);
+        ArrayList<Book> deletedBooks = bookDAO.get(sq);
+        for (Book book: deletedBooks ) {
+            if(book.getQuantity()== book.getAvailableQuantity())
+                bookDAO.delete(book);
+        }
+    }
+
 
 }
 

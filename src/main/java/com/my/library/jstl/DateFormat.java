@@ -2,28 +2,33 @@ package com.my.library.jstl;
 
 import com.my.library.db.entities.User;
 
-import javax.servlet.jsp.tagext.*;
-import javax.servlet.jsp.*;
-import java.io.*;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.tagext.SimpleTagSupport;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-public class UserName extends SimpleTagSupport {
+public class DateFormat extends SimpleTagSupport {
 
-    private User user;
+    private Date date;
 
-    public User getUser() {
-        return user;
-    }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
 
     public void doTag() throws JspException, IOException {
         JspWriter out = getJspContext().getOut();
-        if(user==null)
-            out.println("Hello, Guest!");
-        else
-            out.println("Hello, "+user.getLogin()+"!");
+        try{
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String format = formatter.format(date);
+        out.print(format);
+        }catch (Exception e)
+        {
+            out.print("");
+        }
+
     }
 }

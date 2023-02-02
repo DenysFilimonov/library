@@ -1,43 +1,81 @@
 package com.my.library.servlets;
-import com.my.library.db.entities.User;
-import com.my.library.services.ConfigurationManager;
-import com.my.library.services.Login;
-import com.my.library.services.MessageManager;
 
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.sql.SQLException;
+import com.my.library.db.DTO.UserDTO;
+import com.my.library.db.entities.User;
+import com.my.library.db.DAO.UserDAO;
+import com.my.library.services.*;
+import com.my.library.services.validator.EditUserValidator;
+
 import javax.naming.OperationNotSupportedException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-public class LoginCommand implements Command {
-    public String execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
-            IOException, SQLException, NoSuchAlgorithmException, OperationNotSupportedException, CloneNotSupportedException {
-        String page = new String();
-        User user = new User();
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
+import java.util.Map;
+import java.util.Objects;
 
-        if (req.getMethod().equals("GET") | req.getParameter("language") != null)
-            page = ConfigurationManager.getInstance()
-                    .getProperty(ConfigurationManager.LOGIN_PAGE_PATH);
-        else {
-            user = Login.login(req);
-            if (user != null) {
-                System.out.println("Login succesfull");
-                req.getSession().setAttribute("user", user);
-                page = ConfigurationManager.getInstance()
-                        .getProperty(ConfigurationManager.MAIN_PAGE_PATH);
+public class AccountCommand implements Command {
+
+     AppContext context;
+
+    /**
+     * Serve the requests to edit user account  including validation form data
+     *
+     * @param req     HttpServletRequest request
+     * @param resp    HttpServletResponse request
+     * @param context AppContext
+     * @return return string with url of page
+     * @see com.my.library.servlets.CommandMapper
+     * @see EditUserValidator
+     */
+    public String execute(HttpServletRequest req, HttpServletResponse resp, AppContext context) throws ServletException,
+            IOException, SQLException, NoSuchAlgorithmException, OperationNotSupportedException, CloneNotSupportedException {
+        this.context = context;
+        Map<String, Map<String, String>> errors;
+        if (Objects.equals(req.getMethod(), "POST")) {
+            errors = context.getValidator(req).validate(req, this.context );
+            if (errors.isEmpty()) {
+                updateUser(req);
+                return ConfigurationManager.getInstance().getProperty(ConfigurationManager.OK_ACCOUNT_PAGE_PATH);
             } else {
-                req.setAttribute("errorMessage",
-                        MessageManager.getInstance()
-                                .getProperty(MessageManager.LOGIN_ERROR_MESSAGE));
-                page = ConfigurationManager.getInstance()
-                        .getProperty(ConfigurationManager.LOGIN_PAGE_PATH);
+                req.setAttribute("errorMessages", errors);
             }
         }
-        String page1 = page;
-        req.setAttribute("commandUrl", req.getContextPath()+
-                "/controller?command="+page1.replace(".jsp","" ).replace("/", "") );
-        return page;
+        return ConfigurationManager.getInstance().getProperty(ConfigurationManager.ACCOUNT_PAGE_PATH);
     }
+
+    /**
+     * Performing update User
+     * @param  req      HttpServletRequest request
+     * @throws          ServletException  throw to upper level, where it will be caught
+     * @throws          SQLException   throw to upper level, where it will be caught
+     * @throws          UnsupportedEncodingException throws during password encryption
+     * @throws          NoSuchAlgorithmException throws during password encryption
+     * @throws          OperationNotSupportedException throws during password encryption
+     * @throws          CloneNotSupportedException throws during password encryption
+     */
+    private void updateUser(HttpServletRequest req) throws SQLException, UnsupportedEncodingException,
+            NoSuchAlgorithmException, OperationNotSupportedException, CloneNotSupportedException {
+        User user = new User();
+        UserDAO userDAO = (UserDAO) context.getDAO(user);
+        user = UserDTO.toModel(req);
+        user.setId(Integer.parseInt(req.getParameter("id")));
+        User baseUser = userDAO.getOne(user.getId());
+        user.setRole(baseUser.getRole());
+        user.setActive(baseUser.isActive());
+        String password = req.getParameter("password");
+        if (password != null && !password.equals("")) {
+            user.setPassword(PasswordHash.doHash(user.getPassword()));
+        } else {
+            user.setPassword(baseUser.getPassword());
+        }
+        userDAO.update(user);
+        req.getSession().setAttribute("user", UserDTO.toView(user));
+    }
+
+
 }
+

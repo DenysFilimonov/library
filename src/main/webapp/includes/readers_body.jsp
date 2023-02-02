@@ -1,7 +1,38 @@
 <div class="container-md col-9 text-center">
-    <div class="ordersTable">
+<div class="container col-12 bgColor rounded ">
+      <div class="h4 text-center white">
+        <fmt:message key="returnBook.label.header" />
+      </div>
+</div>
+    <form method = "POST">
+        <div class="row">
+            <div class="col">
+                <div class="input-group pb-2">
+                       <div class="input-group-text">
+                        <fmt:message key="readers.label.title"/>
+                       </div>
+                       <input type="text" class="form-control form-control-sm"
+                       value = "${not empty param.title? param.title: ''}"
+                       name  = "title" placeholder=<fmt:message key="readers.label.title"/>>
+                       <div class="input-group-text">
+                       <fmt:message key="catalog.label.reader"/>
+                       </div>
+                       <input type="text" class="form-control form-control-sm"
+                       value = "${not empty param.reader? param.reader: ''}"
+                       name = "reader" placeholder=<fmt:message key="reader.label.reader"/>>
+                      <div class="input-group-text">
+                       <input type="submit" class="btn btn-primary btn-sm" value=<fmt:message key="login.label.find"/>>
+                      </div>
+                </div>
+            </div>
+
+        </div>
+        </form>
+
+
+    <div class="readersTable">
         <div class="tableHeader">
-            <fmt:message key="orders.label.user"/>
+            <fmt:message key="reader.label.reader"/>
             <div class ="arrows">
                 <img class="arrow" src="SVG/sort-arrow-up.svg" onClick="javascript:sortFunction('reader', 'asc');"/>
                 <img class="arrow" src="SVG/sort-arrow-down.svg" onClick="javascript:sortFunction('reader', 'desc');"/>
@@ -9,6 +40,10 @@
         </div>
         <div class="tableHeader">
             <fmt:message key="orders.label.title"/>
+              <div class ="arrows">
+                     <img class="arrow" src="SVG/sort-arrow-up.svg" onClick="javascript:sortFunction('${language=='en'?'title':'title_ua'}', 'asc');"/>
+                     <img class="arrow" src="SVG/sort-arrow-down.svg" onClick="javascript:sortFunction('${language=='en'?'title':'title_ua'}', 'desc');"/>
+             </div>
         </div>
         <div class="tableHeader">
             <fmt:message key="orders.label.author"/>
@@ -17,57 +52,53 @@
             <fmt:message key="orders.label.issueType"/>
         </div>
         <div class="tableHeader">
-            <fmt:message key="orders.label.bookStore"/>
-            <div class ="arrows">
-                <img class="arrow" src="SVG/sort-arrow-up.svg" onClick="javascript:sortFunction('case_num', 'asc');"/>
-                <img class="arrow" src="SVG/sort-arrow-down.svg" onClick="javascript:sortFunction('case_num', 'desc');"/>
-            </div>
+            <fmt:message key="reader.label.issueDate"/>
         </div>
         <div class="tableHeader">
-            <fmt:message key="orders.label.issueOrder"/>
+            <fmt:message key="orders.label.targetDate"/>
         </div>
         <div class="tableHeader">
-            <fmt:message key="orders.label.cancelOrder"/>
+            <fmt:message key="reader.label.fine"/>
+        </div>
+        <div class="tableHeader">
+            <fmt:message key="reader.label.returnBook"/>
         </div>
 
-        <c:forEach items="${usersBooks}" var="book">
+        <c:forEach items="${usersBooks}" var="userBook">
             <div class='tableCell'>
-                ${users[book.userId].firstName} ${users[book.userId].secondName}
-
+                ${users[userBook.userId].firstName} ${users[userBook.userId].secondName}
             </div>
             <div class='tableCell'>
-                ${book.title[language]}
+                ${userBook.title[language]}
+            </div>
+             <div class='tableCell'>
+                ${userBook.author[language]}
             </div>
             <div class='tableCell'>
-                ${book.author[language]}
+                ${userBook.issueType.issueType[language]}
             </div>
             <div class='tableCell'>
-                ${book.issueType.issueType[language]}
+               <ex:DateFormat date="${userBook.issueDate}"/>
             </div>
             <div class='tableCell'>
-                ${book.bookStore.caseNum}/${book.bookStore.shelfNum}/${book.bookStore.cellNum}
+               <ex:DateFormat date="${userBook.targetDate}"/>
             </div>
             <div class='tableCell'>
-                <a class="btn btn-primary btn-sm" href="javascript: issueOrder(${book.id})"><fmt:message key="orders.label.issue"/></a>
+               ${userBook.getFineDays()}
             </div>
             <div class='tableCell'>
-                <a class="btn btn-primary btn-sm" href="javascript: cancelOrder(${book.id})"><fmt:message key="orders.label.cancel"/></a>
+                <a class="btn btn-primary btn-sm" href="javascript: returnBook(${userBook.id})"><fmt:message key="orders.label.return"/></a>
             </div>
         </c:forEach>
     </div>
+    <%@include file="pagination.jsp" %>
 </div>
 
 <script type="text/javascript">
-    function cancelOrder(orderId){
-        const urlParams = new URLSearchParams(window.location.search);
-        urlParams.set('cancelOrderId', orderId);
-        console.log(urlParams);
-        window.location.search = urlParams;
-    }
 
-    function issueOrder(orderId){
+    function returnBook(orderId){
         const urlParams = new URLSearchParams(window.location.search);
-        urlParams.set('issueOrderId', orderId);
+        urlParams.set('returnBook', orderId);
         console.log(urlParams);
         window.location.search = urlParams;
     }

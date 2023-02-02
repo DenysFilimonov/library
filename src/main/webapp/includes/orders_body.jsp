@@ -1,34 +1,45 @@
-<c:set var="class_"
-       value="${not empty user ? 'bookTableUser' : 'bookTableGuest'}"
-       scope="session" />
 <div class="container-md col-9 text-center">
-    <div class="subscriptionTable">
+ <div class="container col-12 bgColor rounded ">
+      <div class="h4 text-center white">
+        <fmt:message key="IssueBook.label.header" />
+      </div>
+</div>
+    <div class="ordersTable">
         <div class="tableHeader">
-            <fmt:message key="subscriptions.label.title"/>
+            <fmt:message key="orders.label.user"/>
+            <div class ="arrows">
+                <img class="arrow" src="SVG/sort-arrow-up.svg" onClick="javascript:sortFunction('reader', 'asc');"/>
+                <img class="arrow" src="SVG/sort-arrow-down.svg" onClick="javascript:sortFunction('reader', 'desc');"/>
+            </div>
         </div>
         <div class="tableHeader">
-            <fmt:message key="subscriptions.label.author"/>
+            <fmt:message key="orders.label.title"/>
         </div>
         <div class="tableHeader">
-            <fmt:message key="subscriptions.label.status"/>
+            <fmt:message key="orders.label.author"/>
         </div>
         <div class="tableHeader">
-            <fmt:message key="subscriptions.label.issueType"/>
+            <fmt:message key="orders.label.issueType"/>
         </div>
         <div class="tableHeader">
-            <fmt:message key="subscriptions.label.issueDate"/>
+            <fmt:message key="orders.label.bookStore"/>
+            <div class ="arrows">
+                <img class="arrow" src="SVG/sort-arrow-up.svg" onClick="javascript:sortFunction('case_num', 'asc');"/>
+                <img class="arrow" src="SVG/sort-arrow-down.svg" onClick="javascript:sortFunction('case_num', 'desc');"/>
+            </div>
         </div>
         <div class="tableHeader">
-            <fmt:message key="subscriptions.label.targetDate"/>
+            <fmt:message key="orders.label.issueOrder"/>
         </div>
         <div class="tableHeader">
-            <fmt:message key="subscriptions.label.returnDate"/>
-        </div>
-        <div class="tableHeader">
-            <fmt:message key="subscriptions.label.fine"/>
+            <fmt:message key="orders.label.cancelOrder"/>
         </div>
 
         <c:forEach items="${usersBooks}" var="book">
+            <div class='tableCell'>
+                ${users[book.userId].firstName} ${users[book.userId].secondName}
+
+            </div>
             <div class='tableCell'>
                 ${book.title[language]}
             </div>
@@ -36,28 +47,16 @@
                 ${book.author[language]}
             </div>
             <div class='tableCell'>
-                ${book.status.status[language]}
-                <c:if test="${book.status.status['en']=='order'}">
-                <button
-                    class="btn btn-secondary btn-sm"
-                    onClick="cancelOrder(${book.id});"
-                ><fmt:message key="subscriptions.label.cancel"/></button>
-                </c:if>
-            </div>
-            <div class='tableCell'>
                 ${book.issueType.issueType[language]}
             </div>
             <div class='tableCell'>
-                ${book.issueDate}
+                ${book.bookStore.caseNum}/${book.bookStore.shelfNum}/${book.bookStore.cellNum}
             </div>
             <div class='tableCell'>
-                ${book.targetDate}
+                <a class="btn btn-primary btn-sm" href="javascript: issueOrder(${book.id})"><fmt:message key="orders.label.issue"/></a>
             </div>
             <div class='tableCell'>
-                ${book.returnDate}
-            </div>
-            <div class='tableCell'>
-                ${book.getFineDays()}
+                <a class="btn btn-primary btn-sm" href="javascript: cancelOrder(${book.id})"><fmt:message key="orders.label.cancel"/></a>
             </div>
         </c:forEach>
     </div>
@@ -70,5 +69,21 @@
         console.log(urlParams);
         window.location.search = urlParams;
     }
+
+    function issueOrder(orderId){
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('userBookId', orderId);
+        console.log(urlParams);
+        window.location.search = urlParams;
+    }
+
+     function sortFunction(sort, order){
+           const urlParams = new URLSearchParams(window.location.search);
+           urlParams.set('sort', sort);
+           urlParams.set('order', order);
+           console.log(urlParams);
+           window.location.search = urlParams;
+        }
+
 
 </script>

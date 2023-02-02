@@ -1,120 +1,112 @@
 package com.my.library.servlets;
 
 import com.my.library.db.SQLSmartQuery;
-import com.my.library.db.entities.Book;
-import com.my.library.db.entities.User;
-import com.my.library.db.entities.UsersBooks;
-import com.my.library.db.repository.BookRepository;
-import com.my.library.db.repository.UsersBookRepository;
+import com.my.library.db.entities.*;
+import com.my.library.db.DAO.BookDAO;
+import com.my.library.db.DAO.UsersBookDAO;
 import com.my.library.services.AppContext;
 import com.my.library.services.ConfigurationManager;
-import com.my.library.services.PaginationManager;
 import com.my.library.services.SetWindowUrl;
 
+import javax.naming.OperationNotSupportedException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.stream.Collectors;
 
-public class CatalogCommand implements Command {
-    public String execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
-             SQLException {
-        BookRepository br = BookRepository.getInstance();
-        SQLSmartQuery bookQuery;
-        SQLSmartQuery ordersQuery;
-        User user = (User) req.getSession().getAttribute("user");
+public class SubscriptionsCommand implements Command {
 
-        if(req.getMethod().equals("POST")) {
-             if(req.getParameter("book")!=null) new OrderBookCommand().execute(req, resp);
-             bookQuery = prepareCatalogSQl(req);
-             AppContext.getInstance().setContext(req.getSession(), req.getParameter("command"), bookQuery);
+
+    AppContext context;
+    BookDAO bookDAO;
+    UsersBookDAO usersBookDAO;
+
+
+    /**
+     * Implements Command method execute
+     * Serve the requests to users subscriptions, including unsubscribe books
+     *
+     * @param req     HttpServletRequest request
+     * @param resp    HttpServletResponse request
+     * @param context AppContext with dependency injection
+     * @throws SQLException                   can be thrown during password validation
+     * @throws ServletException               throw to upper level, where it will be caught
+     * @throws IOException                    throw to upper level, where it will be caught
+     * @throws OperationNotSupportedException base Command exception
+     * @throws NoSuchAlgorithmException       base Command exception
+     * @throws CloneNotSupportedException     base Command exception
+     * @see com.my.library.servlets.CommandMapper
+     */
+    public String execute(HttpServletRequest req, HttpServletResponse resp, AppContext context) throws ServletException,
+            SQLException, OperationNotSupportedException, IOException, NoSuchAlgorithmException, CloneNotSupportedException {
+        this.context =context;
+        UsersBooks usersBooks = new UsersBooks();
+        this.usersBookDAO =(UsersBookDAO) context.getDAO(usersBooks);
+        this.bookDAO = (BookDAO) context.getDAO(new Book());
+
+        String page;
+        if (req.getSession().getAttribute("user")==null){
+            page = CommandMapper.getInstance().getCommand("catalog").execute(req, resp, context);
         }
-        else{
-            if (AppContext.getInstance().getContext(req.getSession(), req.getParameter("command"))!=null)
-                bookQuery = AppContext.getInstance().getContext(req.getSession(), req.getParameter("command"));
-            else {
-                bookQuery = prepareCatalogSQl(req);
-            }
+        else {
+            updateOrderList(req);
+            setRequestAttributes(req);
+            page = ConfigurationManager.getInstance().getProperty(ConfigurationManager.SUBSCRIPTIONS_PAGE_PATH);
+            SetWindowUrl.setUrl(page, req);
         }
-        ArrayList<Book> books = br.get(bookQuery);
-        req.setAttribute("books", books);
-        req.setAttribute("pagination", new PaginationManager(req, bookQuery));
-        if(user!=null) {
-            setOrders(req);
-        }
-        String page = ConfigurationManager.getInstance().getProperty(ConfigurationManager.CATALOG_PAGE_PATH);
-        SetWindowUrl.setUrl(page, req);
         return page;
     }
 
-    private SQLSmartQuery prepareCatalogSQl(HttpServletRequest req) {
-        SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(new Book().table);
-        String title= req.getParameter("title");
-        String author = req.getParameter("author");
-        String linesOnPage = req.getParameter("linesOnPage");
-        String pageParam = req.getParameter("page");
-        String orderParam = req.getParameter("order");
-        String sortParam = req.getParameter("sort");
-        String local = (String) req.getSession().getAttribute("language");
-        if (local!=null) {
-            local = local.equals("ua") ? "_ua" : "";
-        }
-        else local="";
-
-        int currentPage = 1;
-        if(pageParam!=null && !req.getMethod().equals("POST")){
-            currentPage = Integer.parseInt(pageParam);
-        }
-        int limit = linesOnPage!=null? Integer.parseInt(linesOnPage) :
-                Integer.parseInt(ConfigurationManager.getInstance().getProperty(ConfigurationManager.LINES_ON_PAGE));
-        if (title!=null && !title.equals("")) {
-            sq.filter("title"+local, title, SQLSmartQuery.Operators.ILIKE);
-            if (author != null && !author.equals("")) sq.logicOperator(SQLSmartQuery.LogicOperators.OR);
-        }
-        if (author != null && !author.equals("")) {
-            sq.filter("first_name"+local, author, SQLSmartQuery.Operators.ILIKE);
-            sq.logicOperator(SQLSmartQuery.LogicOperators.OR);
-            sq.filter("second_name"+local, author, SQLSmartQuery.Operators.ILIKE);
-        }
-        if(orderParam!=null){
-            if (!sortParam.equals("publishing_date")) sortParam=sortParam+local;
-            sq.order(sortParam, orderParam.equals("desc")? SQLSmartQuery.SortOrder.DESC: SQLSmartQuery.SortOrder.ASC);
-        }
-        else{
-            sq.order("title"+local);
-        }
-        sq.limit(limit);
-        sq.offset(limit*(currentPage-1));
-        return sq;
-    }
-
-    private SQLSmartQuery prepareOrdersSQl(HttpServletRequest req) {
-        SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(new UsersBooks().table);
+    /**
+     * Set request attributes for jsp page
+     * @param  req      HttpServletRequest request
+     * @throws          SQLException can be thrown during SQL operations
+     */
+    public void setRequestAttributes(HttpServletRequest req) throws SQLException {
+        SQLSmartQuery sqUserBooks = new SQLSmartQuery();
+        ArrayList<UsersBooks> usersBooks;
         User user = (User) req.getSession().getAttribute("user");
-        sq.filter("user_id", user.getId(), SQLSmartQuery.Operators.E);
-        sq.logicOperator(SQLSmartQuery.LogicOperators.AND);
-        sq.filter("issue_type", "return", SQLSmartQuery.Operators.NE);
-        sq.logicOperator(SQLSmartQuery.LogicOperators.AND);
-        sq.filter("issue_type", "canceled", SQLSmartQuery.Operators.NE);
-        return sq;
+        sqUserBooks.source(new UsersBooks().table);
+        sqUserBooks.filter("user_id", user.getId(), SQLSmartQuery.Operators.E);
+        sqUserBooks.order("status_id", SQLSmartQuery.SortOrder.ASC);
+        usersBooks = usersBookDAO.get(sqUserBooks);
+        SQLSmartQuery sqStatus = new SQLSmartQuery();
+        sqStatus.source(new Status().table);
+        SQLSmartQuery sqIssueTypes = new SQLSmartQuery();
+        sqIssueTypes.source(new IssueType().table);
+        req.setAttribute("usersBooks",usersBooks);
     }
 
-    public  void setOrders(HttpServletRequest req) throws SQLException {
-        SQLSmartQuery ordersQuery = prepareOrdersSQl(req);
-        ArrayList<UsersBooks> orders = UsersBookRepository.getInstance().get(ordersQuery);
-        Map<Integer, UsersBooks> ordersMap = orders.stream().
-                collect(Collectors.toMap(UsersBooks ::getBookId , x->x));
-        req.setAttribute("orders", ordersMap);
-        System.out.println("set ordered books to map = OK");
-    }
 
+    /**
+     * Update orders list in case of canceling order
+     * @param  req      HttpServletRequest request
+     * @throws          SQLException can be thrown during SQL operations
+     */
+    public void updateOrderList(HttpServletRequest req) throws SQLException {
+        String orderId = req.getParameter("cancelOrderId");
+        if(orderId!=null){
+            UsersBooks usersBooks = new UsersBooks();
+            SQLSmartQuery sq = new SQLSmartQuery();
+            sq.source(usersBooks.table);
+            sq.filter("id", Integer.parseInt(orderId), SQLSmartQuery.Operators.E);
+            usersBooks= usersBookDAO.get(sq).get(0);
+            usersBookDAO.delete(usersBooks);
+            SQLSmartQuery sqBook = new SQLSmartQuery();
+            Book book = new Book();
+            sqBook.source(book.table);
+            sqBook.filter("id", usersBooks.getBookId(), SQLSmartQuery.Operators.E);
+            book = bookDAO.get(sqBook).get(0);
+            book.setAvailableQuantity(book.getAvailableQuantity()+1);
+            bookDAO.update(book);
+        }
+    }
 
 }
+
+
 
 

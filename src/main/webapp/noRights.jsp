@@ -1,7 +1,7 @@
 
     <%@include file="includes/header.jsp" %>
 
-    <%@include file="includes/ok_issue.jsp" %>
+    <%@include file="includes/no_rights.jsp" %>
 
 
 </body>

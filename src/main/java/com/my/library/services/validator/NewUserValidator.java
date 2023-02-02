@@ -1,8 +1,15 @@
-package com.my.library.services;
+package com.my.library.services.validator;
 
 
+
+import com.my.library.db.DAO.UserDAO;
+import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.entities.User;
+import com.my.library.services.AppContext;
+import com.my.library.services.ErrorManager;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,14 +18,16 @@ public class NewUserValidator implements Validator {
 
     /**
      * Validate form data for RegisterCommand, check data for create new user
-     * @param  req      HttpServletRequest request with form data
+     *
+     * @param req     HttpServletRequest request with form data
+     * @param context
      * @return errors   Map with errors of form validation
-     * @see             com.my.library.servlets.CommandMapper
-     * @see             com.my.library.servlets.RegisterCommand
-     * @see             ErrorManager
+     * @see com.my.library.servlets.CommandMapper
+     * @see com.my.library.servlets.RegisterCommand
+     * @see ErrorManager
      */
 
-    public Map<String, Map<String,String>> validate(HttpServletRequest req) {
+    public Map<String, Map<String,String>> validate(HttpServletRequest req, AppContext context) throws SQLException {
         Map<String, Map<String,String>> errors = new HashMap<>();
         String login = req.getParameter("login");
         String firstName = req.getParameter("firstName");
@@ -38,6 +47,15 @@ public class NewUserValidator implements Validator {
             ErrorManager.add(errors, "overall", "All the fields are mandatory",
                     "Усі поля є обов'язковими");
             return errors;
+        }
+        SQLSmartQuery sq =new SQLSmartQuery();
+        User user = new User();
+        sq.source(user.table);;
+        sq.filter("login", login, SQLSmartQuery.Operators.E);
+        UserDAO userDAO = (UserDAO) context.getDAO(user);
+        if(userDAO.get(sq).size()>0){
+            ErrorManager.add(errors, "login","User with this login already exists",
+                    "Користувач з таким ім'ям вже існує");
         }
         if (!checkPasswords(password, passwordConfirmation))
             ErrorManager.add(errors, "password", "Password fields does not have the same values",

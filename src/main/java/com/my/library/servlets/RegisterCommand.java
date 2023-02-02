@@ -1,43 +1,62 @@
 package com.my.library.servlets;
-import com.my.library.db.entities.User;
-import com.my.library.services.ConfigurationManager;
-import com.my.library.services.Login;
-import com.my.library.services.MessageManager;
 
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.sql.SQLException;
+import com.my.library.db.DTO.UserDTO;
+import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.entities.User;
+import com.my.library.db.DAO.UserDAO;
+import com.my.library.services.*;
+import com.my.library.services.validator.NewUserValidator;
+
 import javax.naming.OperationNotSupportedException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-public class LoginCommand implements Command {
-    public String execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
-            IOException, SQLException, NoSuchAlgorithmException, OperationNotSupportedException, CloneNotSupportedException {
-        String page = new String();
-        User user = new User();
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
+import java.util.Map;
 
-        if (req.getMethod().equals("GET") | req.getParameter("language") != null)
-            page = ConfigurationManager.getInstance()
-                    .getProperty(ConfigurationManager.LOGIN_PAGE_PATH);
-        else {
-            user = Login.login(req);
-            if (user != null) {
-                System.out.println("Login succesfull");
-                req.getSession().setAttribute("user", user);
-                page = ConfigurationManager.getInstance()
-                        .getProperty(ConfigurationManager.MAIN_PAGE_PATH);
-            } else {
-                req.setAttribute("errorMessage",
-                        MessageManager.getInstance()
-                                .getProperty(MessageManager.LOGIN_ERROR_MESSAGE));
-                page = ConfigurationManager.getInstance()
-                        .getProperty(ConfigurationManager.LOGIN_PAGE_PATH);
+public class RegisterCommand implements Command {
+
+    AppContext context;
+    UserDAO userDAO;
+
+    /**
+     * Serve the requests to register new user including validation of form data
+     *
+     * @param req     HttpServletRequest request
+     * @param resp    HttpServletResponse request
+     * @param context
+     * @throws SQLException
+     * @throws ServletException               throw to upper level, where it will be caught
+     * @throws IOException                    throw to upper level, where it will be caught
+     * @throws OperationNotSupportedException can be thrown during password validation
+     * @throws NoSuchAlgorithmException       can be thrown during password validation
+     * @throws CloneNotSupportedException     can be thrown during password validation
+     * @see com.my.library.servlets.CommandMapper
+     * @see NewUserValidator
+     */
+    public String execute(HttpServletRequest req, HttpServletResponse resp, AppContext context) throws ServletException,
+            IOException, SQLException, NoSuchAlgorithmException, OperationNotSupportedException, CloneNotSupportedException {
+
+        String page = ConfigurationManager.getInstance().getProperty(ConfigurationManager.REGISTER_PAGE_PATH);
+        User user = new User();
+        this.context = context;
+        userDAO = (UserDAO) context.getDAO(user);
+        Map<String, Map<String,String>> errors;
+        if (req.getMethod().equals("POST")) {
+            errors = context.getValidator(req).validate(req, context);
+            if(errors.isEmpty()) {
+                user = UserDTO.toModel(req);
+                user.setPassword(PasswordHash.doHash(user.getPassword()));
+                userDAO.add(user);
+                page = ConfigurationManager.getInstance().getProperty(ConfigurationManager.LOGIN_PAGE_PATH);
+            }
+            else{
+                req.setAttribute("errorMessages", errors);
             }
         }
-        String page1 = page;
-        req.setAttribute("commandUrl", req.getContextPath()+
-                "/controller?command="+page1.replace(".jsp","" ).replace("/", "") );
+        SetWindowUrl.setUrl(page, req);
         return page;
     }
 }

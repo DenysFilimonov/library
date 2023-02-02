@@ -1,23 +1,27 @@
-package com.my.library.db.repository;
+package com.my.library.db.DAO;
 
 import com.my.library.db.ConnectionPool;
 import com.my.library.db.DTO.PublisherDTO;
 import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.entities.Author;
+import com.my.library.db.entities.IssueType;
 import com.my.library.db.entities.Publisher;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.sql.*;
 import java.util.ArrayList;
 
-public class PublisherRepository implements Repository<Publisher> {
+public class PublisherDAO implements DAO<Publisher> {
 
-    private static PublisherRepository instance = null;
+    private final BasicDataSource dataSource;
+    private static PublisherDAO instance = null;
 
-    private PublisherRepository(){
-
+    private PublisherDAO(BasicDataSource dataSource){
+        this.dataSource = dataSource;
     }
 
-    public static PublisherRepository getInstance(){
-        if (instance==null) instance=new PublisherRepository();
+    public static PublisherDAO getInstance(BasicDataSource dataSource){
+        if (instance==null) instance=new PublisherDAO(dataSource);
         return instance;
     }
 
@@ -27,7 +31,8 @@ public class PublisherRepository implements Repository<Publisher> {
         String INSERT_STRING = "insert into publishers " +
                 "(publisher, publisher_ua, country, country_ua) "+
                 "values (?, ?, ?, ?)";
-        try (Connection connection = ConnectionPool.dataSource.getConnection(); PreparedStatement insertPublisher = connection.prepareStatement(INSERT_STRING, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection connection = dataSource.getConnection(); 
+                PreparedStatement insertPublisher = connection.prepareStatement(INSERT_STRING, Statement.RETURN_GENERATED_KEYS)) {
             connection.setAutoCommit(false);
             insertPublisher.setString(1, publisher.getPublisher().get("en"));
             insertPublisher.setString(2, publisher.getPublisher().get("ua"));
@@ -57,7 +62,8 @@ public class PublisherRepository implements Repository<Publisher> {
     @Override
     public void delete(Publisher publisher) throws SQLException{
         String DELETE_STRING = "DELETE FROM publishers WHERE ID=?";
-        try (Connection connection = ConnectionPool.dataSource.getConnection(); PreparedStatement deletePublisher = connection.prepareStatement(DELETE_STRING, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection connection = dataSource.getConnection(); 
+                PreparedStatement deletePublisher = connection.prepareStatement(DELETE_STRING, Statement.RETURN_GENERATED_KEYS)) {
             connection.setAutoCommit(false);
             deletePublisher.setInt(1, publisher.getId());
             int affectedRows = deletePublisher.executeUpdate();
@@ -79,7 +85,8 @@ public class PublisherRepository implements Repository<Publisher> {
                 "country = ?, "+
                 "country_ua = ?, " +
                 " WHERE id = ?";
-        try (Connection connection = ConnectionPool.dataSource.getConnection(); PreparedStatement updatePublisher = connection.prepareStatement(UPDATE_STRING, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection connection = dataSource.getConnection(); 
+                PreparedStatement updatePublisher = connection.prepareStatement(UPDATE_STRING, Statement.RETURN_GENERATED_KEYS)) {
             connection.setAutoCommit(false);
             updatePublisher.setString(1, publisher.getPublisher().get("en"));
             updatePublisher.setString(2, publisher.getPublisher().get("ua"));
@@ -107,29 +114,29 @@ public class PublisherRepository implements Repository<Publisher> {
 
     @Override
     public int count(SQLSmartQuery query) throws SQLException {
-        return 0;
+        ArrayList<Publisher> list = get(query);
+        return list.isEmpty()? 0: list.size();
     }
 
     @Override
     public ArrayList<Publisher> get(SQLSmartQuery query) throws SQLException{
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet resultSet = null;
         ArrayList<Publisher> publishers = new ArrayList<>();
-        try {
-            connection = ConnectionPool.dataSource.getConnection();
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery(query.build());
+        try (Connection connection = dataSource.getConnection();
+            Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery(query.build());
             while (resultSet.next()) {
                 publishers.add(PublisherDTO.toModel(resultSet));
             }
         }
-        finally {
-            assert resultSet != null;
-            resultSet.close();
-            statement.close();
-            connection.close();
-        }
         return publishers;
+    }
+
+    @Override
+    public Publisher getOne(int id) throws SQLException {
+        SQLSmartQuery sq = new SQLSmartQuery();
+        sq.source(new Publisher().table);
+        sq.filter("id", id, SQLSmartQuery.Operators.E);
+        ArrayList<Publisher> publishers = get(sq);
+        return publishers.isEmpty()? null: publishers.get(0);
     }
 }

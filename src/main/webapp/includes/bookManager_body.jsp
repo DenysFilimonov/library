@@ -2,31 +2,57 @@
        value="${not empty user ? 'bookTableUser' : 'bookTableGuest'}"
        scope="session" />
 
-<div class="container-md w-60 text-center">
+ <div class="container-md col-9 text-center">
+
     <form method = "POST">
-        <div class="row mb-2">
+        <div class="row">
             <div class="col">
-                <input type="text" class="form-control" name  = "title" placeholder=<fmt:message key="catalog.label.title"/>>
-            </div>
-            <div class="col">
-                <input type="text" class="form-control" name = "author" placeholder=<fmt:message key="catalog.label.Author"/>>
+                <div class="input-group pb-2">
+                       <div class="input-group-text">
+                        <fmt:message key="catalog.label.title"/>
+                       </div>
+                       <input type="text" class="form-control form-control-sm"
+                       value = "${not empty param.title? param.title: ''}"
+                       name  = "title" placeholder=<fmt:message key="catalog.label.title"/>>
+                       <div class="input-group-text">
+                       <fmt:message key="catalog.label.author"/>
+                       </div>
+                       <input type="text" class="form-control form-control-sm"
+                       value = "${not empty param.author? param.author: ''}"
+                       name = "author" placeholder=<fmt:message key="catalog.label.Author"/>>
+                      <div class="input-group-text">
+                       <input type="submit" class="btn btn-primary btn-sm" value=<fmt:message key="login.label.find"/>>
+                      </div>
+                      <div class="input-group-text">
+
+                          <a class="btn btn-success"
+                          href="controller?command=newBook"
+                          > <fmt:message key="bookManager.label.new"/></a>
+                      </div>
+                </div>
             </div>
 
-            <div class="col">
-                <input type="submit" class="btn btn-primary" value=<fmt:message key="login.label.button"/>>
-            </div>
         </div>
-    </form>
+        </form>
 
+    <div class="bookManagerTable">
+        <div class = "tableHeader">
+                    <div class="head">
+                        ID
+                    </div>
+                    <div class ="arrows">
+                            <img class="arrow" src="SVG/sort-arrow-up.svg" onClick="javascript:sortFunction('id', 'asc');"/>
+                            <img class="arrow" src="SVG/sort-arrow-down.svg" onClick="javascript:sortFunction('id', 'desc');"/>
+                    </div>
+        </div>
 
-    <div class="${class_}">
         <div class = "tableHeader">
             <div class="head">
                 <fmt:message key="catalog.label.title"/>
             </div>
             <div class ="arrows">
-                    <img class="arrow" src="SVG/sort-arrow-up.svg" onClick="javascript:sortFunction('title', 'asc');"/>
-                    <img class="arrow" src="SVG/sort-arrow-down.svg" onClick="javascript:sortFunction('title', 'desc');"/>
+                    <img class="arrow" src="SVG/sort-arrow-up.svg" onClick="javascript:sortFunction('${language=='en'?'title':'title_ua'}', 'asc');"/>
+                    <img class="arrow" src="SVG/sort-arrow-down.svg" onClick="javascript:sortFunction('${language=='en'?'title':'title_ua'}', 'desc');"/>
             </div>
         </div>
         <div class = "tableHeader">
@@ -34,8 +60,8 @@
                 <fmt:message key="catalog.label.firstName"/>
             </div>
             <div class ="arrows">
-                <img class="arrow" src="SVG/sort-arrow-up.svg" onClick="javascript:sortFunction('first_name', 'asc');"/>
-                <img class="arrow" src="SVG/sort-arrow-down.svg" onClick="javascript:sortFunction('first_name', 'desc');"/>
+                <img class="arrow" src="SVG/sort-arrow-up.svg" onClick="javascript:sortFunction('${language=='en'?'first_name':'first_name_ua'}', 'asc');"/>
+                <img class="arrow" src="SVG/sort-arrow-down.svg" onClick="javascript:sortFunction('${language=='en'?'first_name':'first_name_ua'}', 'desc');"/>
             </div>
         </div>
         <div class = "tableHeader">
@@ -43,103 +69,120 @@
                 <fmt:message key="catalog.label.secondName"/>
             </div>
             <div class ="arrows">
-                <img class="arrow" src="SVG/sort-arrow-up.svg" onClick="javascript:sortFunction('second_name', 'asc');"/>
-                <img class="arrow" src="SVG/sort-arrow-down.svg" onClick="javascript:sortFunction('second_name', 'desc');"/>
+                <img class="arrow" src="SVG/sort-arrow-up.svg" onClick="javascript:sortFunction('${language=='en'?'second_name':'second_name'}', 'asc');"/>
+                <img class="arrow" src="SVG/sort-arrow-down.svg" onClick="javascript:sortFunction('${language=='en'?'second_name':'second_name'}', 'desc');"/>
             </div>
         </div>
-        <div class = "tableHeader">
-           <div class="head">
-                <fmt:message key="catalog.label.publisher"/>
-           </div>
-           <div class ="arrows">
-               <img class="arrow" src="SVG/sort-arrow-up.svg" onClick="javascript:sortFunction('publisher', 'asc');"/>
-               <img class="arrow" src="SVG/sort-arrow-down.svg" onClick="javascript:sortFunction('publisher', 'desc');"/>
-           </div>
-        </div>
-        <div class = "tableHeader">
-            <div class="head">
-                <fmt:message key="catalog.label.date"/>
-            </div>
-            <div class ="arrows">
-               <img class="arrow" src="SVG/sort-arrow-up.svg" onClick="javascript:sortFunction('publishing_date', 'asc');"/>
-               <img class="arrow" src="SVG/sort-arrow-down.svg" onClick="javascript:sortFunction('publishing_date', 'desc');"/>
-            </div>
-        </div>
-        <c:if test="${user!= null}">
-            <div class = "tableHeader"><fmt:message key="catalog.label.order"/></div>
+
+        <c:if test="${user.role.roleName['en']== 'administrator'}">
+            <div class = "tableHeader"><fmt:message key="bookManager.label.edit"/></div>
         </c:if>
 
         <c:forEach items="${books}" var="book">
+            <div class="tableCell">${book.id}</div>
             <div class="tableCell">${book.title[language]}</div>
             <div class="tableCell">${book.author.firstName[language]}</div>
             <div class="tableCell">${book.author.secondName[language]}</div>
-            <div class="tableCell">${book.publisher.publisher[language]}</div>
-            <div class="tableCell">${book.date}</div>
-            <c:if test="${(user!= null)}">
-                <div class="tableCell">
-            </c:if>
-                <c:if test="${user!= null and book.availableQuantity>0 and orders[book.id]==null}">
+            <div class="tableCell">
                     <button class="btn btn-primary"
-                        onClick = "a1_onclick(${book.id}, '${book.title[language]}',
-                        '${book.author.firstName[language]}', '${book.author.secondName[language]}',
-                        '${book.cover}',  '${book.publisher.publisher[language]}',  '${book.publisher.country[language]}',
-                         '${book.date}')"
-                    ><fmt:message key="catalog.label.order"/></button>
-                    <button type="button"
-                        id= "${book.id}"
-                        class="btn btn-primary"
-                        data-bs-toggle="modal"
-                        data-bs-target="#orderBook"
-                        hidden
-                    >
-                    </button>
-
-                </c:if>
-                <c:if test="${user!= null and book.availableQuantity<=0 and orders[book.id]==null}">
-                    <fmt:message key="catalog.label.na"/>
-                </c:if>
-                <c:if test="${user!=null and orders[book.id].status.status['en']=='order'}">
-                    <fmt:message key="catalog.label.ordered"/>
-                </c:if>
-                <c:if test="${user!=null and orders[book.id].status.status['en']=='issued'}">
-                    <fmt:message key="catalog.label.issued"/>
-                </c:if>
-                <c:if test="${(user!= null)}">
-                </div>
-
-    </c:if>
-    </c:forEach>
-</div>
-<div class="col">
-    <label class="mr-sm-2 margintop" for="inlineFormCustomSelect">Books on page</label>
-    <select class="custom-select mr-sm-2" id="linesOnPage" name ="linesOnPage" onChange="setLinesOnPage();">
-        <option value="2">2</option>
-        <option value="5">5</option>
-        <option value="10">10</option>
-    </select>
-</div>
-<div>
-    <fmt:message key="catalog.label.page"/>
-    <c:if test="${pagination!= null}">
-        <c:forEach var = "i" begin = "1" end = "${pagination.totalPages}">
-            <a href="/Library/controller?command=catalog&page=${i}"
-               class =  <c:if test="${pagination.currentPage==i}">"currentPage"</c:if>
-    >${i}&nbsp</a>
-    </c:forEach>
-    </c:if>
-</div>
+                        id="${book.id}"
+                        onClick = "editBook(
+                                    '${language}',
+                                    '${languageAlter}',
+                                    ${book.id},
+                                   '${book.isbn}',
+                                   '${book.title[language]}',
+                                   '${book.title[languageAlter]}',
+                                   '${book.author.id}',
+                                   '${book.author.firstName[language]}',
+                                   '${book.author.firstName[languageAlter]}',
+                                   '${book.author.secondName[language]}',
+                                   '${book.author.secondName[languageAlter]}',
+                                   '${book.publisher.id}',
+                                   '${book.publisher.publisher[language]}',
+                                   '${book.publisher.publisher[languageAlter]}',
+                                   '${book.publisher.country[language]}',
+                                   '${book.publisher.country[languageAlter]}',
+                                   '${book.date}',
+                                   '${book.quantity}',
+                                   '${book.cover}',
+                                   '${book.bookStore.caseNum}',
+                                   '${book.bookStore.shelfNum}',
+                                   '${book.bookStore.cellNum}',
+                                   '${book.genre.id}'
+                                   );"
+                    ><fmt:message key="bookManager.label.edit"/></button>
+            </div>
+        </c:forEach>
+    </div>
+    <%@include file="pagination.jsp" %>
+ </div>
 
 
 
 <script type="text/javascript">
-    function a1_onclick(id, title, firstName, secondName, cover, publisher, country, date) {
-        document.getElementById(id).click();
-        document.getElementById('titleModal').innerHTML=title;
-        document.getElementById('firstNameModal').innerHTML=firstName+" "+secondName;
-        var d = new Date(date);
-        document.getElementById('publisherModal').innerHTML=publisher +", "+ country +", "+d.getFullYear();
-        document.getElementById('book').value=id;
-        document.getElementById('coverImage').src=cover;
+
+    function setPage(pageNum){
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.set('page', pageNum);
+            window.location.search = urlParams;
+         }
+
+
+    function editBook( language,
+                       languageAlter,
+                       bookId,
+                       bookIsbn,
+                       bookTitle,
+                       bookTitleAlter,
+                       bookAuthorId,
+                       bookAuthorFirstName,
+                       bookAuthorFirstNameAlter,
+                       bookAuthorSecondName,
+                       bookAuthorSecondNameAlter,
+                       bookPublisherId,
+                       bookPublisher,
+                       bookPublisherAlter,
+                       bookPublisherCountry,
+                       bookPublisherCountryAlter,
+                       bookDate,
+                       bookQuantity,
+                       bookCover,
+                       bookStoreCase,
+                       bookStoreShelf,
+                       bookStoreCell,
+                       bookGenreId
+                       ) {
+       document.getElementById('idModal').value=bookId;
+       document.getElementById('isbnModal').value=bookIsbn;
+       document.getElementById('titleModal'+"_"+language).value=bookTitle;
+       document.getElementById('titleModal'+"_"+languageAlter).value=bookTitleAlter;
+       document.getElementById('authorIdModal').value=bookAuthorId;
+       document.getElementById('firstNameModal'+"_"+language).value=bookAuthorFirstName;
+       document.getElementById('firstNameModal'+"_"+languageAlter).value=bookAuthorFirstNameAlter;
+       document.getElementById('secondNameModal'+"_"+language).value=bookAuthorSecondName;
+       document.getElementById('secondNameModal'+"_"+languageAlter).value=bookAuthorSecondNameAlter;
+       document.getElementById('publisherIdModal').value=bookPublisherId;
+       document.getElementById('publisherModal'+"_"+language).value=bookPublisher;
+       document.getElementById('publisherModal'+"_"+languageAlter).value=bookPublisherAlter;
+       document.getElementById('countryModal'+"_"+language).value=bookPublisherCountry;
+       document.getElementById('countryModal'+"_"+languageAlter).value=bookPublisherCountryAlter;
+       document.getElementById('dateModal').value=bookDate;
+       document.getElementById('quantityModal').value=bookQuantity;
+       document.getElementById('coverImage').src=bookCover;
+       document.getElementById('coverModal').value=bookCover;
+       document.getElementById("modalOpenButton").click();
+       selectElement('genreSelectModal', bookGenreId);
+       selectElement('caseSelectModal', bookStoreCase);
+       selectElement('shelfSelectModal', bookStoreShelf);
+       selectElement('cellSelectModal', bookStoreCell);
+       console.log(bookCover);
+    }
+
+    function selectElement(id, valueToSelect) {
+        let element = document.getElementById(id);
+        element.value = valueToSelect;
+        console.log(id, valueToSelect);
     }
 
     function sortFunction(sort, order){
@@ -156,6 +199,8 @@
         urlParams.set('linesOnPage', lines);
         window.location.search = urlParams;
     }
+
+
 
 </script>
 

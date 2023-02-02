@@ -1,12 +1,11 @@
 <div class="container">
-        <form method="POST">
         <div class="container">
             <div class="formRow">
                 <div class="col">
                     <label for="login" class="form-label"><fmt:message key="register.label.login" /></label>
                 </div>
                 <div clas="col-9">
-                    <input type="text" class="form-control" id="login" name="login" required/>
+                    ${user.login}
                 </div>
             </div>
             <div class="formRow">
@@ -14,7 +13,7 @@
                     <label for="firstName" class="form-label"><fmt:message key="register.label.firstName" /></label>
                 </div>
                 <div clas="col-9">
-                     <input type="text" class="form-control" id="firstName" name="firstName" required/>
+                      ${user.firstName}
                 </div>
             </div>
             <div class="formRow">
@@ -22,7 +21,7 @@
                     <label for="secondName" class="form-label"><fmt:message key="register.label.secondName"/></label>
                 </div>
                 <div clas="col-9">
-                    <input type="text" class="form-control" id="secondName" name="secondName" required/>
+                     ${user.secondName}
                 </div>
             </div>
             <div class="formRow">
@@ -30,7 +29,7 @@
                     <label for="email" class="form-label"><fmt:message key="register.label.email" /></label>
                 </div>
                 <div clas="col-9">
-                    <input type="email" class="form-control" id="email" name="email" required/>
+                     ${user.email}
                 </div>
             </div>
             <div class="formRow">
@@ -38,58 +37,14 @@
                     <label for="phone" class="form-label"><fmt:message key="register.label.phone" /></label>
                 </div>
                 <div clas="col-9">
-                   <input type="tel" class="form-control" id="phone" name="phone" required onInput="phoneCheck()"/>
-                   <span id="phoneError"
-                         style="display:none"
-                         class = "error"
-                         ><fmt:message key="register.label.phoneError"/></span>
+                     ${user.phone}
+                </div>
+            </div>
 
-                </div>
-            </div>
-            <div class="formRow">
-                <div class = "col">
-                    <label for="password" class="form-label"><fmt:message key="register.label.password"/></label>
-                </div>
-                <div clas="col-9">
-                    <input type="password"
-                           class="form-control"
-                           id="password"
-                           name="password"
-                           required
-                           onInput = "comparePassword();"/>
-                </div>
-            </div>
-            <div class="formRow">
-                <div class = "col">
-                    <label for="password" class="form-label"><fmt:message key="register.label.passwordConfirm"/></label>
-                </div>
-                <div clas="col-9">
-                    <input type="password"
-                    class="form-control"
-                    id="passwordConfirmation"
-                    name="passwordConfirmation"
-                    required
-                    onInput = "comparePassword()";
-                    />
-                    <span id="passwordError"
-                          class = "error"
-                          style="display:none"><fmt:message key="register.label.passwordError"/></span>
-                </div>
-            </div>
         </div>
-            <c:if test="${errorMessage != null}">
-                <div class="center">
-                    <p class = "error"><fmt:message key="register.label.error"/></p>
-                </div>
-            </c:if>
-            <input type="submit"
-            class="btn btn-primary disabled"
-            value=<fmt:message key="register.label.button"/>
-            id="userFormSubmitButton"
-            >
 
+        <bu>
 
-        </form>
 
 
 </div>

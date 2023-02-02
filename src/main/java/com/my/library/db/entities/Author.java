@@ -1,16 +1,17 @@
-package com.library.db.entities;
+package com.my.library.db.entities;
 
 import java.time.LocalDate;
+import java.util.Map;
 
 public class Author extends Entity{
 
     {
         table = "authors";
     }
-    private String firstName;
-    private String secondName;
+    private Map<String,String> firstName;
+    private Map<String,String> secondName;
     private LocalDate birthday;
-    private String country;
+    private Map<String,String> country;
 
     public int getId() {
         return this.id;
@@ -20,19 +21,19 @@ public class Author extends Entity{
         this.id = id;
     }
 
-    public String getFirstName() {
+    public Map<String,String> getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
+    public void setFirstName(Map<String,String> firstName) {
         this.firstName = firstName;
     }
 
-    public String getSecondName() {
+    public Map<String,String> getSecondName() {
         return secondName;
     }
 
-    public void setSecondName(String second_name) {
+    public void setSecondName(Map<String,String> secondName) {
         this.secondName = secondName;
     }
 
@@ -44,11 +45,11 @@ public class Author extends Entity{
         this.birthday = birthday;
     }
 
-    public String getCountry() {
+    public Map<String,String> getCountry() {
         return country;
     }
 
-    public void setCountry(String country) {
+    public void setCountry(Map<String,String> country) {
         this.country = country;
     }
 }

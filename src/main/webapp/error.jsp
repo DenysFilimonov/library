@@ -16,16 +16,7 @@
 <body>
     <%@include file="includes/header.jsp" %>
     <div class="container-md w-50 text-center">
-    <c:if test="${error.getType() == 'SQL'}">
-        <div class = "errorHeader"> <c:out value="${error.getHeader()}" /></div>
-        <div class = "errorMessage"><c:out value="${error.getMessage()}"/></div>
-        <div class = "errorAdvise"><c:out value="${error.getAdvise()}"/></div>
-    </c:if>
-    <c:if test="${error.getType() == 'SERVLET'}">
-            <div class = "errorHeader"> <c:out value="${error.getHeader()}" /></div>
-            <div class = "errorMessage"><c:out value="${error.getMessage()}"/></div>
-            <div class = "errorAdvise"><c:out value="${error.getAdvise()}"/></div>
-        </c:if>
+            <div class = "errorHeader"> <c:out value="${errorMessage}" /></div>
     </div>
 </body>
 

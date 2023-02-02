@@ -1,13 +1,13 @@
 package com.my.library.servlets;
 
-import com.my.library.db.DTO.UsersBooksDTO;
+import com.my.library.db.DAO.StatusDAO;
 import com.my.library.db.SQLSmartQuery;
-import com.my.library.db.entities.Book;
-import com.my.library.db.entities.User;
-import com.my.library.db.entities.UsersBooks;
-import com.my.library.db.repository.BookRepository;
-import com.my.library.db.repository.UsersBookRepository;
+import com.my.library.db.entities.*;
+import com.my.library.db.DAO.BookDAO;
+import com.my.library.db.DAO.PaymentDAO;
+import com.my.library.db.DAO.UsersBookDAO;
 import com.my.library.services.*;
+import com.my.library.services.validator.ReturnBookValidator;
 
 import javax.naming.OperationNotSupportedException;
 import javax.servlet.ServletException;
@@ -15,150 +15,165 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Date;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class IssueOrderCommand implements Command {
-    public String execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
+public class ReturnBookCommand implements Command {
+
+    AppContext context;
+    UsersBookDAO usersBookDAO;
+    BookDAO bookDAO;
+    PaymentDAO paymentDAO;
+    StatusDAO statusDAO;
+
+    /**
+     * Serve the requests to retrieving book from reader
+     *
+     * @param req     HttpServletRequest request
+     * @param resp    HttpServletResponse request
+     * @param context AppContext with dependency injection
+     * @throws SQLException                   can be thrown during password validation
+     * @throws ServletException               throw to upper level, where it will be caught
+     * @throws IOException                    throw to upper level, where it will be caught
+     * @throws OperationNotSupportedException base Command exception
+     * @throws NoSuchAlgorithmException       base Command exception
+     * @throws CloneNotSupportedException     base Command exception
+     * @see com.my.library.servlets.CommandMapper
+     */
+    public String execute(HttpServletRequest req, HttpServletResponse resp, AppContext context) throws ServletException,
             SQLException, OperationNotSupportedException, IOException, NoSuchAlgorithmException, CloneNotSupportedException {
+        this.context =context;
+        usersBookDAO = (UsersBookDAO) context.getDAO(new UsersBooks());
+        bookDAO = (BookDAO) context.getDAO(new Book());
+        paymentDAO = (PaymentDAO) context.getDAO(new Payment());
+        statusDAO = (StatusDAO) context.getDAO(new Status());
         Map<String, Map<String, String>> errors = new HashMap<>();
         if (req.getSession().getAttribute("user") == null) {
             return ConfigurationManager.getInstance().getProperty(ConfigurationManager.ERROR_PAGE_PATH);
         }
 
-        if(Objects.equals(req.getMethod(), "POST")){
-            errors = FormValidator.validateIssue(req);
+        if(req.getMethod().equals("POST")){
+            errors = context.getValidator(req).validate(req,context );
             if(errors.isEmpty()) {
-                return doIssue(req);
+                UsersBooks ub = getUserBook(req).get(0);
+                float payment = getPayment(ub);
+                if (ub.getFineDays()==0 || payment>=ub.getFineDays())
+                    return doReturn(req);
+                else
+                    ErrorManager.add(errors, "fine", "There is unpaid debt, cant return book",
+                            "Є не погашена заборгованість за видану книгу, не можливо закрити заказ");
             }
-
         }
-        else if (req.getParameter("cancelIssue")!=null){
-            clearBlock(req);
-            return CommandMapper.getInstance().getCommand("orders").execute(req, resp);
+        else if (req.getParameter("cancelBook")!=null){
+            req.removeAttribute("returnBook");
+            req.removeAttribute("cancelBook");
+            return CommandMapper.getInstance().getCommand("readers").execute(req, resp, context);
         }
-
-        if(!blockOrder(req)) {
-            ErrorManager.add(errors, "id", "Order canceled or already taken by other librarian ",
-                    "Замовлення відхилене або вже оброблюється іншим оператором");
-            System.out.println("order already processed");
-            SetWindowUrl.setUrl(ConfigurationManager.getInstance().getProperty(ConfigurationManager.ISSUE_ORDER_PAGE_PATH), req);
-            return ConfigurationManager.getInstance().getProperty(ConfigurationManager.ISSUE_ORDER_PAGE_PATH);
+        else if (req.getParameter("amount")!=null){
+            doPayment(req);
         }
-        System.out.println("try to get userBook");
-        UsersBooks userBook = getUserBook(req);
-        if(userBook!=null) {
-            System.out.println("get userBook");
-            req.setAttribute("book", getBook(userBook));
-            Calendar cal = Calendar.getInstance();
-            userBook.setIssueDate(cal.getTime());
-            cal.add(Calendar.DATE,
-                    userBook.getIssueType().getId() == GetIssueTypes.get().get("subscription").getId()? 30: 1);
-            userBook.setTargetDate(cal.getTime());
-            req.setAttribute("userBook", userBook);
-
-        }
+        List<UsersBooks> usersBook =  getUserBook(req);
+        UsersBooks ub = usersBook.isEmpty()? new UsersBooks(): usersBook.get(0);
+        Book book = getBook(ub);
+        float payment = getPayment(ub);
+        req.setAttribute("payment", payment);
+        req.setAttribute("userBook", ub);
+        req.setAttribute("book", book);
+        System.out.println("Can i clear it? "+ req.getParameter("returnBook"));
         req.setAttribute("errors", errors);
-        SetWindowUrl.setUrl(ConfigurationManager.getInstance().getProperty(ConfigurationManager.ISSUE_ORDER_PAGE_PATH), req);
-        return ConfigurationManager.getInstance().getProperty(ConfigurationManager.ISSUE_ORDER_PAGE_PATH);
-
+        SetWindowUrl.setUrl(ConfigurationManager.getInstance().getProperty(ConfigurationManager.RETURN_BOOK_PAGE_PATH), req);
+        return ConfigurationManager.getInstance().getProperty(ConfigurationManager.RETURN_BOOK_PAGE_PATH);
     }
 
-    private String doIssue(HttpServletRequest req) throws SQLException {
+    /**
+     * Perform return operation
+     * @param  req      HttpServletRequest request
+     * @throws          SQLException can be thrown during password validation
+     */
+    private String doReturn(HttpServletRequest req) throws SQLException {
+        List<UsersBooks> usersBooks = getUserBook(req);
+        UsersBooks ub  = new UsersBooks();
+        if(usersBooks.isEmpty()) throw new SQLException("cant find specified order with ID"+req.getParameter("userBookId"));
+        ub = usersBooks.get(0);
+        ub.setStatus(GetStatuses.get(statusDAO).get("return"));
+        ub.setReturnDate(today());
+        User user = (User) req.getSession().getAttribute("user");
+        ub.setLibrarianId(user.getId());
+        usersBookDAO.update(ub);
+        Book book = getBook(ub);
+        book.setAvailableQuantity(book.getAvailableQuantity()+1);
+        bookDAO.update(book);
+        SetWindowUrl.setUrl(ConfigurationManager.getInstance().getProperty(ConfigurationManager.OK_RETURN_PAGE_PATH), req);
+        return ConfigurationManager.getInstance().getProperty(ConfigurationManager.OK_RETURN_PAGE_PATH);
+    }
+
+    /**
+     * Get current order regarding request param
+     * @param  req      HttpServletRequest request
+     * @throws          SQLException can be thrown during password validation
+     */
+    private ArrayList<UsersBooks> getUserBook(HttpServletRequest req) throws SQLException {
         UsersBooks ub = new UsersBooks();
         SQLSmartQuery sq = new SQLSmartQuery();
         sq.source(ub.table);
-        sq.filter("id", Integer.parseInt(req.getParameter("userBookId")), SQLSmartQuery.Operators.E);
-        sq.logicOperator(SQLSmartQuery.LogicOperators.AND);
-        sq.filter("status_id", GetStatuses.get().get("process").getId(), SQLSmartQuery.Operators.E);
-
-        ArrayList<UsersBooks> usersBooks = UsersBookRepository.getInstance().get(sq);
-        if(usersBooks.isEmpty()) throw new SQLException();
-        ub = usersBooks.get(0);
-        ub.setStatus(GetStatuses.get().get("issued"));
-        ub.setTargetDate(Date.valueOf(req.getParameter("targetDate")));
-        ub.setIssueDate(Date.valueOf(req.getParameter("issueDate")));
-        UsersBookRepository.getInstance().update(ub);
-        SetWindowUrl.setUrl(ConfigurationManager.getInstance().getProperty(ConfigurationManager.OK_ISSUE_PAGE_PATH), req);
-        return ConfigurationManager.getInstance().getProperty(ConfigurationManager.OK_ISSUE_PAGE_PATH);
-    }
-
-
-    private void clearBlock(HttpServletRequest req) throws SQLException {
-        ArrayList<UsersBooks> ub;
-        SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(new UsersBooks().table);
-        sq.filter("id", Integer.parseInt(req.getParameter("cancelIssue")), SQLSmartQuery.Operators.E);
-        sq.logicOperator(SQLSmartQuery.LogicOperators.AND);
-        sq.filter("status_id", GetStatuses.get().get("process").getId(), SQLSmartQuery.Operators.E);
-        ub = UsersBookRepository.getInstance().get(sq);
-        if(!ub.isEmpty()){
-            ub.get(0).setStatus(GetStatuses.get().get("order"));
-            ub.get(0).setLibrarianId(0);
-            UsersBookRepository.getInstance().update(ub.get(0));
-        }
-
-
-    }
-
-    private boolean blockOrder(HttpServletRequest req) throws SQLException {
-        UsersBooks ub = getUserBook(req);
-        if(ub!=null){
-            ub.setStatus(GetStatuses.get().get("process"));
-            User user = (User) req.getSession().getAttribute("user");
-            ub.setLibrarianId(user!=null? user.getId():null);
-            UsersBookRepository.getInstance().update(ub);
-            req.getSession().setAttribute("userBookProcessed", ub);
-            return true;
-        }
-        return false;
-    }
-
-    private Book getBook(UsersBooks usersBooks) throws SQLException {
-        Book book = new Book();
-        ArrayList<Book> books;
-        SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(book.table);
-        sq.filter("id", usersBooks.getBookId(), SQLSmartQuery.Operators.E);
-        books = BookRepository.getInstance().get(sq);
-        if (!books.isEmpty()) book=books.get(0);
-        return book;
-    }
-
-    private UsersBooks getUserBook(HttpServletRequest req) throws SQLException {
-        ArrayList<UsersBooks> ub;
-        UsersBooks usersBooks;
-        SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(new UsersBooks().table);
-        int id = req.getParameter("userBookId")!=null?
-                Integer.parseInt(req.getParameter("userBookId")):
-                req.getParameter("issueOrderId")!=null?Integer.parseInt(req.getParameter("issueOrderId")):0;
-        sq.groupOperator(SQLSmartQuery.GroupOperators.GROUP);
+        String idString = req.getParameter("userBookId")==null?
+                req.getParameter("returnBook"):req.getParameter("userBookId");
+        int id= Integer.parseInt(idString);
         sq.filter("id", id, SQLSmartQuery.Operators.E);
         sq.logicOperator(SQLSmartQuery.LogicOperators.AND);
-        sq.filter("status_id", GetStatuses.get().get("order").getId(), SQLSmartQuery.Operators.E);
-        sq.groupOperator(SQLSmartQuery.GroupOperators.UNGROUP);
-        sq.logicOperator(SQLSmartQuery.LogicOperators.OR);
-        sq.groupOperator(SQLSmartQuery.GroupOperators.GROUP);
-        sq.filter("id", id, SQLSmartQuery.Operators.E);
-        sq.logicOperator(SQLSmartQuery.LogicOperators.AND);
-        sq.filter("status_id", GetStatuses.get().get("process").getId(), SQLSmartQuery.Operators.E);
-        sq.logicOperator(SQLSmartQuery.LogicOperators.AND);
-        User user = (User )req.getSession().getAttribute("user");
-        sq.filter("librarian_id", user.getId() , SQLSmartQuery.Operators.E);
-        sq.groupOperator(SQLSmartQuery.GroupOperators.UNGROUP);
-        ub = UsersBookRepository.getInstance().get(sq);
-        if (ub.isEmpty()){
-            return null;
+        sq.filter("status_id", GetStatuses.get(statusDAO).get("issued").getId(), SQLSmartQuery.Operators.E);
+        ArrayList<UsersBooks> usersBooks = usersBookDAO.get(sq);
+        if (!usersBooks.isEmpty()) {
+           usersBooks.get(0).setReturnDate(today());
         }
-        usersBooks = ub.get(0);
         return usersBooks;
     }
 
+    /**
+     * Get details of book that is operated
+     * @param  userBook UsersBooks instance
+     * @throws          SQLException can be thrown during password validation
+     */
+    private Book getBook(UsersBooks userBook) throws SQLException {
+        return bookDAO.getOne(userBook.getBookId());
+    }
 
+    /**
+     * Perform payment operation
+     * @param  req      HttpServletRequest request
+     * @throws          SQLException can be thrown during password validation
+     */
+    private void doPayment(HttpServletRequest req) throws SQLException {
+        Payment payment = new Payment();
+        payment.setOrderId(Integer.parseInt(req.getParameter("userBookId")));
+        payment.setDate(new java.sql.Date(today().getTime()));
+        payment.setAmount(Float.parseFloat(req.getParameter("amount")));
+        paymentDAO.add(payment);
+    }
+
+    /**
+     * Perform date Today() operation
+     * @return  Date
+     */
+    private Date today(){
+        Calendar cal = Calendar.getInstance();
+        return cal.getTime();
+    }
+
+    /**
+     * calculate fine amount
+     * @param  userBook  UserBook instance
+     * @return float    amount what reader has to pay
+     * @throws          SQLException can be thrown during password validation
+     */
+    private float getPayment(UsersBooks userBook) throws SQLException {
+        SQLSmartQuery sq = new SQLSmartQuery();
+        sq.source(new Payment().table);
+        sq.filter("order_id", userBook.getId(), SQLSmartQuery.Operators.E);
+        ArrayList<Payment> payments = paymentDAO.get(sq);
+        double payment = payments.isEmpty()? 0: payments.stream().mapToDouble(Payment::getAmount).sum();
+        return (float) payment;
+    }
 
 }
 

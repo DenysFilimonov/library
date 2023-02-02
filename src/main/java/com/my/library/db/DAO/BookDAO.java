@@ -1,45 +1,46 @@
-package com.my.library.db.repository;
+package com.my.library.db.DAO;
 import com.my.library.db.ConnectionPool;
 import com.my.library.db.DTO.BookDTO;
 import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.entities.Author;
 import com.my.library.db.entities.Book;
 import com.my.library.services.ConfigurationManager;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.sql.*;
 import java.util.ArrayList;
 
-public class BookRepository implements Repository<Book> {
+public class BookDAO implements DAO<Book> {
+    
+    private final BasicDataSource dataSource;
+    
+    private static BookDAO instance = null;
 
-    private static BookRepository instance = null;
-
-    public static BookRepository getInstance(){
-        if (instance==null) instance = new BookRepository();
+    public static BookDAO getInstance(BasicDataSource dataSource){
+        if (instance==null) instance = new BookDAO(dataSource);
         return instance;
     }
-   private BookRepository(){
 
+    public static void destroyInstance(){
+        instance = null;
+    }
+
+   private BookDAO(BasicDataSource dataSource){
+        this.dataSource = dataSource;
    }
 
     public int count(SQLSmartQuery query) throws SQLException {
-       Connection connection = null;
-       Statement statement = null;
        ResultSet resultSet = null;
        int count=0;
-       try {
-           connection = ConnectionPool.dataSource.getConnection();
-           statement = connection.createStatement();
+       try  (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement()) {
            resultSet = statement.executeQuery(query.buildCount());
            while (resultSet.next()) {
-            count = resultSet.getInt(1);
+               count = resultSet.getInt(1);
            }
-       } finally {
-           assert resultSet != null;
-           resultSet.close();
-           statement.close();
-           connection.close();
        }
        return count;
-   }
+    }
 
     @Override
     public void add(Book book) throws SQLException {
@@ -47,7 +48,8 @@ public class BookRepository implements Repository<Book> {
                 "(isbn, title, title_ua, author_id, genre_id, publisher_id, publishing_date, quantity,"+
                 "available_quantity, book_store_id, cover) "+
                 "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (Connection connection = ConnectionPool.dataSource.getConnection(); PreparedStatement insertBook = connection.prepareStatement(INSERT_STRING, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection connection = dataSource.getConnection();
+            PreparedStatement insertBook = connection.prepareStatement(INSERT_STRING, Statement.RETURN_GENERATED_KEYS)){
             connection.setAutoCommit(false);
             insertBook.setString(1, book.getIsbn());
             insertBook.setString(2, book.getTitle().get("en"));
@@ -60,7 +62,6 @@ public class BookRepository implements Repository<Book> {
             insertBook.setInt(9, book.getAvailableQuantity());
             insertBook.setInt(10, book.getBookStore().getId());
             insertBook.setString(11, book.getCover());
-
             int affectedRows = insertBook.executeUpdate();
             if (affectedRows == 0) {
                 throw new SQLException("Creating book failed, no rows affected.");
@@ -77,13 +78,14 @@ public class BookRepository implements Repository<Book> {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+       
     }
 
 
     @Override
     public void delete(Book book) throws SQLException {
     String DELETE_STRING = "DELETE FROM books WHERE ID=?";
-        try (Connection connection = ConnectionPool.dataSource.getConnection(); PreparedStatement deleteBook = connection.prepareStatement(DELETE_STRING, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection connection = dataSource.getConnection(); PreparedStatement deleteBook = connection.prepareStatement(DELETE_STRING, Statement.RETURN_GENERATED_KEYS)) {
             connection.setAutoCommit(false);
             deleteBook.setInt(1, book.getId());
             int affectedRows = deleteBook.executeUpdate();
@@ -114,11 +116,8 @@ public class BookRepository implements Repository<Book> {
                 "cover=?, "+
                 "deleted=? "+
                 " WHERE id = ?";
-        Connection connection = null;
-        PreparedStatement updateBook = null;
-        try {
-            connection = ConnectionPool.dataSource.getConnection();
-            updateBook = connection.prepareStatement(UPDATE_STRING, Statement.RETURN_GENERATED_KEYS);
+        try (Connection connection = dataSource.getConnection();
+            PreparedStatement updateBook = connection.prepareStatement(UPDATE_STRING, Statement.RETURN_GENERATED_KEYS)){
             connection.setAutoCommit(false);
             updateBook.setString(1, book.getIsbn());
             updateBook.setString(2, book.getTitle().get("en"));
@@ -151,33 +150,28 @@ public class BookRepository implements Repository<Book> {
         catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        finally {
-            assert updateBook != null;
-            updateBook.close();
-            connection.close();
-        }
     }
 
     @Override
     public ArrayList<Book> get(SQLSmartQuery query) throws SQLException {
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet resultSet = null;
         ArrayList<Book> books = new ArrayList<>();
-        try {
-            connection = ConnectionPool.dataSource.getConnection();
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery(query.build());
+        try (Connection connection = dataSource.getConnection();
+            Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery(query.build());
             while (resultSet.next()) {
                 books.add(BookDTO.toModel(resultSet));
             }
-        } finally {
-            assert resultSet != null;
-            resultSet.close();
-            statement.close();
-            connection.close();
-        }
+        } 
     return books;
+    }
+
+    @Override
+    public Book getOne(int id) throws SQLException {
+        SQLSmartQuery sq = new SQLSmartQuery();
+        sq.source(new Book().table);
+        sq.filter("id", id, SQLSmartQuery.Operators.E);
+        ArrayList<Book> books = get(sq);
+        return books.isEmpty()? null: books.get(0);
     }
 
 }

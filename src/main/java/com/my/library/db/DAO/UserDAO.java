@@ -1,21 +1,31 @@
-package com.my.library.db.repository;
+package com.my.library.db.DAO;
 import com.my.library.db.ConnectionPool;
 import com.my.library.db.DTO.UserDTO;
 import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.entities.Author;
+import com.my.library.db.entities.Publisher;
 import com.my.library.db.entities.User;
+import org.apache.commons.dbcp2.BasicDataSource;
+
 import java.sql.*;
 import java.util.ArrayList;
 
-public class UserRepository implements Repository<User> {
+public class UserDAO implements DAO<User> {
 
+    private final BasicDataSource dataSource;
+    private static UserDAO instance = null;
 
-    private static UserRepository instance = null;
-
-    public static UserRepository getInstance(){
-        if (instance==null) instance = new UserRepository();
+    public static UserDAO getInstance(BasicDataSource dataSource){
+        if (instance==null) instance = new UserDAO(dataSource);
         return instance;
     }
-    private UserRepository(){
+
+    public static void destroyInstance(){
+       instance =null;
+    }
+
+    private UserDAO(BasicDataSource dataSource){
+        this.dataSource = dataSource;
 
     }
     @Override
@@ -23,11 +33,8 @@ public class UserRepository implements Repository<User> {
         String INSERT_STRING = "insert into users " +
                 "(login, pass_word, first_name, second_name, email, phone, role_id, active)"+
                 "values (?, ?, ?, ?, ?, ?, ?, ?)";
-        Connection connection = null;
-        PreparedStatement addUser = null;
-        try {
-            connection = ConnectionPool.dataSource.getConnection();
-            addUser = connection.prepareStatement(INSERT_STRING, Statement.RETURN_GENERATED_KEYS);
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement addUser = connection.prepareStatement(INSERT_STRING, Statement.RETURN_GENERATED_KEYS)){
             connection.setAutoCommit(false);
             addUser.setString(1, user.getLogin());
             addUser.setString(2, user.getPassword());
@@ -54,23 +61,15 @@ public class UserRepository implements Repository<User> {
         }
         catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-                assert addUser != null;
-                addUser.close();
-                connection.close();
-
-        }
+        }    
     }
 
 
     @Override
     public void delete(User user) throws SQLException {
     String DELETE_STRING = "DELETE FROM USERS WHERE ID=?";
-        Connection connection = null;
-        PreparedStatement deleteUser = null;
-        try {
-            connection = ConnectionPool.dataSource.getConnection();
-            deleteUser = connection.prepareStatement(DELETE_STRING, Statement.RETURN_GENERATED_KEYS);
+        try (Connection connection = dataSource.getConnection();
+            PreparedStatement deleteUser = connection.prepareStatement(DELETE_STRING, Statement.RETURN_GENERATED_KEYS)){
             connection.setAutoCommit(false);
             deleteUser.setInt(1, user.getId());
             int affectedRows = deleteUser.executeUpdate();
@@ -81,11 +80,6 @@ public class UserRepository implements Repository<User> {
         }
         catch (SQLException e) {
             throw new SQLException(e);
-        }
-        finally {
-            assert deleteUser != null;
-            deleteUser.close();
-            connection.close();
         }
     }
 
@@ -102,11 +96,8 @@ public class UserRepository implements Repository<User> {
                 "role_id=?," +
                 "active=?" +
                 " WHERE id = ?";
-        Connection connection = null;
-        PreparedStatement updateUser = null;
-        try {
-            connection = ConnectionPool.dataSource.getConnection();
-            updateUser = connection.prepareStatement(UPDATE_STRING, Statement.RETURN_GENERATED_KEYS);
+        try (Connection connection = dataSource.getConnection();
+                PreparedStatement updateUser = connection.prepareStatement(UPDATE_STRING, Statement.RETURN_GENERATED_KEYS)) {
             connection.setAutoCommit(false);
             updateUser.setString(1, user.getLogin());
             updateUser.setString(2, user.getPassword());
@@ -123,42 +114,36 @@ public class UserRepository implements Repository<User> {
             }
 
             connection.commit();
-
-
-        } finally {
-            assert updateUser != null;
-            updateUser.close();
-            connection.close();
         }
+
     }
 
     @Override
     public int count(SQLSmartQuery query) throws SQLException {
-        return 0;
+        ArrayList<User> list = get(query);
+        return list.isEmpty()? 0: list.size();
     }
 
     @Override
     public ArrayList<User> get(SQLSmartQuery query) throws SQLException {
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet resultSet = null;
         ArrayList<User> users = new ArrayList<>();
-        try {
-            connection = ConnectionPool.dataSource.getConnection();
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery(query.build());
+        try (Connection connection = dataSource.getConnection();
+            Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery(query.build());
             while (resultSet.next()) {
                 users.add(UserDTO.toModel(resultSet));
             }
         }
-        finally {
-            assert resultSet != null;
-            resultSet.close();
-            statement.close();
-            connection.close();
-        }
     return users;
     }
 
+    @Override
+    public User getOne(int id) throws SQLException {
+        SQLSmartQuery sq = new SQLSmartQuery();
+        sq.source(new User().table);
+        sq.filter("id", id, SQLSmartQuery.Operators.E);
+        ArrayList<User> users = get(sq);
+        return users.isEmpty()? null: users.get(0);
+    }
 
 }

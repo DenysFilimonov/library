@@ -1,6 +1,6 @@
 package com.my.library.db.DTO;
 
-import com.my.library.db.entities.Genre;
+import com.my.library.db.entities.BookStore;
 import com.my.library.db.entities.Role;
 
 import javax.naming.OperationNotSupportedException;
@@ -9,19 +9,22 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-interface RoleDTO {
+public interface BookStoreDTO {
 
-    static Role toView(Role role) throws OperationNotSupportedException {
-        throw new OperationNotSupportedException();
-    };
+    static BookStore toView(BookStore bookStore) throws OperationNotSupportedException {
+        return bookStore;
+    }
 
-    static Role toModel(ResultSet rs) throws  SQLException {
-        Role role = new Role();
-        Map<String,String> rl = new HashMap<>();
-        role.setId(rs.getInt("role_id"));
-        rl.put("en", rs.getString("role"));
-        rl.put("ua", rs.getString("role_ua"));
-        role.setRoleName(rl);
-        return role;
+    static BookStore toModel(ResultSet rs) throws  SQLException {
+        BookStore bookStore = new BookStore();
+        try{
+            bookStore.setId(rs.getInt("book_store_id"));
+        }catch (SQLException e) {
+            bookStore.setId(rs.getInt("id"));
+        }
+        bookStore.setCaseNum(rs.getInt("case_num"));
+        bookStore.setShelfNum(rs.getInt("shelf_num"));
+        bookStore.setCellNum(rs.getInt("cell_num"));
+        return bookStore;
     }
 }

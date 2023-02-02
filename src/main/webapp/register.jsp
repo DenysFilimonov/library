@@ -1,4 +1,4 @@
 
     <%@include file="includes/header.jsp" %>
-    <%@include file="includes/login_body.jsp" %>
+    <%@include file="includes/user_form.jsp" %>
 </html>

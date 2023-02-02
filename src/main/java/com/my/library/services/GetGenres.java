@@ -1,24 +1,28 @@
 package com.my.library.services;
 
 import com.my.library.db.SQLSmartQuery;
-import com.my.library.db.entities.IssueType;
-import com.my.library.db.entities.Status;
-import com.my.library.db.repository.IssueTypeRepository;
-import com.my.library.db.repository.StatusRepository;
+import com.my.library.db.entities.Genre;
+import com.my.library.db.DAO.GenreDAO;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class GetStatuses {
+public class GetGenres {
 
-    public static Map<String, Status> getTypes() throws SQLException {
+    /**
+     * Return map with book genres that used for library catalog mapped with english genre name
+     * @see     Genre
+     * @see     com.my.library.db.entities.Entity
+     * @see     GenreDAO
+     */
+
+    public static Map<String, Genre> get(GenreDAO genreDAO) throws SQLException {
         SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(new Status().table);
-        ArrayList<Status> st = StatusRepository.getInstance().get(sq);
-        Map<String, Status> issueMap=st.stream().collect(Collectors.toMap(x->x.getStatus().get("en"), x->x));
-        return issueMap;
+        sq.source(new Genre().table);
+        ArrayList<Genre> st = genreDAO.get(sq);
+        return st.stream().collect(Collectors.toMap(x->x.getGenre().get("en"), x->x));
     }
 
 }

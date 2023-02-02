@@ -1,18 +1,14 @@
 package com.my.library.db;
 
-
-//import com.zaxxer.hikari.HikariConfig;
-//import com.zaxxer.hikari.HikariDataSource;
 import com.my.library.db.entities.Entity;
 import org.apache.commons.dbcp2.BasicDataSource;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
 
-public class ConnectionPool2 {
+public class ConnectionPool {
 
     public static BasicDataSource dataSource = null;
 
@@ -23,7 +19,7 @@ public class ConnectionPool2 {
                 prop.load(in);
                 Class.forName( "org.postgresql.Driver" );
             } catch (IOException | ClassNotFoundException | RuntimeException ex) {
-                System.out.println(ex);
+               throw new RuntimeException(ex);
             }
             dataSource = new BasicDataSource();
             dataSource.setUrl(prop.getProperty("jdbc.url"));
@@ -32,7 +28,6 @@ public class ConnectionPool2 {
             dataSource.setMinIdle(5);
             dataSource.setMaxIdle(10);
             dataSource.setMaxTotal(25);
-            System.out.println("Connection Successful");
 
     }
 }

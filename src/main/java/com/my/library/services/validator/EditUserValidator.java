@@ -1,10 +1,14 @@
-package com.my.library.services;
+package com.my.library.services.validator;
 
 
 
 import com.my.library.db.SQLSmartQuery;
 import com.my.library.db.entities.*;
 import com.my.library.db.DAO.*;
+import com.my.library.services.AppContext;
+import com.my.library.services.ErrorManager;
+import com.my.library.services.PasswordHash;
+
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
@@ -16,21 +20,27 @@ import java.util.regex.Pattern;
 
 public class EditUserValidator implements Validator{
 
+    AppContext context;
+    UserDAO userDAO;
+
     /**
      * Validate form data for AccountCommand
-     * @param  req      HttpServletRequest request with form data
+     *
+     * @param req     HttpServletRequest request with form data
+     * @param context
      * @return errors   Map with errors of form validation
-     * @see             com.my.library.servlets.CommandMapper
-     * @see             com.my.library.servlets.AccountCommand
-     * @see             ErrorManager
-     * @throws          SQLException can be thrown during password validation
-     * @throws          UnsupportedEncodingException can be thrown during password encryption
-     * @throws          NoSuchAlgorithmException can be thrown during password encryption
+     * @throws SQLException                 can be thrown during password validation
+     * @throws UnsupportedEncodingException can be thrown during password encryption
+     * @throws NoSuchAlgorithmException     can be thrown during password encryption
+     * @see com.my.library.servlets.CommandMapper
+     * @see com.my.library.servlets.AccountCommand
+     * @see ErrorManager
      */
 
-    public  Map<String, Map<String,String>> validate(HttpServletRequest req) throws SQLException,
+    public  Map<String, Map<String,String>> validate(HttpServletRequest req, AppContext context) throws SQLException,
             UnsupportedEncodingException, NoSuchAlgorithmException {
-        Map<String, Map<String,String>> errors = new HashMap<>();
+        this.userDAO = (UserDAO) context.getDAO(new User());
+        Map<String, Map<String, String>> errors = new HashMap<>();
         String login = req.getParameter("login");
         String firstName = req.getParameter("firstName");
         String secondName = req.getParameter("secondName");
@@ -40,7 +50,7 @@ public class EditUserValidator implements Validator{
         String password = req.getParameter("password");
         String passwordConfirmation = req.getParameter("passwordConfirmation");
         User user = (User) req.getSession().getAttribute("user");
-        if (user==null) {
+        if (user == null) {
             ErrorManager.add(errors, "overall", "There is not user registered in this sesssion",
                     "Такого користувача не зареєстровано в системі");
             return errors;
@@ -49,9 +59,12 @@ public class EditUserValidator implements Validator{
                 || (Objects.equals(firstName, "") || firstName == null)
                 || (Objects.equals(secondName, "") || secondName == null)
                 || (Objects.equals(email, "") || email == null)
-                || (Objects.equals(phone, "") ||phone == null))
+                || (Objects.equals(phone, "") || phone == null))
+        {
             ErrorManager.add(errors, "overall", "All the fields are mandatory",
                     "Усі поля є обов'язковими");
+            return errors;
+    }
         if(!Objects.equals(oldPassword, "") && oldPassword!=null) {
             if (!checkOldPassword(oldPassword, user.getId()))
                 ErrorManager.add(errors, "oldPassword", "Password is incorrect",
@@ -70,7 +83,7 @@ public class EditUserValidator implements Validator{
             sq.filter("email", email, SQLSmartQuery.Operators.E);
             sq.logicOperator(SQLSmartQuery.LogicOperators.AND);
             sq.filter("id", user.getId(), SQLSmartQuery.Operators.NE);
-            if(!UserDAO.getInstance().get(sq).isEmpty())
+            if(!userDAO.get(sq).isEmpty())
                 ErrorManager.add(errors, "email","Email number already belongs to another user "
                         , "Адресу вже привязано до іншого користувача");
         }
@@ -83,11 +96,19 @@ public class EditUserValidator implements Validator{
             sq.filter("phone", phone, SQLSmartQuery.Operators.E);
             sq.logicOperator(SQLSmartQuery.LogicOperators.AND);
             sq.filter("id", user.getId(), SQLSmartQuery.Operators.NE);
-            if(!UserDAO.getInstance().get(sq).isEmpty())
+            if(!userDAO.get(sq).isEmpty())
                 ErrorManager.add(errors, "phone","Phone number already belongs to another user "
                         , "Номер вже привязано до іншого користувача");
         }
 
+        if(login!=null && login.length()>20) ErrorManager.add(errors, "login","Login should be up to 20 character long "
+                , "Логін не повинен бути довщим за 20 символів");
+        if(firstName!=null && firstName.length()>20) ErrorManager.add(errors, "firstName","Name should be up to 20 character long "
+                , "Ім'я не повинно бути довщим за 20 символів");
+        if(secondName!=null && secondName.length()>30) ErrorManager.add(errors, "lastName","Last name should be up to 30 character long "
+                , "Прізвище не повиненне бути довщим за 30 символів");
+        if(password!=null &&password.length()>30) ErrorManager.add(errors, "password","password  should be up to 30 character long "
+                , "Пароль не повиненен бути довщим за 30 символів");
 
 
         return errors;
@@ -114,13 +135,13 @@ public class EditUserValidator implements Validator{
         return matcher.find();
     }
 
-    private static boolean checkOldPassword(String password, int id) throws SQLException, UnsupportedEncodingException, NoSuchAlgorithmException {
+    private boolean checkOldPassword(String password, int id) throws SQLException, UnsupportedEncodingException, NoSuchAlgorithmException {
         SQLSmartQuery sq = new SQLSmartQuery();
         sq.source(new User().table);
         sq.filter("pass_word", PasswordHash.doHash(password), SQLSmartQuery.Operators.E);
         sq.logicOperator(SQLSmartQuery.LogicOperators.AND);
         sq.filter("id", id, SQLSmartQuery.Operators.E);
-        List<User> user =  UserDAO.getInstance().get(sq);
+        List<User> user = this.userDAO.get(sq);
         return (user.size()>0);
     }
 

@@ -2,6 +2,11 @@
   color: red!important ;
 }
 
+a{
+ color: black;
+ text-shadow: 0 0 black;
+}
+
 .center {
     margin:0 auto;
 }
@@ -11,10 +16,81 @@ display: grid;
 grid-template-columns: 1fr 2fr 3fr 2fr 2fr;
 }
 
+/*                     title a_fn a_sn pub pd oh or*/
+.bookTableUser{
+display: grid;
+grid-template-columns: 4fr 2fr 2fr 2fr 2fr 1fr;
+}
+
+
+.bookManagerTable{
+    display: grid;
+    grid-template-columns: 1fr 2fr 2fr 2fr 1fr ;
+}
+
+.listAndEdit{
+display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.listAndEditModal{
+display: grid;
+    grid-template-columns: 1fr 3fr;
+}
+
+
+.margintop{
+    margin-top: 0.5em;
+}
+
+.currentPage {
+    background-color: #bbdefb;
+}
+
+.bookTableGuest{
+display: grid;
+grid-template-columns: 4fr 2fr 2fr 2fr 2fr;
+}
+
+body{
+background-image: url("COVERS/img.png");
+ background-repeat: no-repeat;
+ background-attachment: fixed;
+ background-position: center;
+ background-size: cover;
+}
+
+.readersTable{
+display: grid;
+grid-template-columns: 1fr 2fr 1fr 1fr 1fr 1fr 0.5fr 0.5fr;
+}
+
 .tableHeader{
     border: 1px solid rgb(255,255,255);
+    align-items: center;
     background-color: #bbdefb;
     padding: 0.5em 1em 0.5em 1em;
+    display: flex;
+    flex-direction: row;
+    grid-auto-flow: column;
+}
+
+.baseColor{
+    background-color: #bbdefb;
+}
+
+.bgColor{
+    background-color: rgb(0 0 0 / 8%);
+}
+
+.white{
+color: white;
+text-shadow: 1px 1px 3px black;
+}
+
+.w6 {
+    font-weight: 600;
+
 }
 
 .tableCell{
@@ -24,14 +100,153 @@ grid-template-columns: 1fr 2fr 3fr 2fr 2fr;
     padding: 0.5em 1em 0.5em 1em;
 }
 
+.head{
+display: flex;
+align-self: center;
+margin-right: 0.5em;
+}
+
+
+.subscriptionTable{
+display: grid;
+grid-template-columns: 2fr 1.5fr 2fr 1fr 1fr 1fr 1fr 1fr
+}
+
+.formRow{
+ display: grid;
+ grid-template-columns: 1fr 3fr;
+ margin-bottom: 0.5em;
+ margin-right:20em;
+ margin-left:10em;
+}
+
+.arrows{
+    align-self: center;
+    margin:0;
+    padding: 0px 0px 0px 0px;
+    display:grid;
+    grid-template-columns: 1fr;
+    margin-left: 0.5em;
+}
+
+.arrow{
+    margin: 0;
+    padding: 0px 0px 0px 0px;
+    width:10px;
+    height:10px;
+}
+
+.arrow:hover {
+    cursor: pointer;
+}
+
+
+.cover{
+    width: 150px;
+    margin: auto;
+    padding: 1.5em 1.5em 1.5em 1.5em;
+}
+
+.left{
+    text-align:left;
+}
+
+
+.formTwoRow {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    column-gap: 1em;
+    row-gap: 0.5em;
+    padding-right: 3em;
+    padding-bottom: 1em;
+}
+
+.formTwoRowRM0 {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    column-gap: 1em;
+    row-gap: 0.5em;
+    padding-bottom: 1em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+.footerCenterMT1{
+    margin-top: 1em;
+    text-align: center;
+    padding-bottom: 1em;
+}
+
+.tableUsers{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+
+}
+
+
+.formThreeRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 1em;
+    row-gap: 0.5em;
+    padding-right: 3em;
+    padding-bottom: 1em;
+    width:auto;
+    margin:auto;
+}
+
+input[type=number]{
+ width:4em !important;
+}
+
+.footerThreeButton{
+
+    display: grid;
+    justify-content: flex-end;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-column-gap: 1em;
+    margin-left: 18em;
+
+}
+
+
+.modalBody{
+display:grid;
+grid-template-columns: 1fr;
+}
+
 .blueLogo{
-     filter: invert(77%) sepia(41%) saturate(2532%) hue-rotate(189deg) brightness(112%) contrast(124%);
-     height: 75%;
-     width: 75%;
+     filter: invert(77%) sepia(41%) saturate(3032%) hue-rotate(192deg) brightness(102%) contrast(124%);
+     width: 50px;
 }
 
 .greyLogo{
-    filter: invert(99%) sepia(1%) saturate(1316%) hue-rotate(177deg) brightness(99%) contrast(90%);
-    height: 75%;
-    width: 75%;
+    filter: invert(70%) sepia(1%) saturate(1316%) hue-rotate(177deg) brightness(99%) contrast(90%);
+    width: 50px;
+}
+
+.ordersTable{
+    display: grid;
+    grid-template-columns: 2fr 2fr 2fr 1fr 1fr 1fr 1fr;
+}
+
+.w15{
+   width: 10em;
+       background-color:#cacaca;
+       font-weight: 600;
+}
+
+
+.form-label{
+    font-weight:600;
+ }
+
+
+.userLogo{
+    margin: 0 auto;
+    padding: 0;
+    text-align: center;
+    color: #0b5ed7;
+    white-space: nowrap;
+    padding-right: 1em;
 }

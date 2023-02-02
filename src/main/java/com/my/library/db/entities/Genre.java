@@ -1,11 +1,13 @@
-package com.library.db.entities;
+package com.my.library.db.entities;
+
+import java.util.Map;
 
 public class Genre extends Entity {
 
     {
         table = "genres";
     }
-    private String genre;
+    private Map<String,String> genre;
 
     public int getId() {
         return id;
@@ -15,11 +17,11 @@ public class Genre extends Entity {
         this.id = id;
     }
 
-    public String getGenre() {
+    public Map<String,String> getGenre() {
         return genre;
     }
 
-    public void setGenre(String genre) {
+    public void setGenre(Map<String,String> genre) {
         this.genre = genre;
     }
 }

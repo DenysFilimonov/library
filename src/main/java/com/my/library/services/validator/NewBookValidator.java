@@ -1,9 +1,11 @@
-package com.my.library.services;
+package com.my.library.services.validator;
 
 
 import com.my.library.db.SQLSmartQuery;
 import com.my.library.db.entities.*;
 import com.my.library.db.DAO.*;
+import com.my.library.services.AppContext;
+import com.my.library.services.ErrorManager;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -20,20 +22,33 @@ import java.util.Map;
 
 public class NewBookValidator  implements Validator{
 
+    private AppContext context;
+    private BookDAO bookDAO;
+    private PublisherDAO publisherDAO;
+    private BookStoreDAO bookStoreDAO;
+
     /**
      * Validate form data for NewBookCommand
-     * @param  req      HttpServletRequest request with form data
+     *
+     * @param req     HttpServletRequest request with form data
+     * @param context
      * @return errors   Map with errors of form validation
-     * @see             com.my.library.servlets.CommandMapper
-     * @see             com.my.library.servlets.NewBookCommand
-     * @see             ErrorManager
-     * @throws          SQLException  can be thrown by DAO classes
-     * @throws          IOException can be thrown by file load classes
-     * @throws          ServletException can be thrown during redirection
+     * @throws SQLException     can be thrown by DAO classes
+     * @throws IOException      can be thrown by file load classes
+     * @throws ServletException can be thrown during redirection
+     * @see com.my.library.servlets.CommandMapper
+     * @see com.my.library.servlets.NewBookCommand
+     * @see ErrorManager
      */
-
-    public Map<String, Map<String,String>> validate(HttpServletRequest req)
+    @Override
+    public Map<String, Map<String,String>> validate(HttpServletRequest req, AppContext context)
             throws SQLException, IOException, ServletException {
+
+        this.context =context;
+        this.bookDAO = (BookDAO) context.getDAO(new Book());
+        this.bookStoreDAO = (BookStoreDAO) context.getDAO(new BookStore());
+        this.publisherDAO = (PublisherDAO) context.getDAO(new Publisher());
+
         Map<String, Map<String,String>> errors = new HashMap<>();
 
         if(req.getParameter("isbn")==null || req.getParameter("isbn").equals("")){
@@ -44,7 +59,7 @@ public class NewBookValidator  implements Validator{
             SQLSmartQuery sq = new SQLSmartQuery();
             sq.source(new Book().table);
             sq.filter("isbn", req.getParameter("isbn"), SQLSmartQuery.Operators.E);
-            if(BookDAO.getInstance().get(sq).size()>0) {
+            if(bookDAO.get(sq).size()>0) {
                 ErrorManager.add(errors, "isbn", "Book with same ISBN already present",
                         "Книга з цим ISBN вже представлена");
             }
@@ -98,6 +113,14 @@ public class NewBookValidator  implements Validator{
                         "Не корректний формат дати народження");
             }
         }
+        else {
+            try{
+                Integer.parseInt(req.getParameter("authorId"));
+            }catch (NumberFormatException e){
+                ErrorManager.add(errors, "authorId", "Publisher ID should be integer",
+                        "Id автору повинне бути цілим ");
+            }
+        }
 
 
         if(req.getParameter("genreId")==null || req.getParameter("genreId").equals("")){
@@ -107,6 +130,15 @@ public class NewBookValidator  implements Validator{
             if(req.getParameter("genreUa")==null || req.getParameter("genreUa").equals(""))
                 ErrorManager.add(errors, "genreUa", "Genre should be completed",
                         "Жанр, то обовязкове поле");
+        }
+        else {
+            try{
+                Integer.parseInt(req.getParameter("genreId"));
+            }catch (NumberFormatException e){
+                ErrorManager.add(errors, "genreId", "Genre ID should be integer",
+                        "Id жанру повинне бути цілим ");
+            }
+
         }
 
         if(req.getParameter("publisherId")==null || req.getParameter("publisherId").equals("")) {
@@ -119,7 +151,7 @@ public class NewBookValidator  implements Validator{
                 sqPub.filter("publisher", req.getParameter("publisherEn"), SQLSmartQuery.Operators.E);
                 sqPub.logicOperator(SQLSmartQuery.LogicOperators.AND);
                 sqPub.filter("publisher_ua", req.getParameter("publisherUa"), SQLSmartQuery.Operators.E);
-                if(!PublisherDAO.getInstance().get(sqPub).isEmpty())
+                if(!publisherDAO.get(sqPub).isEmpty())
                     ErrorManager.add(errors, "publisherEn", "Publisher with this same name present, choose from the list",
                             "Видавець з таким імя'м вже присутній, виберіть зі списку");
 
@@ -133,15 +165,25 @@ public class NewBookValidator  implements Validator{
             if(req.getParameter("countryUa")==null || req.getParameter("countryUa").equals(""))
                 ErrorManager.add(errors, "countryUa", "Country should be completed",
                         "Країна то обовязкове поле");
-            if(req.getParameter("date")==null || req.getParameter("date").equals(""))
-                ErrorManager.add(errors, "date", "Date should be completed",
-                        "Дата то обовязкове поле");
-            else try {
-                Date.valueOf(req.getParameter("date"));
-            } catch (IllegalArgumentException e) {
-                ErrorManager.add(errors, "date", "Date has incorrect value",
-                        "Не корректний формат дати публікації");
+
+        }
+        else {
+            try{
+                Integer.parseInt(req.getParameter("publisherId"));
+            }catch (NumberFormatException e){
+                ErrorManager.add(errors, "publisherId", "Publisher ID should be integer",
+                        "Id видавця повинне бути цілим ");
             }
+        }
+
+        if(req.getParameter("date")==null || req.getParameter("date").equals(""))
+            ErrorManager.add(errors, "date", "Date should be completed",
+                    "Дата то обовязкове поле");
+        else try {
+            Date.valueOf(req.getParameter("date"));
+        } catch (IllegalArgumentException e) {
+            ErrorManager.add(errors, "date", "Date has incorrect value",
+                    "Не корректний формат дати публікації");
         }
 
         if(req.getParameter("caseNum")==null || req.getParameter("caseNum").equals("") ||
@@ -161,7 +203,7 @@ public class NewBookValidator  implements Validator{
             sqBs.filter("shelf_num", Integer.parseInt(req.getParameter("shelf")), SQLSmartQuery.Operators.E);
             sqBs.logicOperator(SQLSmartQuery.LogicOperators.AND);
             sqBs.filter("cell_num", Integer.parseInt(req.getParameter("cell")), SQLSmartQuery.Operators.E);
-            ArrayList<BookStore> bookStores = BookStoreDAO.getInstance().get(sqBs);
+            ArrayList<BookStore> bookStores = bookStoreDAO.get(sqBs);
             if (bookStores.isEmpty())
                 ErrorManager.add(errors, "cell", "This storing address is incorrect ",
                         "Не корректний адрес зберігання");
@@ -169,7 +211,7 @@ public class NewBookValidator  implements Validator{
                 SQLSmartQuery sq = new SQLSmartQuery();
                 sq.source(new Book().table);
                 sq.filter("book_store_id", bookStores.get(0).getId(), SQLSmartQuery.Operators.E);
-                if (!BookDAO.getInstance().get(sq).isEmpty())
+                if (!bookDAO.get(sq).isEmpty())
                     ErrorManager.add(errors, "cell", "This storing address is occupied ",
                             "Адрес зберігання вже зайнято");
             }
@@ -178,20 +220,28 @@ public class NewBookValidator  implements Validator{
                     "Не корректний формат адреси зберігання");
         }
         Part filePart = req.getPart("cover");
-        String filePath = filePart.getSubmittedFileName();//Retrieves complete file name with path and directories
-        Path p = Paths.get(filePath); //creates a Path object
-        String fileName = p.getFileName().toString();
-        if(fileName.equals("")){
+        if (filePart==null) {
             ErrorManager.add(errors, "cover", "Cover image should be present ",
                     "Зображення обкладинки повинне бути представлене");
         }
         else{
-            if(fileName.length()>50)
+            String filePath = filePart.getSubmittedFileName();//Retrieves complete file name with path and directories
+            Path p = Paths.get(filePath); //creates a Path object
+            String fileName = p.getFileName().toString();
+            if(fileName.equals("")){
+                ErrorManager.add(errors, "cover", "Cover image should be present ",
+                        "Зображення обкладинки повинне бути представлене");
+            }
+            else if(fileName.length()>50)
                 ErrorManager.add(errors, "cover", "Cover image name should be < 50 chars ",
                         "Довжина імені зображення обкладинки повинна бути менше 50 знаків ");
+
+            if(filePart.getInputStream()==null)
+                ErrorManager.add(errors, "cover", "File body doesn't present  in request",
+                        "Відсутне тіло файлу");
         }
 
-             return errors;
+        return errors;
     }
 
 

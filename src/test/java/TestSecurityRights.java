@@ -4,18 +4,16 @@ import com.my.library.services.SecurityCheck;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 
-import javax.servlet.ServletException;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.util.HashMap;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.mock;
 
-public class SecurityTest{
+public class TestSecurityRights {
 
      @ParameterizedTest
      @CsvFileSource(resources = "test_security_filter.csv", numLinesToSkip = 1)

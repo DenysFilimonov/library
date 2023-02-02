@@ -1,56 +1,43 @@
 package com.my.library.db.DTO;
 
-import com.my.library.db.SQLSmartQuery;
-import com.my.library.db.entities.Author;
-import com.my.library.db.entities.Genre;
-import com.my.library.db.repository.AuthorRepository;
-import com.my.library.db.repository.GenreRepository;
+import com.my.library.db.entities.Payment;
 
 import javax.naming.OperationNotSupportedException;
 import javax.servlet.http.HttpServletRequest;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
 
-public interface GenreDTO {
+public interface PaymentDTO {
 
-    static Genre toView(Genre genre) throws OperationNotSupportedException {
+    static Payment toView(Payment payment) throws OperationNotSupportedException {
         throw new OperationNotSupportedException();
-    };
-
-    static Genre toModel(ResultSet rs) throws  SQLException {
-        Genre genre = new Genre();
-        Map<String,String> gr = new HashMap<>();
-        try{
-            genre.setId(rs.getInt("genre_id"));
-        }catch (SQLException e) {
-            genre.setId(rs.getInt("id"));
-        }
-        gr.put("en", rs.getString("genre"));
-        gr.put("ua", rs.getString("genre_ua"));
-        genre.setGenre(gr);
-        return genre;
     }
 
-    static Genre toModel(HttpServletRequest req) throws  SQLException {
-        Genre genre = new Genre();
-        Map<String,String> gr = new HashMap<>();
+    static Payment toModel(ResultSet rs) throws  SQLException {
+        Payment payment = new Payment();
+        payment.setId(rs.getInt("id"));
+        payment.setDate(rs.getDate("payment_date"));
+        payment.setOrderId(rs.getInt("order_id"));
+        payment.setAmount(rs.getFloat("amount"));
+        return payment;
+    }
 
-        if(req.getParameter("genreId")!=null){
-            SQLSmartQuery sq = new SQLSmartQuery();
-            sq.source(new Genre().table);
-            sq.filter("id", req.getParameter("genreId"), SQLSmartQuery.Operators.E);
-            genre = GenreRepository.getInstance().get(sq).get(0);
+    static Payment toModel(HttpServletRequest req) throws  SQLException {
+        Payment payment = new Payment();
+        try {
+            payment.setId(Integer.parseInt(req.getParameter("id")));
+        }catch(NumberFormatException e){
+            payment.setId(Integer.parseInt(req.getParameter("paymentId")));
         }
-        else{
-            gr.put("en", req.getParameter("genreEn"));
-            gr.put("ua", req.getParameter("genreUa"));
-            genre.setGenre(gr);
-            GenreRepository.getInstance().add(genre);
+        payment.setAmount(Float.parseFloat(req.getParameter("amount")));
+        try {
+            payment.setDate(Date.valueOf(req.getParameter("date")));
+        }catch(IllegalArgumentException e){
+            payment.setDate(Date.valueOf(req.getParameter("paymentDate")));
         }
-        return genre;
+        payment.setOrderId(Integer.parseInt(req.getParameter("orderId")));
+        return payment;
     }
 
 

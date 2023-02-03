@@ -8,10 +8,7 @@ import com.my.library.db.entities.Publisher;
 import com.my.library.db.entities.Role;
 import org.apache.commons.dbcp2.BasicDataSource;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class RoleDAO implements DAO<Role> {
@@ -28,17 +25,72 @@ public class RoleDAO implements DAO<Role> {
         return instance;
     }
 
+    public static void destroyInstance(){
+       instance=null;
+    }
+
     @Override
     public void add(Role role) throws SQLException
     {
+
+        String INSERT_STRING = "insert into roles " +
+                "(role_name, role_name_ua ) "+
+                "values (?, ?)";
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement insertRole = connection.prepareStatement(INSERT_STRING, Statement.RETURN_GENERATED_KEYS)){
+            connection.setAutoCommit(false);
+            insertRole.setString(1, role.getRoleName().get("en"));
+            insertRole.setString(2, role.getRoleName().get("ua"));
+            int affectedRows = insertRole.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Creating role failed, no rows affected.");
+            }
+            try (ResultSet generatedKeys = insertRole.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    role.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new SQLException("Creating role failed, no ID obtained.");
+                }
+            }
+            connection.commit();
+        }
     }
 
     @Override
     public void delete(Role role) throws SQLException{
+        String DELETE_STRING = "DELETE FROM roles WHERE id=?";
+        try (Connection connection = dataSource.getConnection(); PreparedStatement deleteRole = connection.prepareStatement(DELETE_STRING, Statement.RETURN_GENERATED_KEYS)) {
+            connection.setAutoCommit(false);
+            deleteRole.setInt(1, role.getId());
+            int affectedRows = deleteRole.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Delete role failed, no rows affected.");
+            }
+            connection.commit();
+        }
     }
 
     @Override
     public void update(Role role) throws SQLException{
+        String UPDATE_STRING = "UPDATE roles SET " +
+                "role_name = ?, " +
+                "role_name_ua = ? " +
+                " WHERE id = ?";
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement updateRole = connection.prepareStatement(UPDATE_STRING, Statement.RETURN_GENERATED_KEYS)){
+            connection.setAutoCommit(false);
+            updateRole.setString(1, role.getRoleName().get("en"));
+            updateRole.setString(2, role.getRoleName().get("ua"));
+            updateRole.setInt(3, role.getId());
+            int affectedRows = updateRole.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Updating author failed, no rows affected.");
+            }
+            connection.commit();
+
+        }
     }
 
     @Override

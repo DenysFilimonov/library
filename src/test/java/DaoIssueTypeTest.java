@@ -1,8 +1,6 @@
-import com.my.library.db.DAO.AuthorDAO;
 import com.my.library.db.DAO.GenreDAO;
 import com.my.library.db.DAO.IssueTypeDAO;
 import com.my.library.db.SQLSmartQuery;
-import com.my.library.db.entities.Genre;
 import com.my.library.db.entities.IssueType;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.junit.jupiter.api.AfterEach;
@@ -17,7 +15,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class DaoTestIssueType {
+public class DaoIssueTypeTest {
 
     public IssueType issueType;
 
@@ -41,7 +39,7 @@ public class DaoTestIssueType {
     }
 
     @Test
-    public void TestDeleteIssueType() throws SQLException {
+    public void testDelete() throws SQLException {
         BasicDataSource dataSource = mock(BasicDataSource.class);
         Connection connection = mock(Connection.class);
         when(dataSource.getConnection()).thenReturn(connection);
@@ -58,7 +56,7 @@ public class DaoTestIssueType {
     }
 
     @Test
-    public void TestAddIssueType() throws SQLException {
+    public void testAdd() throws SQLException {
         BasicDataSource dataSource = mock(BasicDataSource.class);
         Connection connection = mock(Connection.class);
         when(dataSource.getConnection()).thenReturn(connection);
@@ -86,14 +84,13 @@ public class DaoTestIssueType {
     }
 
     @Test
-    public void TestGetIssueType() throws SQLException {
+    public void testGet() throws SQLException {
         BasicDataSource dataSource = mock(BasicDataSource.class);
         Connection connection = mock(Connection.class);
         Statement statement = mock(Statement.class);
         when(dataSource.getConnection()).thenReturn(connection);
         ResultSet resultSet = mock(ResultSet.class);
         SQLSmartQuery sqlSmartQuery = mock(SQLSmartQuery.class);
-        PreparedStatement preparedStatement = mock(PreparedStatement.class);
         when(connection.createStatement()).thenReturn(statement);
         ArgumentCaptor<String> arg1 = ArgumentCaptor.forClass(String.class);
         when(statement.executeQuery(arg1.capture())).thenReturn(resultSet);
@@ -106,7 +103,7 @@ public class DaoTestIssueType {
     }
 
     @Test
-    public void TestUpdateIssueType() throws SQLException {
+    public void testUpdate() throws SQLException {
         BasicDataSource dataSource = mock(BasicDataSource.class);
         Connection connection = mock(Connection.class);
         when(dataSource.getConnection()).thenReturn(connection);

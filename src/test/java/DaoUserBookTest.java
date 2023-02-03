@@ -18,7 +18,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class DaoTestUserBook {
+public class DaoUserBookTest {
 
     public UsersBooks book;
 

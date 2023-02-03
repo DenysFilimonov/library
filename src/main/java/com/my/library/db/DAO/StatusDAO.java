@@ -8,10 +8,7 @@ import com.my.library.db.entities.Publisher;
 import com.my.library.db.entities.Status;
 import org.apache.commons.dbcp2.BasicDataSource;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class StatusDAO implements DAO<Status> {
@@ -28,17 +25,73 @@ public class StatusDAO implements DAO<Status> {
         return instance;
     }
 
+    public static void destroyInstance(){
+        instance=null;
+    }
+
     @Override
-    public void add(Status status) throws SQLException
-    {
+    public void add(Status status) throws SQLException {
+        {
+
+            String INSERT_STRING = "insert into statuses " +
+                    "(status, status_ua ) " +
+                    "values (?, ?)";
+
+            try (Connection connection = dataSource.getConnection();
+                 PreparedStatement insertStatus = connection.prepareStatement(INSERT_STRING, Statement.RETURN_GENERATED_KEYS)) {
+                connection.setAutoCommit(false);
+                insertStatus.setString(1, status.getStatus().get("en"));
+                insertStatus.setString(2, status.getStatus().get("ua"));
+                int affectedRows = insertStatus.executeUpdate();
+                if (affectedRows == 0) {
+                    throw new SQLException("Creating status failed, no rows affected.");
+                }
+                try (ResultSet generatedKeys = insertStatus.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        status.setId(generatedKeys.getInt(1));
+                    } else {
+                        throw new SQLException("Creating status failed, no ID obtained.");
+                    }
+                }
+                connection.commit();
+            }
+        }
     }
 
     @Override
     public void delete(Status status) throws SQLException{
+        String DELETE_STRING = "DELETE FROM statuses WHERE id=?";
+        try (Connection connection = dataSource.getConnection(); PreparedStatement deleteStatus = connection.prepareStatement(DELETE_STRING, Statement.RETURN_GENERATED_KEYS)) {
+            connection.setAutoCommit(false);
+            deleteStatus.setInt(1, status.getId());
+            int affectedRows = deleteStatus.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Delete status failed, no rows affected.");
+            }
+            connection.commit();
+        }
     }
 
     @Override
     public void update(Status status) throws SQLException{
+        String UPDATE_STRING = "UPDATE statuses SET " +
+                "status = ?, " +
+                "status_ua = ? " +
+                " WHERE id = ?";
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement updateRole = connection.prepareStatement(UPDATE_STRING, Statement.RETURN_GENERATED_KEYS)){
+            connection.setAutoCommit(false);
+            updateRole.setString(1, status.getStatus().get("en"));
+            updateRole.setString(2, status.getStatus().get("ua"));
+            updateRole.setInt(3, status.getId());
+            int affectedRows = updateRole.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Updating status failed, no rows affected.");
+            }
+            connection.commit();
+
+        }
     }
 
     @Override

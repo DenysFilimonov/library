@@ -1,7 +1,6 @@
-import com.my.library.db.DAO.GenreDAO;
-import com.my.library.db.DAO.IssueTypeDAO;
+import com.my.library.db.DAO.PaymentDAO;
 import com.my.library.db.SQLSmartQuery;
-import com.my.library.db.entities.IssueType;
+import com.my.library.db.entities.Payment;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,37 +8,33 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import java.sql.*;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class DaoTestPayment {
+public class DaoPublisherTest {
 
-    public IssueType issueType;
+    public Payment payment;
 
     @BeforeEach
     public void setEntity(){
-        issueType = new IssueType();
-        Map<String,String> issueTypes = new HashMap<>();
-        issueTypes.put("en", "issueEn");
-        issueTypes.put("ua", "issueUa");
-        issueType.setIssueType(issueTypes);
-        issueType.setPenalty(1.0f);
-        issueType.setId(1);
-        IssueTypeDAO.destroyInstance();
+        payment = new Payment();
+        payment.setAmount(10f);
+        payment.setOrderId(1);
+        payment.setId(1);
+        payment.setDate(Date.valueOf("2022-10-01"));
+        PaymentDAO.destroyInstance();
 
     }
 
     @AfterEach
     public void clearDAO(){
-        GenreDAO.destroyInstance();
+        PaymentDAO.destroyInstance();
 
     }
 
     @Test
-    public void TestDeleteIssueType() throws SQLException {
+    public void TestDelete() throws SQLException {
         BasicDataSource dataSource = mock(BasicDataSource.class);
         Connection connection = mock(Connection.class);
         when(dataSource.getConnection()).thenReturn(connection);
@@ -50,13 +45,13 @@ public class DaoTestPayment {
         when(preparedStatement.getGeneratedKeys()).thenReturn(resultSet);
         ArgumentCaptor<Integer> arg1 = ArgumentCaptor.forClass(Integer.class);
         doNothing().when(preparedStatement).setInt(eq(1), arg1.capture());
-        IssueTypeDAO.getInstance(dataSource).delete(this.issueType);
-        assertEquals(arg1.getValue(), this.issueType.getId());
+        PaymentDAO.getInstance(dataSource).delete(this.payment);
+        assertEquals(arg1.getValue(), this.payment.getId());
         verify(preparedStatement, atLeast(1)).executeUpdate();
     }
 
     @Test
-    public void TestAddIssueType() throws SQLException {
+    public void TestAdd() throws SQLException {
         BasicDataSource dataSource = mock(BasicDataSource.class);
         Connection connection = mock(Connection.class);
         when(dataSource.getConnection()).thenReturn(connection);
@@ -67,16 +62,16 @@ public class DaoTestPayment {
         when(preparedStatement.getGeneratedKeys()).thenReturn(resultSet);
         when(resultSet.next()).thenReturn(true);
         when(resultSet.getInt(1)).thenReturn(1);
-        ArgumentCaptor<String> arg1 = ArgumentCaptor.forClass(String.class);
-        doNothing().when(preparedStatement).setString(eq(1), arg1.capture());
-        ArgumentCaptor<String> arg2 = ArgumentCaptor.forClass(String.class);
-        doNothing().when(preparedStatement).setString(eq(2), arg2.capture());
-        ArgumentCaptor<Float> arg3 = ArgumentCaptor.forClass(Float.class);
-        doNothing().when(preparedStatement).setFloat(eq(3), arg3.capture());
-        IssueTypeDAO.getInstance(dataSource).add(this.issueType);
-        assertEquals(arg1.getValue(), this.issueType.getIssueType().get("en"));
-        assertEquals(arg2.getValue(), this.issueType.getIssueType().get("ua"));
-        assertEquals(arg3.getValue(), this.issueType.getPenalty());
+        ArgumentCaptor<Float> arg1 = ArgumentCaptor.forClass(Float.class);
+        doNothing().when(preparedStatement).setFloat(eq(1), arg1.capture());
+        ArgumentCaptor<Date> arg2 = ArgumentCaptor.forClass(Date.class);
+        doNothing().when(preparedStatement).setDate(eq(2), arg2.capture());
+        ArgumentCaptor<Integer> arg3 = ArgumentCaptor.forClass(Integer.class);
+        doNothing().when(preparedStatement).setInt(eq(3), arg3.capture());
+        PaymentDAO.getInstance(dataSource).add(this.payment);
+        assertEquals(arg1.getValue(), this.payment.getAmount());
+        assertEquals(arg2.getValue(), this.payment.getDate());
+        assertEquals(arg3.getValue(), this.payment.getOrderId());
         verify(preparedStatement, atLeast(1)).executeUpdate();
         verify(preparedStatement, atLeast(1)).getGeneratedKeys();
         verify(resultSet, atLeast(1)).next();
@@ -84,27 +79,26 @@ public class DaoTestPayment {
     }
 
     @Test
-    public void TestGetIssueType() throws SQLException {
+    public void TestGet() throws SQLException {
         BasicDataSource dataSource = mock(BasicDataSource.class);
         Connection connection = mock(Connection.class);
         Statement statement = mock(Statement.class);
         when(dataSource.getConnection()).thenReturn(connection);
         ResultSet resultSet = mock(ResultSet.class);
         SQLSmartQuery sqlSmartQuery = mock(SQLSmartQuery.class);
-        PreparedStatement preparedStatement = mock(PreparedStatement.class);
         when(connection.createStatement()).thenReturn(statement);
         ArgumentCaptor<String> arg1 = ArgumentCaptor.forClass(String.class);
         when(statement.executeQuery(arg1.capture())).thenReturn(resultSet);
         when(resultSet.next()).thenReturn(false);
-        when(sqlSmartQuery.build()).thenReturn("SELECT * FROM IssueType WHERE id=1");
-        IssueTypeDAO.getInstance(dataSource).get(sqlSmartQuery);
+        when(sqlSmartQuery.build()).thenReturn("SELECT * FROM payments WHERE id=1");
+        PaymentDAO.getInstance(dataSource).get(sqlSmartQuery);
         assertEquals(arg1.getValue(), sqlSmartQuery.build());
         verify(statement, atLeast(1)).executeQuery(anyString());
         verify(resultSet, atLeast(1)).next();
     }
 
     @Test
-    public void TestUpdateIssueType() throws SQLException {
+    public void TestUpdate() throws SQLException {
         BasicDataSource dataSource = mock(BasicDataSource.class);
         Connection connection = mock(Connection.class);
         when(dataSource.getConnection()).thenReturn(connection);
@@ -114,20 +108,20 @@ public class DaoTestPayment {
         when(preparedStatement.executeUpdate()).thenReturn(1);
         when(preparedStatement.getGeneratedKeys()).thenReturn(resultSet);
         when(resultSet.next()).thenReturn(true);
-        when(resultSet.getInt(1)).thenReturn(issueType.getId());
-        ArgumentCaptor<String> arg1 = ArgumentCaptor.forClass(String.class);
-        doNothing().when(preparedStatement).setString(eq(1), arg1.capture());
-        ArgumentCaptor<String> arg2 = ArgumentCaptor.forClass(String.class);
-        doNothing().when(preparedStatement).setString(eq(2), arg2.capture());
-        ArgumentCaptor<Float> arg3 = ArgumentCaptor.forClass(Float.class);
-        doNothing().when(preparedStatement).setFloat(eq(3), arg3.capture());
+        when(resultSet.getInt(1)).thenReturn(payment.getId());
+        ArgumentCaptor<Float> arg1 = ArgumentCaptor.forClass(Float.class);
+        doNothing().when(preparedStatement).setFloat(eq(1), arg1.capture());
+        ArgumentCaptor<Date> arg2 = ArgumentCaptor.forClass(Date.class);
+        doNothing().when(preparedStatement).setDate(eq(2), arg2.capture());
+        ArgumentCaptor<Integer> arg3 = ArgumentCaptor.forClass(Integer.class);
+        doNothing().when(preparedStatement).setInt(eq(3), arg3.capture());
         ArgumentCaptor<Integer> arg4 = ArgumentCaptor.forClass(Integer.class);
         doNothing().when(preparedStatement).setInt(eq(4), arg4.capture());
-        IssueTypeDAO.getInstance(dataSource).update(this.issueType);
-        assertEquals(arg1.getValue(), this.issueType.getIssueType().get("en"));
-        assertEquals(arg2.getValue(), this.issueType.getIssueType().get("ua"));
-        assertEquals(arg3.getValue(), this.issueType.getPenalty());
-        assertEquals(arg4.getValue(), this.issueType.getId());
+        PaymentDAO.getInstance(dataSource).update(this.payment);
+        assertEquals(arg1.getValue(), this.payment.getAmount());
+        assertEquals(arg2.getValue(), this.payment.getDate());
+        assertEquals(arg3.getValue(), this.payment.getOrderId());
+        assertEquals(arg4.getValue(), this.payment.getId());
         verify(preparedStatement, atLeast(1)).executeUpdate();
     }
 

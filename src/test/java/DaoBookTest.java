@@ -17,7 +17,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class DaoTestBook {
+public class DaoBookTest {
 
     public Book book;
 
@@ -57,7 +57,7 @@ public class DaoTestBook {
     }
 
     @Test
-    public void TestDeleteUser() throws SQLException {
+    public void TestDelete() throws SQLException {
         BasicDataSource dataSource = mock(BasicDataSource.class);
         Connection connection = mock(Connection.class);
         when(dataSource.getConnection()).thenReturn(connection);
@@ -74,7 +74,7 @@ public class DaoTestBook {
     }
 
     @Test
-    public void TestAddBook() throws SQLException {
+    public void TestAdd() throws SQLException {
         BasicDataSource dataSource = mock(BasicDataSource.class);
         Connection connection = mock(Connection.class);
         when(dataSource.getConnection()).thenReturn(connection);
@@ -108,7 +108,6 @@ public class DaoTestBook {
         ArgumentCaptor<String> arg11 = ArgumentCaptor.forClass(String.class);
         doNothing().when(preparedStatement).setString(eq(11), arg11.capture());
         BookDAO.getInstance(dataSource).add(this.book);
-
         assertEquals(arg1.getValue(), this.book.getIsbn());
         assertEquals(arg2.getValue(), this.book.getTitle().get("en"));
         assertEquals(arg3.getValue(), this.book.getTitle().get("ua"));
@@ -127,20 +126,19 @@ public class DaoTestBook {
     }
 
     @Test
-    public void TestGetBook() throws SQLException {
+    public void TestGet() throws SQLException {
         BasicDataSource dataSource = mock(BasicDataSource.class);
         Connection connection = mock(Connection.class);
         Statement statement = mock(Statement.class);
         when(dataSource.getConnection()).thenReturn(connection);
         ResultSet resultSet = mock(ResultSet.class);
         SQLSmartQuery sqlSmartQuery = mock(SQLSmartQuery.class);
-        PreparedStatement preparedStatement = mock(PreparedStatement.class);
         when(connection.createStatement()).thenReturn(statement);
         ArgumentCaptor<String> arg1 = ArgumentCaptor.forClass(String.class);
         when(statement.executeQuery(arg1.capture())).thenReturn(resultSet);
         when(resultSet.next()).thenReturn(false);
-        when(sqlSmartQuery.build()).thenReturn("SELECT * FROM AUTHORS WHERE id=1 AND active = true");
-        AuthorDAO.getInstance(dataSource).get(sqlSmartQuery);
+        when(sqlSmartQuery.build()).thenReturn("SELECT * FROM books WHERE id=1 AND deleted = false");
+        BookDAO.getInstance(dataSource).get(sqlSmartQuery);
         assertEquals(arg1.getValue(), sqlSmartQuery.build());
         verify(statement, atLeast(1)).executeQuery(anyString());
         verify(resultSet, atLeast(1)).next();
@@ -148,7 +146,7 @@ public class DaoTestBook {
     }
 
     @Test
-    public void TestUpdateBook() throws SQLException {
+    public void TestUpdate() throws SQLException {
         BasicDataSource dataSource = mock(BasicDataSource.class);
         Connection connection = mock(Connection.class);
         when(dataSource.getConnection()).thenReturn(connection);
@@ -200,10 +198,5 @@ public class DaoTestBook {
         assertEquals(arg12.getValue(), this.book.isDeleted());
         assertEquals(arg13.getValue(), this.book.getId());
         verify(preparedStatement, atLeast(1)).executeUpdate();
-        verify(preparedStatement, atLeast(1)).getGeneratedKeys();
-        verify(resultSet, atLeast(1)).next();
-        verify(resultSet, atLeast(1)).getInt(1);
-        UserDAO.destroyInstance();
     }
-
 }

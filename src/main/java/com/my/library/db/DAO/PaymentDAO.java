@@ -20,6 +20,10 @@ public class PaymentDAO implements DAO<Payment> {
         if (instance==null) instance = new PaymentDAO(dataSource);
         return instance;
     }
+
+    public static void destroyInstance(){
+       instance=null;
+    }
     private PaymentDAO(BasicDataSource dataSource){
         this.dataSource = dataSource;
     }

@@ -14,7 +14,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class DaoTestAuthor {
+public class DaoAuthorTest {
 
     public Author author;
 
@@ -45,7 +45,7 @@ public class DaoTestAuthor {
     }
 
     @Test
-    public void TestDeleteAuthor() throws SQLException {
+    public void TestDelete() throws SQLException {
         BasicDataSource dataSource = mock(BasicDataSource.class);
         Connection connection = mock(Connection.class);
         when(dataSource.getConnection()).thenReturn(connection);
@@ -62,7 +62,7 @@ public class DaoTestAuthor {
     }
 
     @Test
-    public void TestAddAuthor() throws SQLException {
+    public void TestAdd() throws SQLException {
         BasicDataSource dataSource = mock(BasicDataSource.class);
         Connection connection = mock(Connection.class);
         when(dataSource.getConnection()).thenReturn(connection);
@@ -102,7 +102,7 @@ public class DaoTestAuthor {
     }
 
     @Test
-    public void TestGetAuthor() throws SQLException {
+    public void TestGet() throws SQLException {
         BasicDataSource dataSource = mock(BasicDataSource.class);
         Connection connection = mock(Connection.class);
         Statement statement = mock(Statement.class);
@@ -121,7 +121,7 @@ public class DaoTestAuthor {
     }
 
     @Test
-    public void TestUpdateAuthor() throws SQLException {
+    public void TestUpdate() throws SQLException {
         BasicDataSource dataSource = mock(BasicDataSource.class);
         Connection connection = mock(Connection.class);
         AuthorDAO authorDAO = AuthorDAO.getInstance(dataSource);

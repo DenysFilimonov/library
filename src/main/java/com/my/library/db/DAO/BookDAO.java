@@ -74,11 +74,7 @@ public class BookDAO implements DAO<Book> {
                 }
             }
             connection.commit();
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
-       
     }
 
 
@@ -93,9 +89,6 @@ public class BookDAO implements DAO<Book> {
                 throw new SQLException("Delete book failed, no rows affected.");
             }
             connection.commit();
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -136,19 +129,7 @@ public class BookDAO implements DAO<Book> {
             if (affectedRows == 0) {
                 throw new SQLException("Updating book failed, no rows affected.");
             }
-            try (ResultSet generatedKeys = updateBook.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    book.setId(generatedKeys.getInt(1));
-                }
-                else {
-                    throw new SQLException("Updating book failed, no ID obtained.");
-                }
-            }
             connection.commit();
-
-        }
-        catch (SQLException e) {
-            throw new RuntimeException(e);
         }
     }
 

@@ -63,10 +63,7 @@ public class UsersBooks extends Entity {
         Calendar cal = Calendar.getInstance();
         Date date = cal.getTime();
         if(targetDate!=null && returnDate==null) {
-            return ((date.getTime() - targetDate.getTime()) / 1000 / 60 / 60 / 24) * issueType.getPenalty();
-        }
-        if(targetDate!=null && returnDate!=null) {
-            float fine = ((returnDate.getTime() - targetDate.getTime()) / 1000 / 60 / 60 / 24) * issueType.getPenalty();
+            float fine =  ((date.getTime() - targetDate.getTime()) / 1000 / 60 / 60 / 24) * issueType.getPenalty();
             return fine>0? fine: 0;
         }
         return 0;

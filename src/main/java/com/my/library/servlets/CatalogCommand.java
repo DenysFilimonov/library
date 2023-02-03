@@ -42,6 +42,7 @@ public class CatalogCommand implements Command {
              if(req.getParameter("book")!=null) new OrderBookCommand().execute(req, resp,context);
              bookQuery = prepareCatalogSQl(req);
              req.getSession().setAttribute(req.getParameter("command"), bookQuery);
+             req.setAttribute("refreshPagination", true);
         }
         else{
             if (req.getSession().getAttribute(req.getParameter("command"))!=null)

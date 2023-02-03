@@ -158,7 +158,7 @@
                         class="btn btn-primary"
                         hidden
                         id="cancelButton"
-                        onClick="activateForm();"
+                        onClick="deactivateForm();"
                     ><fmt:message key="account.label.cancel"/>
                     </button>
                     <button
@@ -219,11 +219,15 @@
         });
         document.getElementById('userFormActivate').hidden= !document.getElementById('userFormActivate').hidden;
         document.getElementById('cancelButton').hidden=!document.getElementById('cancelButton').hidden;
-        if(document.getElementById('passwordChange').hidden)
-            document.getElementById('passwordChange').hidden=!document.getElementById('passwordChange').hidden;
+        document.getElementById('passwordChange').hidden=!document.getElementById('passwordChange').hidden;
         document.getElementById('submitButton').hidden=!document.getElementById('submitButton').hidden;
         document.getElementById('passwordGroup').style.display='none';
         setPassNull();
+    }
+
+    function deactivateForm(){
+        document.getElementById('passwordChange').hidden=!document.getElementById('passwordChange').hidden;
+        activateForm();
     }
 
     function editPassword(){

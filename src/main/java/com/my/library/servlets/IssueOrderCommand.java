@@ -1,11 +1,8 @@
 package com.my.library.servlets;
 
-import com.my.library.db.DAO.IssueTypeDAO;
-import com.my.library.db.DAO.StatusDAO;
+import com.my.library.db.DAO.*;
 import com.my.library.db.SQLSmartQuery;
 import com.my.library.db.entities.*;
-import com.my.library.db.DAO.BookDAO;
-import com.my.library.db.DAO.UsersBookDAO;
 import com.my.library.services.*;
 import com.my.library.services.validator.NewBookValidator;
 
@@ -26,6 +23,7 @@ public class IssueOrderCommand implements Command {
     IssueTypeDAO issueTypeDAO;
     StatusDAO statusDAO;
 
+    UserDAO userDAO;
     BookDAO bookDAO;
 
     /**
@@ -54,6 +52,7 @@ public class IssueOrderCommand implements Command {
         this.bookDAO = (BookDAO) context.getDAO(new Book());
         this.issueTypeDAO = (IssueTypeDAO) context.getDAO(new IssueType());
         this.statusDAO = (StatusDAO) context.getDAO(new Status());
+        this.userDAO = (UserDAO) context.getDAO(new User());
         Map<String, Map<String, String>> errors = new HashMap<>();
 
         if(Objects.equals(req.getMethod(), "POST")){
@@ -78,6 +77,7 @@ public class IssueOrderCommand implements Command {
             return ConfigurationManager.getInstance().getProperty(ConfigurationManager.ISSUE_ORDER_PAGE_PATH);
         }
         UsersBooks userBook = getUserBook(req);
+        User reader = userDAO.getOne(userBook.getUserId());
         if(userBook!=null) {
             req.setAttribute("book", getBook(userBook));
             Calendar cal = Calendar.getInstance();
@@ -86,6 +86,7 @@ public class IssueOrderCommand implements Command {
                     userBook.getIssueType().getId() == GetIssueTypes.get(issueTypeDAO).get("subscription").getId()? 30: 1);
             userBook.setTargetDate(cal.getTime());
             req.setAttribute("userBook", userBook);
+            req.setAttribute("reader", reader);
 
         }
         req.setAttribute("errors", errors);

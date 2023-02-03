@@ -4,11 +4,6 @@
         <select class="custom-select mr-sm-2" id="linesOnPage"
         name ="linesOnPage" onChange="setLinesOnPage();"
         value="${param.linesOnPage}">
-            <option value="2"
-            <c:if test ="${param.linesOnPage == 2}">
-                selected="selected"
-            </c:if>
-            >2</option>
             <option value="5"
             <c:if test ="${param.linesOnPage == 5}">
                 selected="selected"
@@ -33,9 +28,11 @@
         </c:forEach>
         </c:if>
     </div>
+    <c:if test = "${param.command=='catalog'}">
     <div>
-        <tf:libraryStat/> <fmt:message key="catalog.label.availableCount"/>
+        <fmt:message key="catalog.label.availableCount"/>: <tf:libraryStat/>
     </div>
+    </c:if>
 </div>
 
 

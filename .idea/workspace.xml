@@ -4,31 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4848fd86-92e6-432a-909d-736a85aafb12" name="Changes" comment="add tests DAO">
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/COVERS/41B1cw0HfVL.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/COVERS/41zvHhjA8XS.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/COVERS/51+g25Mu5rL._AC_UL600_SR600,600_.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/COVERS/611OWa8x+WL.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/COVERS/917Ow7GC6WL.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/COVERS/Ulysses,_1922.djvu.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/COVERS/matthew.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/COVERS/my-life-and-work-2.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/COVERS/the-little-prince-60.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/DaoPaymentTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/DaoPublisherTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/DaoStatusTest.java" afterDir="false" />
+    <list default="true" id="4848fd86-92e6-432a-909d-736a85aafb12" name="Changes" comment="get permission">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/BookDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/BookDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/PaymentDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/PaymentDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/RoleDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/RoleDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/StatusDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/StatusDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/log4j.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/DaoTestAuthor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/DaoAuthorTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/DaoTestBook.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/DaoBookTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/DaoTestGenre.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/DaoGenreTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/DaoTestIssueType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/DaoRoleTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/DaoTestPayment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/DaoIssueTypeTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/DaoTestUserBook.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/DaoUserBookTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DTO/StatusDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DTO/StatusDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/entities/UsersBooks.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/entities/UsersBooks.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/PaginationManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/PaginationManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/CatalogCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/CatalogCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/IssueOrderCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/IssueOrderCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/config.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/config.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/text.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/text.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/includes/issueBook_body.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/includes/issueBook_body.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/includes/pagination.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/includes/pagination.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/includes/user_account.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/includes/user_account.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -280,7 +267,21 @@
       <option name="project" value="LOCAL" />
       <updated>1675340145530</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="get permissio">
+      <created>1675432095427</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1675432095427</updated>
+    </task>
+    <task id="LOCAL-00003" summary="get permission">
+      <created>1675432115795</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1675432115795</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -338,7 +339,9 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="add tests DAO" />
-    <option name="LAST_COMMIT_MESSAGE" value="add tests DAO" />
+    <MESSAGE value="get permissio" />
+    <MESSAGE value="get permission" />
+    <option name="LAST_COMMIT_MESSAGE" value="get permission" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

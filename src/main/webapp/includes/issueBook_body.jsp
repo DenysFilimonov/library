@@ -11,7 +11,7 @@
     </div>
     <div class="container col-12">
             <div class="h4">
-                   <fmt:message key="issueBook.label.issueWarning"/> ${user.firstName} ${user.secondName}, ID ${user.id}
+                   <fmt:message key="issueBook.label.issueWarning"/> ${reader.firstName} ${reader.secondName}, ID ${reader.id}
             </div>
             <div class="h4">
                    <fmt:message key="issueBook.label.bookStore"/>: ${book.bookStore.caseNum} / ${book.bookStore.shelfNum} /${book.bookStore.cellNum}

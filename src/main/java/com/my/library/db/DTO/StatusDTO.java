@@ -24,7 +24,7 @@ public interface StatusDTO {
         }
         HashMap<String, String> st = new HashMap<>();
         st.put("en", rs.getString("status"));
-        st.put("ua", rs.getString("status"));
+        st.put("ua", rs.getString("status_ua"));
         status.setStatus(st);
         return status;
     }

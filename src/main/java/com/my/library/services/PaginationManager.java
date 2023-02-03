@@ -16,7 +16,9 @@ public class PaginationManager {
      * Modify SQLSmartQuery object to set it up according to pagination parameters in request
      * @param  req      HttpServletRequest request with pagination params
      * @param  query    SQLSmartQuery to modify with params
+     * @param dao       Data Access Object
      * @see             SQLSmartQuery
+     * @see             DAO
      */
 
     public PaginationManager(HttpServletRequest req, SQLSmartQuery query, DAO dao) throws SQLException {
@@ -25,8 +27,13 @@ public class PaginationManager {
         this.linesOnPage = (linesOnPage!=null && !linesOnPage.equals(""))? Integer.parseInt(linesOnPage):
                 Integer.parseInt(ConfigurationManager.getInstance().getProperty(ConfigurationManager.LINES_ON_PAGE));
         this.totalPages = totalLines/this.linesOnPage+(totalLines%this.linesOnPage>0?1:0);
-        String page = req.getParameter("page");
-        this.currentPage = (page!=null && !page.equals(""))? Integer.parseInt(page): 1;
+        if(req.getParameter("refreshPagination")!=null && Boolean.getBoolean(req.getParameter("refreshPagination")))
+            {this.currentPage = 1;}
+        else{
+            String page = req.getParameter("page");
+            this.currentPage = (page!=null && !page.equals(""))? Integer.parseInt(page): 1;
+        }
+
         query.limit(this.linesOnPage);
         query.offset(this.linesOnPage*(this.currentPage-1));
     }

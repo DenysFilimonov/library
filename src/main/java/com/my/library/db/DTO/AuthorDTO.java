@@ -4,6 +4,7 @@ import com.my.library.db.ConnectionPool;
 import com.my.library.db.SQLSmartQuery;
 import com.my.library.db.entities.Author;
 import com.my.library.db.DAO.AuthorDAO;
+import com.my.library.services.AppContext;
 
 import javax.naming.OperationNotSupportedException;
 import javax.servlet.http.HttpServletRequest;
@@ -48,17 +49,14 @@ public interface AuthorDTO {
         return author;
     }
 
-    static Author toModel(HttpServletRequest req) throws SQLException {
+    static Author toModel(HttpServletRequest req, AppContext context) throws SQLException {
         Author author = new Author();
         Map<String, String> firstName = new HashMap<>();
         Map<String, String> secondName = new HashMap<>();
         Map<String, String> country = new HashMap<>();
 
         if(req.getParameter("authorId")!=null){
-            SQLSmartQuery sq = new SQLSmartQuery();
-            sq.source(new Author().table);
-            sq.filter("id", req.getParameter("authorId"), SQLSmartQuery.Operators.E);
-            author = AuthorDAO.getInstance(ConnectionPool.dataSource).get(sq).get(0);
+            author = ((AuthorDAO) context.getDAO(author)).getOne(Integer.parseInt(req.getParameter("authorId")));
         }
         else{
             firstName.put("en", req.getParameter("firstNameEn"));
@@ -71,7 +69,6 @@ public interface AuthorDTO {
             author.setSecondName(secondName);
             author.setCountry(country);
             author.setBirthday(LocalDate.parse(req.getParameter("authorBirthday")));
-            AuthorDAO.getInstance(ConnectionPool.dataSource).add(author);
         }
         return author;
     }

@@ -1,11 +1,8 @@
 package com.my.library.db.DTO;
-
-import com.my.library.db.DAO.DAO;
 import com.my.library.db.SQLSmartQuery;
 import com.my.library.db.entities.Genre;
 import com.my.library.db.DAO.GenreDAO;
 import com.my.library.services.AppContext;
-
 import javax.naming.OperationNotSupportedException;
 import javax.servlet.http.HttpServletRequest;
 import java.sql.ResultSet;
@@ -47,10 +44,7 @@ public interface GenreDTO {
             gr.put("en", req.getParameter("genreEn"));
             gr.put("ua", req.getParameter("genreUa"));
             genre.setGenre(gr);
-            ((GenreDAO) context.getDAO(new Genre())).add(genre);
         }
         return genre;
     }
-
-
 }

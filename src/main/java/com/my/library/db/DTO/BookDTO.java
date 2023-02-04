@@ -1,6 +1,4 @@
 package com.my.library.db.DTO;
-
-import com.my.library.db.DAO.DAO;
 import com.my.library.db.SQLSmartQuery;
 import com.my.library.db.entities.*;
 import com.my.library.db.DAO.BookDAO;
@@ -8,7 +6,6 @@ import com.my.library.db.DAO.BookStoreDAO;
 import com.my.library.services.AppContext;
 import com.my.library.services.ConfigurationManager;
 import com.my.library.services.LoadFile;
-
 import javax.naming.OperationNotSupportedException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -55,7 +52,7 @@ public interface BookDTO {
         title.put("en", req.getParameter("titleEn"));
         title.put("ua", req.getParameter("titleUa"));
         book.setTitle(title);
-        Author author = AuthorDTO.toModel(req);
+        Author author = AuthorDTO.toModel(req, context);
         book.setAuthor(author);
         Genre genre = GenreDTO.toModel(req,  context);
         book.setGenre(genre);
@@ -96,8 +93,5 @@ public interface BookDTO {
         }
         return book;
     }
-
-
-
 
 }

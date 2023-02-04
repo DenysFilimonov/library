@@ -4,6 +4,7 @@ import com.my.library.db.DTO.BookDTO;
 import com.my.library.db.entities.Book;
 import com.my.library.db.DAO.BookDAO;
 import com.my.library.services.AppContext;
+import com.my.library.services.ConfigurationManager;
 import com.my.library.services.validator.EditBookValidator;
 import javax.naming.OperationNotSupportedException;
 import javax.servlet.ServletException;
@@ -48,7 +49,7 @@ public class EditeBookCommand implements Command {
             req.setAttribute("errors", errors);
             req.setAttribute("wrongBook", req.getParameter("id"));
         }
-        return CommandMapper.getInstance().getCommand("booksManager").execute(req,resp, context);
+        return ConfigurationManager.getInstance().getProperty(ConfigurationManager.OK_EDIT_BOOK_PAGE_PATH);
     }
 
 

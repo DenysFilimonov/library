@@ -60,7 +60,6 @@ public interface PublisherDTO {
             country.put("ua", req.getParameter("countryUa"));
             publisher.setPublisher(publisherMap);
             publisher.setCountry(country);
-            ((PublisherDAO) context.getDAO(new Publisher())).add(publisher);
         }
         return publisher;
     }

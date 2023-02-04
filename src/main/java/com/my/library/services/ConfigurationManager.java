@@ -18,6 +18,7 @@ public class ConfigurationManager {
     public static final String RETURN_BOOK_PAGE_PATH = "RETURN_BOOK_PAGE_PATH";
 
     public static final String OK_RETURN_PAGE_PATH = "OK_RETURN_PAGE_PATH";
+    public static final String OK_EDIT_BOOK_PAGE_PATH = "OK_EDIT_BOOK_PAGE_PATH";
 
 
     public static final String SUBSCRIPTIONS_PAGE_PATH = "SUBSCRIPTIONS_PAGE_PATH";

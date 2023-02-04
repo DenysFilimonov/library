@@ -16,13 +16,17 @@
                    </div>
                    <input type="text" class="form-control form-control-sm"
                    value = "${not empty param.title? param.title: ''}"
-                   name  = "title" placeholder=<fmt:message key="catalog.label.title"/>>
+                   name  = "title"
+                   id="titleSearchInputField"
+                   placeholder=<fmt:message key="catalog.label.title"/>>
                    <div class="input-group-text">
                    <fmt:message key="catalog.label.author"/>
                    </div>
                    <input type="text" class="form-control form-control-sm"
                    value = "${not empty param.author? param.author: ''}"
-                   name = "author" placeholder=<fmt:message key="catalog.label.Author"/>>
+                   name = "author"
+                   id="authorSearchInputField"
+                   placeholder=<fmt:message key="catalog.label.Author"/>>
                   <div class="input-group-text">
                    <input type="submit" class="btn btn-primary btn-sm" value=<fmt:message key="login.label.find"/>>
                   </div>
@@ -144,14 +148,17 @@
     }
 
     function sortFunction(sort, order){
-       const urlParams = new URLSearchParams(window.location.search);
-       urlParams.set('sort', sort);
-       urlParams.set('order', order);
-       console.log(urlParams);
-       window.location.search = urlParams;
-    }
-
-
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.set('sort', sort);
+            urlParams.set('order', order);
+            if(document.getElementById("authorSearchInputField").value){
+               urlParams.set('author', document.getElementById("authorSearchInputField").value);
+            }
+            if(document.getElementById("titleSearchInputField").value){
+                urlParams.set('title', document.getElementById("titleSearchInputField").value);
+            }
+            window.location.search = urlParams;
+         }
 
 </script>
 

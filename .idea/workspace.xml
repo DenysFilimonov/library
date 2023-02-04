@@ -5,17 +5,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4848fd86-92e6-432a-909d-736a85aafb12" name="Changes" comment="get permission">
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/includes/ok_edit.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/okEditBook.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DTO/StatusDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DTO/StatusDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/entities/UsersBooks.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/entities/UsersBooks.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/PaginationManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/PaginationManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/CatalogCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/CatalogCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/IssueOrderCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/IssueOrderCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/BookDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/BookDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DTO/AuthorDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DTO/AuthorDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DTO/BookDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DTO/BookDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DTO/GenreDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DTO/GenreDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DTO/PublisherDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DTO/PublisherDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/filters/CharacterEncodingFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/filters/CharacterEncodingFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/filters/LogingFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/filters/LogingFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/filters/SecurityFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/filters/SecurityFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/jstl/DateFormat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/tags/DateFormat.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/jstl/UserName.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/tags/UserName.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/ConfigurationManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/ConfigurationManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/BooksManagerCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/BooksManagerCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/EditeBookCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/EditeBookCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/NewBookCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/NewBookCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/config.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/config.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/text.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/text.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/includes/issueBook_body.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/includes/issueBook_body.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/includes/pagination.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/includes/pagination.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/includes/user_account.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/includes/user_account.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/text_ua.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/text_ua.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/custom.tld" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/custom.tld" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/includes/bookManager_body.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/includes/bookManager_body.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/includes/catalog_body.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/includes/catalog_body.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,7 +89,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "last_opened_file_path": "C:/Users/filim/EPAM/JAVA_BASIC/library/src/main/webapp/COVERS",
+    "last_opened_file_path": "C:/Users/filim/EPAM/JAVA_BASIC/library/src/main/webapp",
     "project.structure.last.edited": "Libraries",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.46781608",
@@ -90,11 +102,11 @@
       <recent name="com.my.library.services" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\filim\EPAM\JAVA_BASIC\library\src\main\webapp" />
+      <recent name="C:\Users\filim\EPAM\JAVA_BASIC\library\src\main\webapp\includes" />
       <recent name="C:\Users\filim\EPAM\JAVA_BASIC\library\src\main\webapp\COVERS" />
       <recent name="C:\Users\filim\EPAM\JAVA_BASIC\library\src\main\resources" />
       <recent name="C:\Users\filim\EPAM\JAVA_BASIC\library\src\main\webapp\WEB-INF\classes" />
-      <recent name="C:\Users\filim\EPAM\JAVA_BASIC\library\src\test\resources" />
-      <recent name="C:\Users\filim\EPAM\JAVA_BASIC\library\src\main\java\com\my\library\services" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\filim\EPAM\JAVA_BASIC\library\src\main\webapp\WEB-INF\tags" />
@@ -281,7 +293,14 @@
       <option name="project" value="LOCAL" />
       <updated>1675432115795</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="get permission">
+      <created>1675444880832</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1675444880832</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

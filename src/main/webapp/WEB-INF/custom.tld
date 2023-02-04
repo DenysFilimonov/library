@@ -5,7 +5,7 @@
 
     <tag>
         <name>UserName</name>
-        <tag-class>com.my.library.jstl.UserName</tag-class>
+        <tag-class>com.my.library.tags.UserName</tag-class>
         <body-content>scriptless</body-content>
 
 
@@ -17,7 +17,7 @@
     </tag>
     <tag>
         <name>DateFormat</name>
-        <tag-class>com.my.library.jstl.DateFormat</tag-class>
+        <tag-class>com.my.library.tags.DateFormat</tag-class>
         <body-content>scriptless</body-content>
 
 

@@ -1,6 +1,4 @@
-package com.my.library.jstl;
-
-import com.my.library.db.entities.User;
+package com.my.library.tags;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;

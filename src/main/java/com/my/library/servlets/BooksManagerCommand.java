@@ -42,6 +42,7 @@ public class BooksManagerCommand implements Command {
         this.bookStoreDAO = (BookStoreDAO) context.getDAO(new BookStore());
         this.genreDAO = (GenreDAO) context.getDAO(new Genre());
         if(req.getParameter("delete")!=null) new DeleteBookCommand().execute(req, resp, context);
+        System.out.println(req.getMethod()+"   "+ req.getParameter("formName")+" "+req.getParameter("command"));
         if(req.getMethod().equals("POST")) {
             bookQuery = prepareCatalogSQl(req);
             req.getSession().setAttribute(req.getParameter("command"), bookQuery);

@@ -1,7 +1,10 @@
 package com.my.library.servlets;
 
 import com.my.library.db.DAO.*;
+import com.my.library.db.DTO.AuthorDTO;
 import com.my.library.db.DTO.BookDTO;
+import com.my.library.db.DTO.GenreDTO;
+import com.my.library.db.DTO.PublisherDTO;
 import com.my.library.db.SQLSmartQuery;
 import com.my.library.db.entities.*;
 import com.my.library.services.*;
@@ -34,7 +37,7 @@ public class NewBookCommand implements Command {
      *
      * @param req     HttpServletRequest request
      * @param resp    HttpServletResponse request
-     * @param context
+     * @param context AppContext
      * @return String with jsp page name
      * @throws SQLException                   throw to upper level, where it will be caught
      * @throws ServletException               throw to upper level, where it will be caught
@@ -59,8 +62,11 @@ public class NewBookCommand implements Command {
             Map<String, Map<String, String>> errors = this.context.getValidator(req).validate(req, context);
             if (errors.size()!=0) req.setAttribute("errors", errors);
             else{
-                createBook(req);
-                return CommandMapper.getInstance().getCommand("booksManager").execute(req, resp, context);
+                if (createBook(req))
+                    return CommandMapper.getInstance().getCommand("booksManager").execute(req, resp, context);
+                else
+                    ErrorManager.add(errors, "id", "Couldn't create book, try again later",
+                            "Не вдалося створити книгу. Спробуйте піздніше" );
             }
         }
         setAuthors(req);
@@ -80,7 +86,7 @@ public class NewBookCommand implements Command {
     private void setAuthors(HttpServletRequest req) throws SQLException {
         String authorSearchStr = req.getParameter("author")!=null? req.getParameter("author"): "a";
         SQLSmartQuery sq= new SQLSmartQuery();
-        ArrayList<Author> authors = new ArrayList<>();
+        ArrayList<Author> authors;
         sq.source(new Author().table);
         sq.filter("first_name", authorSearchStr, SQLSmartQuery.Operators.ILIKE);
         sq.logicOperator(SQLSmartQuery.LogicOperators.OR);
@@ -97,12 +103,12 @@ public class NewBookCommand implements Command {
      * Set request 'publishers' attribute for jsp page
      * @param  req      HttpServletRequest request
      * @throws          SQLException throw to upper level, where it will be caught
-     * 2
+     *
      */
     private void setPublishers(HttpServletRequest req) throws SQLException {
         String publisherSearchStr = req.getParameter("publisher");
         SQLSmartQuery sq= new SQLSmartQuery();
-        ArrayList<Publisher> publishers = new ArrayList<>();
+        ArrayList<Publisher> publishers;
         sq.source(new Publisher().table);
         if (publisherSearchStr!=null) {
             sq.filter("publisher", publisherSearchStr, SQLSmartQuery.Operators.ILIKE);
@@ -120,14 +126,38 @@ public class NewBookCommand implements Command {
         req.setAttribute("publishers",publishers);
     }
 
-    private void createBook(HttpServletRequest req) throws SQLException, ServletException, IOException {
-        Book book = BookDTO.toModel(req, context);
-        bookDAO.add(book);
-
+    private boolean createBook(HttpServletRequest req) throws SQLException {
+        Author author = new Author();
+        Genre genre = new Genre();
+        Book book = new Book();
+        Publisher publisher = new Publisher();
+        try {
+            if (req.getParameter("authorId") == null) {
+                author = AuthorDTO.toModel(req, context);
+                authorDAO.add(author);
+            }
+            if (req.getParameter("genreId") == null) {
+                genre = GenreDTO.toModel(req, context);
+                genreDAO.add(genre);
+            }
+            if (req.getParameter("publisherId") == null) {
+                publisher = PublisherDTO.toModel(req, context);
+                publisherDAO.add(publisher);
+            }
+            book = BookDTO.toModel(req, context);
+            bookDAO.add(book);
+            return true;
+        } catch (Exception e){
+            if(author.getId()!=0) authorDAO.delete(author);
+            if(genre.getId()!=0) genreDAO.delete(genre);
+            if(book.getId()!=0) bookDAO.delete(book);
+            if(publisher.getId()!=0) publisherDAO.delete(publisher);
+            return false;
+         }
     }
 
 
-    }
+}
 
 
 

@@ -1,4 +1,4 @@
-package com.my.library.jstl;
+package com.my.library.tags;
 
 import com.my.library.db.entities.User;
 

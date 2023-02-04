@@ -25,8 +25,6 @@ public class SecurityFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException
     {
-        System.out.println("Security filter");
-
             if(SecurityCheck.getInstance().check((HttpServletRequest) request)){
                 chain.doFilter(request, response);
             }

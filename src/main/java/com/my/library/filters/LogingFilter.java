@@ -28,7 +28,6 @@ public class LogingFilter implements Filter {
         if(req.getParameter("command")!=null) {
             LOGGER.info("User " + (user != null ? user.getId() : "guest") + " command = " + req.getParameter("command"));
         }
-        System.out.println("Logging filter");
         chain.doFilter(request, response);
     }
 }

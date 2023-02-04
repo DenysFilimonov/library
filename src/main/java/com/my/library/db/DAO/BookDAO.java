@@ -61,7 +61,7 @@ public class BookDAO implements DAO<Book> {
             insertBook.setInt(8, book.getQuantity());
             insertBook.setInt(9, book.getAvailableQuantity());
             insertBook.setInt(10, book.getBookStore().getId());
-            insertBook.setString(11, book.getCover());
+            insertBook.setString(11, book.getCover().replace(ConfigurationManager.COVER_PATH, ""));
             int affectedRows = insertBook.executeUpdate();
             if (affectedRows == 0) {
                 throw new SQLException("Creating book failed, no rows affected.");

@@ -26,7 +26,7 @@ BD scheme
 
 <ul>
   <li>Build with MVC scheme</li>
-  <li>PRG pattern used for processing input forms</li>
+  <li>PRG pattern used for processing POST requests</li>
   <li>dbcp2 connection pool</li>
   <li>SHA-256 passwords encryption</li>
   <li>Custom jstl tags</li>

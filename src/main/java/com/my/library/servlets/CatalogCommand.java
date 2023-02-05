@@ -3,8 +3,6 @@ import com.my.library.db.SQLSmartQuery;
 import com.my.library.db.entities.Book;
 import com.my.library.db.entities.User;
 import com.my.library.db.entities.UsersBooks;
-import com.my.library.db.DAO.BookDAO;
-import com.my.library.db.DAO.UsersBookDAO;
 import com.my.library.services.*;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,9 +12,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class CatalogCommand implements Command {
-
-    private AppContext context;
+public class CatalogCommand extends ControllerCommand {
 
     /**
      * Serve the requests to main page of application. Processing searching, sorting,
@@ -32,9 +28,7 @@ public class CatalogCommand implements Command {
      */
     public String execute(HttpServletRequest req, HttpServletResponse resp, AppContext context) throws ServletException,
              SQLException
-    {
-        this.context = context;
-        BookDAO bookDao = (BookDAO) context.getDAO(new Book());
+    {   setContext(context);
         SQLSmartQuery bookQuery;
         User user = (User) req.getSession().getAttribute("user");
 
@@ -51,9 +45,9 @@ public class CatalogCommand implements Command {
                 bookQuery = prepareCatalogSQl(req);
             }
         }
-        req.setAttribute("pagination", new PaginationManager(req, bookQuery, bookDao));
+        req.setAttribute("pagination", new PaginationManager(req, bookQuery, bookDAO));
         SortManager.SortManager(req, bookQuery);
-        ArrayList<Book> books = bookDao.get(bookQuery);
+        ArrayList<Book> books = bookDAO.get(bookQuery);
         req.setAttribute("books", books);
         if(user!=null) {
             setOrders(req);
@@ -127,7 +121,6 @@ public class CatalogCommand implements Command {
      */
     public  void setOrders(HttpServletRequest req) throws SQLException {
         SQLSmartQuery ordersQuery = prepareOrdersSQl(req);
-        UsersBookDAO usersBookDAO = (UsersBookDAO) context.getDAO(new UsersBooks());
         ArrayList<UsersBooks> orders = usersBookDAO.get(ordersQuery);
         Map<Integer, UsersBooks> ordersMap = orders.stream().
                 collect(Collectors.toMap(UsersBooks ::getBookId , x->x));

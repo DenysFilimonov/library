@@ -14,12 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class DeleteBookCommand implements Command {
+public class DeleteBookCommand extends ControllerCommand {
 
-    private AppContext context;
-    BookDAO bookDAO;
-  
-    
     /**
      * Serve the requests for delete book. Delete it instance if there aren't issued book or mark as
      * deleted to avoid new operations. When all the released books will be returned  - book would be deleted instantly.
@@ -34,9 +30,7 @@ public class DeleteBookCommand implements Command {
      */
     public String execute(HttpServletRequest req, HttpServletResponse resp, AppContext context) throws ServletException,
              SQLException {
-        this.context = context;
-        this.bookDAO = (BookDAO) context.getDAO(new Book());
-        
+        setContext(context);
         ArrayList<Book> books = bookDAO.get(prepareSQL(req));
         performDeletedClean();
         if(books.size()>0){
@@ -78,8 +72,6 @@ public class DeleteBookCommand implements Command {
                 bookDAO.delete(book);
         }
     }
-
-
 }
 
 

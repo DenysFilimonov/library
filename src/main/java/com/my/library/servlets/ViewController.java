@@ -21,7 +21,6 @@ public class ViewController extends HttpServlet implements javax.servlet.Servlet
 
     private static final Logger LOGGER = LogManager.getLogger(ViewController.class.getName() );
 
-
     CommandMapper commandMapper = CommandMapper.getInstance();
     public ViewController() {
         super();
@@ -41,7 +40,6 @@ public class ViewController extends HttpServlet implements javax.servlet.Servlet
      * @param  req      HttpServletRequest request
      * @param  resp     HttpServletResponse request
      * @see             com.my.library.servlets.CommandMapper
-     * @throws          SQLException can be thrown during password validation
      * @throws ServletException  basic exception for servlet classes
      * @throws IOException   basic exception for servlet classes
      */
@@ -76,13 +74,10 @@ public class ViewController extends HttpServlet implements javax.servlet.Servlet
                     MessageManager.getInstance().getProperty(MessageManager.OTHER_EXCEPTION_ERROR_MESSAGE));
             page = ConfigurationManager.getInstance().getProperty(ConfigurationManager.ERROR_PAGE_PATH);
         }
-
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(page);
         dispatcher.forward(req, resp);
     }
-
-
-    }
+}
 
 
 

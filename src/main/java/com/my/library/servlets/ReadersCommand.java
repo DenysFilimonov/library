@@ -14,13 +14,7 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
-public class ReadersCommand implements Command {
-
-    AppContext context;
-    UsersBookDAO usersBookDAO;
-    UserDAO userDAO;
-
-    StatusDAO statusDAO;
+public class ReadersCommand extends ControllerCommand {
 
     /**
      * Serve the requests for working with readers orders list, including searching,
@@ -39,10 +33,7 @@ public class ReadersCommand implements Command {
      */
     public String execute(HttpServletRequest req, HttpServletResponse resp, AppContext context) throws ServletException,
             SQLException, OperationNotSupportedException, IOException, NoSuchAlgorithmException, CloneNotSupportedException {
-        this.context = context;
-        this.usersBookDAO = (UsersBookDAO) context.getDAO(new UsersBooks());
-        this.userDAO = (UserDAO) context.getDAO(new User());
-        this.statusDAO= (StatusDAO) context.getDAO(new Status());
+        setContext(context);
         String page;
         if (req.getSession().getAttribute("user")==null) {
             page = CommandMapper.getInstance().getCommand("catalog").execute(req, resp, context);

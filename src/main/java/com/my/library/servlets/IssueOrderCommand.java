@@ -1,11 +1,9 @@
 package com.my.library.servlets;
 
-import com.my.library.db.DAO.*;
 import com.my.library.db.SQLSmartQuery;
 import com.my.library.db.entities.*;
 import com.my.library.services.*;
 import com.my.library.services.validator.NewBookValidator;
-
 import javax.naming.OperationNotSupportedException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -16,15 +14,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.util.*;
 
-public class IssueOrderCommand implements Command {
-
-    AppContext context;
-    UsersBookDAO usersBookDAO;
-    IssueTypeDAO issueTypeDAO;
-    StatusDAO statusDAO;
-
-    UserDAO userDAO;
-    BookDAO bookDAO;
+public class IssueOrderCommand extends ControllerCommand {
 
     /**
      * Serve the requests for release book to reader
@@ -45,16 +35,8 @@ public class IssueOrderCommand implements Command {
      */
     public String execute(HttpServletRequest req, HttpServletResponse resp, AppContext context) throws ServletException,
             SQLException, OperationNotSupportedException, IOException, NoSuchAlgorithmException, CloneNotSupportedException {
-        System.out.println("inside issue book command, method = "+req.getMethod());
-        this.context =context;
-        UsersBooks usersBooks = new UsersBooks();
-        this.usersBookDAO =(UsersBookDAO) context.getDAO(usersBooks);
-        this.bookDAO = (BookDAO) context.getDAO(new Book());
-        this.issueTypeDAO = (IssueTypeDAO) context.getDAO(new IssueType());
-        this.statusDAO = (StatusDAO) context.getDAO(new Status());
-        this.userDAO = (UserDAO) context.getDAO(new User());
         Map<String, Map<String, String>> errors = new HashMap<>();
-
+        setContext(context);
         if(Objects.equals(req.getMethod(), "POST")){
             errors = context.getValidator(req).validate(req, context);
             if(errors.isEmpty()) {
@@ -117,8 +99,10 @@ public class IssueOrderCommand implements Command {
         ub.setTargetDate(Date.valueOf(req.getParameter("targetDate")));
         ub.setIssueDate(Date.valueOf(req.getParameter("issueDate")));
         usersBookDAO.update(ub);
-        SetWindowUrl.setUrl(ConfigurationManager.getInstance().getProperty(ConfigurationManager.OK_ISSUE_PAGE_PATH), req);
-        return ConfigurationManager.getInstance().getProperty(ConfigurationManager.OK_ISSUE_PAGE_PATH);
+        req.setAttribute("messagePrg", "account.label.okEdit");
+        req.setAttribute("commandPrg", "orders");
+        SetWindowUrl.setUrl(ConfigurationManager.getInstance().getProperty(ConfigurationManager.OK_RETURN), req);
+        return ConfigurationManager.getInstance().getProperty(ConfigurationManager.OK_RETURN);
     }
 
 
@@ -206,8 +190,6 @@ public class IssueOrderCommand implements Command {
             ub = usersBookDAO.get(sq);
             usersBooks = ub.get(0);
         }catch (NumberFormatException | IndexOutOfBoundsException | NullPointerException e ){
-            System.out.println("Err000000000000000000000000000000000000000000000r");
-            System.out.println(e);
             usersBooks = null;
         }
         return usersBooks;

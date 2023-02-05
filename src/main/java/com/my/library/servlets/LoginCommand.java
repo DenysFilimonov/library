@@ -12,10 +12,7 @@ import javax.naming.OperationNotSupportedException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-public class LoginCommand implements Command {
-
-    AppContext context;
-    UserDAO userDAO;
+public class LoginCommand extends ControllerCommand {
 
     /**
      * Serve the requests for login user
@@ -35,8 +32,7 @@ public class LoginCommand implements Command {
      */
     public String execute(HttpServletRequest req, HttpServletResponse resp, AppContext context) throws ServletException,
             IOException, SQLException, NoSuchAlgorithmException, OperationNotSupportedException, CloneNotSupportedException {
-        this.context = context;
-        this.userDAO = (UserDAO) context.getDAO(new User());
+        setContext(context);
         String page = "";
         User user = new User();
         Map<String, String> errorMessage = new HashMap<>();

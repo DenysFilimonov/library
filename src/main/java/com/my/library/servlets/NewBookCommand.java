@@ -1,6 +1,5 @@
 package com.my.library.servlets;
 
-import com.my.library.db.DAO.*;
 import com.my.library.db.DTO.AuthorDTO;
 import com.my.library.db.DTO.BookDTO;
 import com.my.library.db.DTO.GenreDTO;
@@ -9,7 +8,6 @@ import com.my.library.db.SQLSmartQuery;
 import com.my.library.db.entities.*;
 import com.my.library.services.*;
 import com.my.library.services.validator.NewBookValidator;
-
 import javax.naming.OperationNotSupportedException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -21,16 +19,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
 
-public class NewBookCommand implements Command {
-
-     AppContext context;
-     AuthorDAO authorDAO;
-     PublisherDAO publisherDAO;
-     BookDAO  bookDAO;
-
-     GenreDAO genreDAO;
-
-     BookStoreDAO bookStoreDAO;
+public class NewBookCommand extends ControllerCommand {
 
     /**
      * Serve the requests for create new book in catalog including form data validation
@@ -51,13 +40,7 @@ public class NewBookCommand implements Command {
      */
     public String execute(HttpServletRequest req, HttpServletResponse resp, AppContext context) throws ServletException,
             SQLException, OperationNotSupportedException, IOException, NoSuchAlgorithmException, CloneNotSupportedException {
-        this.context =context;
-        this.authorDAO = (AuthorDAO) context.getDAO(new Author());
-        this.publisherDAO = (PublisherDAO) context.getDAO(new Publisher());
-        this.bookDAO = (BookDAO) context.getDAO(new Book());
-        this.genreDAO  =(GenreDAO) context.getDAO(new Genre());
-        this.bookStoreDAO = (BookStoreDAO) context.getDAO(new BookStore());
-
+        setContext(context);
         if(Objects.equals(req.getMethod(), "POST")){
             Map<String, Map<String, String>> errors = this.context.getValidator(req).validate(req, context);
             if (errors.size()!=0) req.setAttribute("errors", errors);
@@ -155,8 +138,6 @@ public class NewBookCommand implements Command {
             return false;
          }
     }
-
-
 }
 
 

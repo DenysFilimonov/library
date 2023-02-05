@@ -12,7 +12,6 @@ import java.sql.SQLException;
 
 public interface Command {
 
-
     String execute(HttpServletRequest req, HttpServletResponse resp, AppContext context)
             throws ServletException, IOException, SQLException, NoSuchAlgorithmException, OperationNotSupportedException, CloneNotSupportedException;
 

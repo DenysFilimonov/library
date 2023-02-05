@@ -1,33 +1,22 @@
 package com.my.library.servlets;
 
-import com.my.library.db.DAO.BookStoreDAO;
-import com.my.library.db.DAO.GenreDAO;
 import com.my.library.db.SQLSmartQuery;
 import com.my.library.db.entities.Book;
-import com.my.library.db.DAO.BookDAO;
-import com.my.library.db.entities.BookStore;
-import com.my.library.db.entities.Genre;
 import com.my.library.services.*;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class BooksManagerCommand implements Command {
+public class BooksManagerCommand extends ControllerCommand {
 
-    private AppContext context;
-    BookDAO bookDAO;
-    BookStoreDAO bookStoreDAO;
-
-    GenreDAO genreDAO;
     /**
      * Serve the requests to manage book catalog, perform search, sort, delete and edit operation with books
      *
      * @param req     HttpServletRequest request
      * @param resp    HttpServletResponse request
-     * @param context
+     * @param context AppContext wit dependencies  injection
      * @return return string with url of page
      * @throws ServletException throw to upper level, where it will be caught
      * @throws SQLException     throw to upper level, where it will be caught
@@ -35,14 +24,9 @@ public class BooksManagerCommand implements Command {
      */
     public String execute(HttpServletRequest req, HttpServletResponse resp, AppContext context) throws ServletException,
              SQLException
-    {
-        this.context = context;
+    {   setContext(context);
         SQLSmartQuery bookQuery;
-        this.bookDAO = (BookDAO) context.getDAO(new Book());
-        this.bookStoreDAO = (BookStoreDAO) context.getDAO(new BookStore());
-        this.genreDAO = (GenreDAO) context.getDAO(new Genre());
         if(req.getParameter("delete")!=null) new DeleteBookCommand().execute(req, resp, context);
-        System.out.println(req.getMethod()+"   "+ req.getParameter("formName")+" "+req.getParameter("command"));
         if(req.getMethod().equals("POST")) {
             bookQuery = prepareCatalogSQl(req);
             req.getSession().setAttribute(req.getParameter("command"), bookQuery);

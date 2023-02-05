@@ -16,13 +16,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class OrderBookCommand implements Command {
-
-    AppContext context;
-    BookDAO bookDAO;
-    UsersBookDAO usersBookDAO;
-    IssueTypeDAO issueTypeDAO;
-    StatusDAO statusDAO;
+public class OrderBookCommand extends ControllerCommand {
 
     /**
      * Serve the requests for ordering the book from catalog,
@@ -39,12 +33,7 @@ public class OrderBookCommand implements Command {
 
     public String execute(HttpServletRequest req, HttpServletResponse resp, AppContext context) throws ServletException,
              SQLException {
-        this.context =context;
-        UsersBooks usersBooks = new UsersBooks();
-        this.usersBookDAO =(UsersBookDAO) context.getDAO(usersBooks);
-        this.bookDAO = (BookDAO) context.getDAO(new Book());
-        this.issueTypeDAO = (IssueTypeDAO) context.getDAO(new IssueType());
-        this.statusDAO = (StatusDAO) context.getDAO(new Status());
+        setContext(context);
         ArrayList<Book> books = bookDAO.get(prepareSQL(req));
         if (books == null || books.size() == 0) {
             throw new ServletException("There was an error while order the book");
@@ -85,7 +74,6 @@ public class OrderBookCommand implements Command {
         sq.filter("available_quantity", 0, SQLSmartQuery.Operators.G);
         return sq;
     }
-
 }
 
 

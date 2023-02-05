@@ -1,12 +1,11 @@
 package com.my.library.servlets;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 
 public class CommandMapper {
     private static CommandMapper instance = null;
-    final HashMap<String, Command> commands =  new HashMap<String, Command>();
+    final HashMap<String, Command> commands = new HashMap<>();
 
     
     private CommandMapper() {

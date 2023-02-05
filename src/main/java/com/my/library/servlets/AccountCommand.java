@@ -17,10 +17,7 @@ import java.sql.SQLException;
 import java.util.Map;
 import java.util.Objects;
 
-public class AccountCommand implements Command {
-
-     AppContext context;
-
+public class AccountCommand extends ControllerCommand {
     /**
      * Serve the requests to edit user account  including validation form data
      *
@@ -33,13 +30,15 @@ public class AccountCommand implements Command {
      */
     public String execute(HttpServletRequest req, HttpServletResponse resp, AppContext context) throws ServletException,
             IOException, SQLException, NoSuchAlgorithmException, OperationNotSupportedException, CloneNotSupportedException {
-        this.context = context;
         Map<String, Map<String, String>> errors;
+        setContext(context);
         if (Objects.equals(req.getMethod(), "POST")) {
             errors = context.getValidator(req).validate(req, this.context );
             if (errors.isEmpty()) {
                 updateUser(req);
-                return ConfigurationManager.getInstance().getProperty(ConfigurationManager.OK_ACCOUNT_PAGE_PATH);
+                req.setAttribute("messagePrg", "account.label.okUpdate");
+                req.setAttribute("commandPrg", "account");
+                return ConfigurationManager.getInstance().getProperty(ConfigurationManager.OK_RETURN);
             } else {
                 req.setAttribute("errorMessages", errors);
             }
@@ -59,8 +58,7 @@ public class AccountCommand implements Command {
      */
     private void updateUser(HttpServletRequest req) throws SQLException, UnsupportedEncodingException,
             NoSuchAlgorithmException, OperationNotSupportedException, CloneNotSupportedException {
-        User user = new User();
-        UserDAO userDAO = (UserDAO) context.getDAO(user);
+        User user;
         user = UserDTO.toModel(req);
         user.setId(Integer.parseInt(req.getParameter("id")));
         User baseUser = userDAO.getOne(user.getId());

@@ -16,10 +16,7 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.Map;
 
-public class RegisterCommand implements Command {
-
-    AppContext context;
-    UserDAO userDAO;
+public class RegisterCommand extends ControllerCommand {
 
     /**
      * Serve the requests to register new user including validation of form data
@@ -40,9 +37,8 @@ public class RegisterCommand implements Command {
             IOException, SQLException, NoSuchAlgorithmException, OperationNotSupportedException, CloneNotSupportedException {
 
         String page = ConfigurationManager.getInstance().getProperty(ConfigurationManager.REGISTER_PAGE_PATH);
+        setContext(context);
         User user = new User();
-        this.context = context;
-        userDAO = (UserDAO) context.getDAO(user);
         Map<String, Map<String,String>> errors;
         if (req.getMethod().equals("POST")) {
             errors = context.getValidator(req).validate(req, context);

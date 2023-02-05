@@ -19,11 +19,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserManagerCommand implements Command {
+public class UserManagerCommand extends ControllerCommand {
 
-    AppContext context;
-    UserDAO userDAO;
-    RoleDAO roleDAO;
     /**
      * Implements Command method execute
      * Serve the requests to users accounts page, including editing users status and roles
@@ -38,9 +35,7 @@ public class UserManagerCommand implements Command {
      */
     public String execute(HttpServletRequest req, HttpServletResponse resp, AppContext context) throws ServletException,
             IOException, SQLException, NoSuchAlgorithmException, OperationNotSupportedException, CloneNotSupportedException {
-        this.context = context;
-        this.userDAO= (UserDAO) context.getDAO(new User());
-        this.roleDAO= (RoleDAO) context.getDAO(new Role());
+        setContext(context);
         changeUserRole(req);
         changeUserStatus(req);
         setRoles(req);

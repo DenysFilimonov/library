@@ -1,8 +1,6 @@
 package com.my.library.servlets;
-
 import com.my.library.db.DTO.BookDTO;
 import com.my.library.db.entities.Book;
-import com.my.library.db.DAO.BookDAO;
 import com.my.library.services.AppContext;
 import com.my.library.services.ConfigurationManager;
 import com.my.library.services.validator.EditBookValidator;
@@ -15,16 +13,13 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.Map;
 
-public class EditeBookCommand implements Command {
-
-    AppContext context;
-    BookDAO bookDAO;
+public class EditeBookCommand extends ControllerCommand {
     /**
      * Serve the requests for Edit book including serverside form validation
      *
      * @param req     HttpServletRequest request
      * @param resp    HttpServletResponse request
-     * @param context
+     * @param context AppContext
      * @return String with jsp page name
      * @throws SQLException                   throw to upper level, where it will be caught
      * @throws ServletException               throw to upper level, where it will be caught
@@ -38,9 +33,8 @@ public class EditeBookCommand implements Command {
      */
     public String execute(HttpServletRequest req, HttpServletResponse resp, AppContext context) throws ServletException,
             SQLException, OperationNotSupportedException, IOException, NoSuchAlgorithmException, CloneNotSupportedException {
-        this.context = context;
-        this.bookDAO = (BookDAO) context.getDAO(new Book());
         Map<String, Map<String,String>> errors = new EditBookValidator().validate(req, context);
+        setContext(context);
         if(errors.isEmpty()){
             Book book = BookDTO.toModel(req, context);
             bookDAO.update(book);
@@ -49,10 +43,10 @@ public class EditeBookCommand implements Command {
             req.setAttribute("errors", errors);
             req.setAttribute("wrongBook", req.getParameter("id"));
         }
-        return ConfigurationManager.getInstance().getProperty(ConfigurationManager.OK_EDIT_BOOK_PAGE_PATH);
+        req.setAttribute("messagePrg", "account.label.okIssue");
+        req.setAttribute("commandPrg", "booksManager");
+        return ConfigurationManager.getInstance().getProperty(ConfigurationManager.OK_RETURN);
     }
-
-
 }
 
 

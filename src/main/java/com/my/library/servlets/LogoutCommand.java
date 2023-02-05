@@ -12,7 +12,7 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.Enumeration;
 
-public class LogoutCommand implements Command {
+public class LogoutCommand extends ControllerCommand {
 
     /**
      * Serve the requests for logout user
@@ -33,7 +33,7 @@ public class LogoutCommand implements Command {
     public String execute(HttpServletRequest req, HttpServletResponse resp, AppContext context) throws ServletException,
             IOException, SQLException, NoSuchAlgorithmException, OperationNotSupportedException, CloneNotSupportedException {
         String page;
-
+        setContext(context);
         Enumeration attrs =  req.getSession().getAttributeNames();
         while(attrs.hasMoreElements()) {
             req.getSession().removeAttribute(attrs.nextElement().toString());

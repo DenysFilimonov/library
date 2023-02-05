@@ -1,18 +1,8 @@
 package com.my.library.servlets;
-
-import com.my.library.db.ConnectionPool;
-import com.my.library.db.DAO.StatusDAO;
-import com.my.library.db.DAO.UserDAO;
 import com.my.library.db.SQLSmartQuery;
-import com.my.library.db.entities.Status;
 import com.my.library.db.entities.User;
 import com.my.library.db.entities.UsersBooks;
-import com.my.library.db.DAO.UsersBookDAO;
 import com.my.library.services.*;
-import com.my.library.services.validator.BookIssueValidator;
-import com.my.library.services.validator.CancelOrderValidator;
-import com.my.library.services.validator.EditBookValidator;
-
 import javax.naming.OperationNotSupportedException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -20,19 +10,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
-public class CurrentOrdersCommand implements Command {
-
-    private AppContext context;
-    private UsersBookDAO usersBookDAO;
-
-    private StatusDAO statusDAO;
-
-    private UserDAO userDAO;
+public class CurrentOrdersCommand extends ControllerCommand {
 
     /**
      * Processing the requests for working with orders catalog of reader
@@ -47,11 +28,8 @@ public class CurrentOrdersCommand implements Command {
      */
     public String execute(HttpServletRequest req, HttpServletResponse resp, AppContext context) throws ServletException,
             SQLException, OperationNotSupportedException, IOException, NoSuchAlgorithmException, CloneNotSupportedException {
-        this.context = context;
-        this.usersBookDAO =(UsersBookDAO) context.getDAO(new UsersBooks());
-        this.statusDAO = (StatusDAO) context.getDAO(new Status());
-        this.userDAO =(UserDAO) context.getDAO(new User());
         Map<String, Map<String,String>> errors=new HashMap<>();
+        setContext(context);
         if(req.getParameter("userBookId")!=null)
         {
             return CommandMapper.getInstance().getCommand("issueOrder").execute(req, resp, context);
@@ -98,7 +76,7 @@ public class CurrentOrdersCommand implements Command {
      * @throws          SQLException throw to upper level, where it will be caught
      */
     private void cancelOrder(HttpServletRequest req) throws SQLException {
-        UsersBooks userBook = new UsersBooks();
+        UsersBooks userBook;
         userBook = usersBookDAO.getOne(Integer.parseInt(req.getParameter("cancelOrderId")));
         if (userBook!=null) {
             userBook.setStatus(GetStatuses.get(statusDAO).get("canceled"));

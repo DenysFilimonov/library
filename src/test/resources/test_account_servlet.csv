@@ -1,5 +1,5 @@
 login,password,oldPassword,confirmPassword,firstName,secondName,email,phone,page
-test,test,test,test,test,test,test@test.test,+380500000000,okAccount.jsp
+test,test,test,test,test,test,test@test.test,+380500000000,okReturn.jsp
 test,test,test,test,test,test,test@test.test,+38050000000,account.jsp
 test,test,test,test,test,test,@test@testtest,+380500000000,account.jsp
 ,test,test,test,test,test,@test@testtest,+380500000000,account.jsp
@@ -13,7 +13,7 @@ test,test,test,test,,test,@test@testtest,+380500000000,account.jsp
 test,test,test,test,test,,@test@testtest,+380500000000,account.jsp
 test,test,test,test,test,test,,+380500000000,account.jsp
 @24234234++======\\\\\\\\\test,test,test,test,test,test,test@test.test,+380500000000,account.jsp
-select * from users,test,test,test,test,test,test@test.test,+380500000000,okAccount.jsp
+select * from users,test,test,test,test,test,test@test.test,+380500000000,okReturn.jsp
 
 
 

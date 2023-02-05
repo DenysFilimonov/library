@@ -17,17 +17,12 @@ public class ConfigurationManager {
 
     public static final String RETURN_BOOK_PAGE_PATH = "RETURN_BOOK_PAGE_PATH";
 
-    public static final String OK_RETURN_PAGE_PATH = "OK_RETURN_PAGE_PATH";
-    public static final String OK_EDIT_BOOK_PAGE_PATH = "OK_EDIT_BOOK_PAGE_PATH";
-
+    public static final String OK_RETURN = "OK_RETURN_PAGE_PATH";
 
     public static final String SUBSCRIPTIONS_PAGE_PATH = "SUBSCRIPTIONS_PAGE_PATH";
     public static final String ACCOUNT_PAGE_PATH = "ACCOUNT_PAGE_PATH";
 
     public static final String ORDERS_PAGE_PATH = "ORDERS_PAGE_PATH";
-
-    public static final String OK_ACCOUNT_PAGE_PATH = "OK_ACCOUNT_PAGE_PATH";
-    public static final String OK_ISSUE_PAGE_PATH = "OK_ISSUE_PAGE_PATH";
 
     public static final String BOOK_MANAGER_PAGE_PATH = "BOOK_MANAGER_PAGE_PATH";
 
@@ -38,8 +33,6 @@ public class ConfigurationManager {
     public static final String USER_MANAGER_PAGE_PATH = "USER_MANAGER_PAGE_PATH";
 
     public static final String ISSUE_ORDER_PAGE_PATH = "ISSUE_ORDER_PAGE_PATH";
-
-    public static final String CANCEL_ORDER_PAGE_PATH = "CANCEL_ORDER_PAGE_PATH";
 
     public static final String NO_RIGHTS_PAGE_PATH = "NO_RIGHTS_PAGE_PATH";
     public static final String COVER_PATH = "COVER_PATH";

@@ -3,7 +3,6 @@ package com.my.library.servlets;
 
 import com.my.library.services.AppContext;
 import com.my.library.services.ConfigurationManager;
-
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

@@ -15,7 +15,7 @@ public class NoRightsCommand implements Command {
      *
      * @param req     HttpServletRequest request
      * @param resp    HttpServletResponse request
-     * @param context
+     * @param context AppContext
      * @return string with url of jsp page
      * @throws ServletException throw to upper level, where it will be caught
      * @throws IOException      throw to upper level, where it will be caught

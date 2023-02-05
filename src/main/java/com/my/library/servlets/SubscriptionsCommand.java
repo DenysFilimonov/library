@@ -17,13 +17,7 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class SubscriptionsCommand implements Command {
-
-
-    AppContext context;
-    BookDAO bookDAO;
-    UsersBookDAO usersBookDAO;
-
+public class SubscriptionsCommand extends ControllerCommand {
 
     /**
      * Implements Command method execute
@@ -42,10 +36,8 @@ public class SubscriptionsCommand implements Command {
      */
     public String execute(HttpServletRequest req, HttpServletResponse resp, AppContext context) throws ServletException,
             SQLException, OperationNotSupportedException, IOException, NoSuchAlgorithmException, CloneNotSupportedException {
-        this.context =context;
         UsersBooks usersBooks = new UsersBooks();
-        this.usersBookDAO =(UsersBookDAO) context.getDAO(usersBooks);
-        this.bookDAO = (BookDAO) context.getDAO(new Book());
+        setContext(context);
 
         String page;
         if (req.getSession().getAttribute("user")==null){

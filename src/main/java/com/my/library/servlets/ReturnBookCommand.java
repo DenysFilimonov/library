@@ -7,7 +7,6 @@ import com.my.library.db.DAO.BookDAO;
 import com.my.library.db.DAO.PaymentDAO;
 import com.my.library.db.DAO.UsersBookDAO;
 import com.my.library.services.*;
-import com.my.library.services.validator.ReturnBookValidator;
 
 import javax.naming.OperationNotSupportedException;
 import javax.servlet.ServletException;
@@ -18,13 +17,7 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.*;
 
-public class ReturnBookCommand implements Command {
-
-    AppContext context;
-    UsersBookDAO usersBookDAO;
-    BookDAO bookDAO;
-    PaymentDAO paymentDAO;
-    StatusDAO statusDAO;
+public class ReturnBookCommand extends ControllerCommand {
 
     /**
      * Serve the requests to retrieving book from reader
@@ -42,11 +35,7 @@ public class ReturnBookCommand implements Command {
      */
     public String execute(HttpServletRequest req, HttpServletResponse resp, AppContext context) throws ServletException,
             SQLException, OperationNotSupportedException, IOException, NoSuchAlgorithmException, CloneNotSupportedException {
-        this.context =context;
-        usersBookDAO = (UsersBookDAO) context.getDAO(new UsersBooks());
-        bookDAO = (BookDAO) context.getDAO(new Book());
-        paymentDAO = (PaymentDAO) context.getDAO(new Payment());
-        statusDAO = (StatusDAO) context.getDAO(new Status());
+        setContext(context);
         Map<String, Map<String, String>> errors = new HashMap<>();
         if (req.getSession().getAttribute("user") == null) {
             return ConfigurationManager.getInstance().getProperty(ConfigurationManager.ERROR_PAGE_PATH);
@@ -103,8 +92,10 @@ public class ReturnBookCommand implements Command {
         Book book = getBook(ub);
         book.setAvailableQuantity(book.getAvailableQuantity()+1);
         bookDAO.update(book);
-        SetWindowUrl.setUrl(ConfigurationManager.getInstance().getProperty(ConfigurationManager.OK_RETURN_PAGE_PATH), req);
-        return ConfigurationManager.getInstance().getProperty(ConfigurationManager.OK_RETURN_PAGE_PATH);
+        req.setAttribute("messagePrg", "readers.label.returnBook");
+        req.setAttribute("commandPrg", "readers");
+        SetWindowUrl.setUrl(ConfigurationManager.getInstance().getProperty(ConfigurationManager.OK_RETURN), req);
+        return ConfigurationManager.getInstance().getProperty(ConfigurationManager.OK_RETURN);
     }
 
     /**

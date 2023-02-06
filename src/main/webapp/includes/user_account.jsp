@@ -1,7 +1,3 @@
-<c:set var="display"
- value="${ not empty errorMessages[oldPassword]  ? 'block': 'none' }"
- scope="request" />
-
 <div class="container col-6 rounded bgColor p-3">
     <div class="h4 text-center white">
         <fmt:message key="editAccount.label.header" />
@@ -73,6 +69,7 @@
       </div>
     <div class="input-group pt-1">
             <span class = "error">${errorMessages['email'][language]}</span>
+            <span class = "error">${errorMessages['email'][language]}</span>
     </div>
 
     <div class="input-group">
@@ -96,7 +93,7 @@
               <span id ="phoneErrorGlobal" class = "error">${errorMessages['phone'][language]}</span>
     </div>
 
-    <div id="passwordGroup" style="display:${display}">
+    <div id="passwordGroup" style="display:none;">
         <div class="input-group">
                  <div class="input-group-text w15">
                     <label for="oldPassword" class="form-label"><fmt:message key="account.label.passwordOld"/></label>
@@ -106,10 +103,11 @@
                      id="oldPassword"
                      name="oldPassword"
                      required
+                     disabled
                  />
         </div>
         <div class="input-group pt-1">
-                <span class = "error">${errorMessages['oldPassword'][language]}</span>
+                <span class = "error" id="oldPasswordError">${errorMessages['oldPassword'][language]}</span>
         </div>
 
         <div class="input-group">
@@ -121,6 +119,7 @@
                         id="password"
                         name="password"
                         required
+                        disabled
                         onInput = "comparePassword();"
                  />
         </div>
@@ -137,6 +136,7 @@
                     id="passwordConfirmation"
                     name="passwordConfirmation"
                     required
+                    disabled
                     onInput = "comparePassword()";
                  />
         </div>
@@ -148,36 +148,39 @@
     </div>
     <div class="mt-3">
         <div style="text-align:center">
-                    <button
+                    <a
                         class="btn btn-primary"
                         id="userFormActivate"
                         onClick="activateForm();"
                     ><fmt:message key="account.label.edit"/>
-                    </button>
-                    <button
+                    </a>
+                    <a
                         class="btn btn-primary"
                         hidden
                         id="cancelButton"
                         onClick="deactivateForm();"
                     ><fmt:message key="account.label.cancel"/>
-                    </button>
-                    <button
+                    </a>
+                    <a
                         class="btn btn-primary"
                         id="passwordChange"
                         hidden
                         onClick="editPassword();"
                     ><fmt:message key="account.label.editPassword"/>
-                    </button>
+                    </a>
                     <input type="submit"
                         hidden
                         class="btn btn-primary"
                         value=<fmt:message key="account.label.submit"/>
                         id="submitButton"
-                        onClick="submitForm();"
+
                     />
                 </div>
     </div>
     </form>
+    <div class="input-group pt-1">
+            <span class = "error">${errorMessages['overall'][language]}</span>
+        </div>
 </div>
 
 
@@ -215,29 +218,43 @@
         var idList=['login', 'firstName', 'secondName', 'email', 'phone'];
 
         idList.map(x=>{
-            document.getElementById(x).disabled = !document.getElementById(x).disabled;
+            document.getElementById(x).disabled = false;
         });
-        document.getElementById('userFormActivate').hidden= !document.getElementById('userFormActivate').hidden;
-        document.getElementById('cancelButton').hidden=!document.getElementById('cancelButton').hidden;
-        document.getElementById('passwordChange').hidden=!document.getElementById('passwordChange').hidden;
-        document.getElementById('submitButton').hidden=!document.getElementById('submitButton').hidden;
-        document.getElementById('passwordGroup').style.display='none';
-        setPassNull();
+        document.getElementById('userFormActivate').hidden= true;
+        document.getElementById('cancelButton').hidden=false;
+        document.getElementById('passwordChange').hidden=false
+        document.getElementById('submitButton').hidden=false;
     }
 
     function deactivateForm(){
-        document.getElementById('passwordChange').hidden=!document.getElementById('passwordChange').hidden;
-        activateForm();
+      var idList=['login', 'firstName', 'secondName', 'email', 'phone'];
+
+              idList.map(x=>{
+                  document.getElementById(x).disabled = true;
+              });
+              document.getElementById('userFormActivate').hidden= false;
+              document.getElementById('cancelButton').hidden=true;
+              document.getElementById('passwordChange').hidden=true
+              document.getElementById('submitButton').hidden=true;
+              editPassword();
     }
 
     function editPassword(){
-        console.log(document.getElementById('passwordGroup').style);
-        if (document.getElementById('passwordGroup').style.display=='none')
+          var idList=['password', 'oldPassword', 'passwordConfirmation'];
+        if (document.getElementById('passwordGroup').style.display=='none'){
             document.getElementById('passwordGroup').style.display='block';
-        else {document.getElementById('passwordGroup').style.display ='none'
-              setPassNull();
+            idList.map(x=>{
+                            document.getElementById(x).disabled = false;
+                           });
+            }
+        else {
+            document.getElementById('passwordGroup').style.display ='none'
+             idList.map(x=>{
+                             document.getElementById(x).disabled = true;
+                           });
+            setPassNull();
         };
-        document.getElementById('passwordChange').hidden = true;
+
     }
 
     function submitForm(){

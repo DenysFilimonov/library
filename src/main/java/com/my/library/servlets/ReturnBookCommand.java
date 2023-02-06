@@ -36,7 +36,8 @@ public class ReturnBookCommand extends ControllerCommand {
     public String execute(HttpServletRequest req, HttpServletResponse resp, AppContext context) throws ServletException,
             SQLException, OperationNotSupportedException, IOException, NoSuchAlgorithmException, CloneNotSupportedException {
         setContext(context);
-        Map<String, Map<String, String>> errors = new HashMap<>();
+        ErrorMap errors = new ErrorMap();
+        ErrorManager errorManager = new ErrorManager();
         if (req.getSession().getAttribute("user") == null) {
             return ConfigurationManager.getInstance().getProperty(ConfigurationManager.ERROR_PAGE_PATH);
         }
@@ -49,7 +50,7 @@ public class ReturnBookCommand extends ControllerCommand {
                 if (ub.getFineDays()==0 || payment>=ub.getFineDays())
                     return doReturn(req);
                 else
-                    ErrorManager.add(errors, "fine", "There is unpaid debt, cant return book",
+                    errorManager.add("fine", "There is unpaid debt, cant return book",
                             "Є не погашена заборгованість за видану книгу, не можливо закрити заказ");
             }
         }
@@ -68,7 +69,7 @@ public class ReturnBookCommand extends ControllerCommand {
         req.setAttribute("payment", payment);
         req.setAttribute("userBook", ub);
         req.setAttribute("book", book);
-        System.out.println("Can i clear it? "+ req.getParameter("returnBook"));
+        errors.putAll(errorManager.getErrors());
         req.setAttribute("errors", errors);
         SetWindowUrl.setUrl(ConfigurationManager.getInstance().getProperty(ConfigurationManager.RETURN_BOOK_PAGE_PATH), req);
         return ConfigurationManager.getInstance().getProperty(ConfigurationManager.RETURN_BOOK_PAGE_PATH);

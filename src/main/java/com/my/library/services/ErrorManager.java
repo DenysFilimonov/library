@@ -17,11 +17,18 @@ public class ErrorManager {
      *
      */
 
-    public static void add(Map<String, Map<String,String>> errors, String key, String enMessage, String uaMessage){
+    private ErrorMap errors = new ErrorMap();
+
+
+    public void add(String key, String enMessage, String uaMessage){
         HashMap<String, String> element = new HashMap<>();
         element.put("en", enMessage);
         element.put("ua", uaMessage);
         errors.put(key, element);
+    }
+
+    public ErrorMap getErrors(){
+        return errors;
     }
 
 }

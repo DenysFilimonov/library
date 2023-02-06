@@ -41,22 +41,24 @@ public class NewBookCommand extends ControllerCommand {
     public String execute(HttpServletRequest req, HttpServletResponse resp, AppContext context) throws ServletException,
             SQLException, OperationNotSupportedException, IOException, NoSuchAlgorithmException, CloneNotSupportedException {
         setContext(context);
+        ErrorMap errors = new ErrorMap();
+        ErrorManager errorManager = new ErrorManager();
         if(Objects.equals(req.getMethod(), "POST")){
-            Map<String, Map<String, String>> errors = this.context.getValidator(req).validate(req, context);
-            if (errors.size()!=0) req.setAttribute("errors", errors);
-            else{
-                if (createBook(req))
+            errors = this.context.getValidator(req).validate(req, context);
+            if (errors.size() ==0) {
+               if (createBook(req))
                     return CommandMapper.getInstance().getCommand("booksManager").execute(req, resp, context);
                 else
-                    ErrorManager.add(errors, "id", "Couldn't create book, try again later",
+                    errorManager.add("id", "Couldn't create book, try again later",
                             "Не вдалося створити книгу. Спробуйте піздніше" );
             }
         }
+        errors.putAll(errorManager.getErrors());
+        req.setAttribute("errors", errors);
         setAuthors(req);
         setPublishers(req);
         req.setAttribute("genres", GetGenres.get(genreDAO));
         req.setAttribute("bookStorage", GetStorage.get(bookStoreDAO));
-
         return ConfigurationManager.getInstance().getProperty(ConfigurationManager.NEW_BOOK_PAGE_PATH);
     }
 

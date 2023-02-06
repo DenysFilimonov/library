@@ -21,10 +21,7 @@
 <script language="javascript">
 
 window.onload = function(e){
-    console.log("window.onload");
-    console.log('${commandUrl}');
-    console.log('${language}')
-    window.history.pushState('page2', 'Library', '${commandUrl}');
+    window.history.pushState('page', 'Library', '${commandUrl}');
     if(sessionStorage.getItem("tab"))  {
         console.log(!sessionStorage.getItem("tab"));
         document.getElementById(sessionStorage.getItem("tab")).click();
@@ -33,6 +30,10 @@ window.onload = function(e){
     try{
         document.getElementById("${wrongBook}").click();
     }catch(e){
+    }
+    if(document.getElementById("oldPasswordError").innerHTML!=''){
+        document.getElementById("userFormActivate").click();
+        document.getElementById("passwordChange").click();
     }
 }
 

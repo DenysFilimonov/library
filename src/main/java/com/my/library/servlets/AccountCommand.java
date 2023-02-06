@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -30,10 +31,13 @@ public class AccountCommand extends ControllerCommand {
      */
     public String execute(HttpServletRequest req, HttpServletResponse resp, AppContext context) throws ServletException,
             IOException, SQLException, NoSuchAlgorithmException, OperationNotSupportedException, CloneNotSupportedException {
-        Map<String, Map<String, String>> errors;
+        ErrorMap errors;
         setContext(context);
         if (Objects.equals(req.getMethod(), "POST")) {
             errors = context.getValidator(req).validate(req, this.context );
+            errors.forEach((k,v)->{
+                System.out.println(k+" "+v);
+            });
             if (errors.isEmpty()) {
                 updateUser(req);
                 req.setAttribute("messagePrg", "account.label.okUpdate");
@@ -41,6 +45,9 @@ public class AccountCommand extends ControllerCommand {
                 return ConfigurationManager.getInstance().getProperty(ConfigurationManager.OK_RETURN);
             } else {
                 req.setAttribute("errorMessages", errors);
+                errors.forEach((k,v)->{
+                    System.out.println(k+" "+v);
+                });
             }
         }
         return ConfigurationManager.getInstance().getProperty(ConfigurationManager.ACCOUNT_PAGE_PATH);
@@ -73,7 +80,5 @@ public class AccountCommand extends ControllerCommand {
         userDAO.update(user);
         req.getSession().setAttribute("user", UserDTO.toView(user));
     }
-
-
 }
 

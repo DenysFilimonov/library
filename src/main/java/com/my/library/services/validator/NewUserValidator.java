@@ -7,6 +7,7 @@ import com.my.library.db.SQLSmartQuery;
 import com.my.library.db.entities.User;
 import com.my.library.services.AppContext;
 import com.my.library.services.ErrorManager;
+import com.my.library.services.ErrorMap;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
@@ -20,15 +21,15 @@ public class NewUserValidator implements Validator {
      * Validate form data for RegisterCommand, check data for create new user
      *
      * @param req     HttpServletRequest request with form data
-     * @param context
-     * @return errors   Map with errors of form validation
+     * @param context AppContext
+     * @return errorManager.getErrors()   Map with errorManager.getErrors() of form validation
      * @see com.my.library.servlets.CommandMapper
      * @see com.my.library.servlets.RegisterCommand
      * @see ErrorManager
      */
 
-    public Map<String, Map<String,String>> validate(HttpServletRequest req, AppContext context) throws SQLException {
-        Map<String, Map<String,String>> errors = new HashMap<>();
+    public ErrorMap validate(HttpServletRequest req, AppContext context) throws SQLException {
+        ErrorManager errorManager = new ErrorManager();
         String login = req.getParameter("login");
         String firstName = req.getParameter("firstName");
         String secondName = req.getParameter("secondName");
@@ -44,38 +45,38 @@ public class NewUserValidator implements Validator {
                 || (Objects.equals(phone, "") ||phone == null)
                 || (Objects.equals(password, "") || password == null)
                 || (Objects.equals(passwordConfirmation, "") || passwordConfirmation == null)) {
-            ErrorManager.add(errors, "overall", "All the fields are mandatory",
+            errorManager.add(  "overall", "All the fields are mandatory",
                     "Усі поля є обов'язковими");
-            return errors;
+            return errorManager.getErrors();
         }
         SQLSmartQuery sq =new SQLSmartQuery();
         User user = new User();
-        sq.source(user.table);;
+        sq.source(user.table);
         sq.filter("login", login, SQLSmartQuery.Operators.E);
         UserDAO userDAO = (UserDAO) context.getDAO(user);
         if(userDAO.get(sq).size()>0){
-            ErrorManager.add(errors, "login","User with this login already exists",
+            errorManager.add(  "login","User with this login already exists",
                     "Користувач з таким ім'ям вже існує");
         }
         if (!checkPasswords(password, passwordConfirmation))
-            ErrorManager.add(errors, "password", "Password fields does not have the same values",
+            errorManager.add(  "password", "Password fields does not have the same values",
                     "Значення полей з паролями не співпадають");
         if (!checkEmail(email))
-            ErrorManager.add(errors, "email", "Email field does not have a valid value",
+            errorManager.add(  "email", "Email field does not have a valid value",
                     "Не коректне значення поля email");
 
-        if (!checkPhone(phone)) ErrorManager.add(errors, "phone","Phone should have format +380XXXXXXXXX "
+        if (!checkPhone(phone)) errorManager.add(  "phone","Phone should have format +380XXXXXXXXX "
            , "Номер повинен мати формат +380XXXXXXXXX");
-        if(login.length()>20) ErrorManager.add(errors, "login","Login should be up to 20 character long "
+        if(login.length()>20) errorManager.add(  "login","Login should be up to 20 character long "
                 , "Логін не повинен бути довщим за 20 символів");
-        if(firstName.length()>20) ErrorManager.add(errors, "firstName","Name should be up to 20 character long "
+        if(firstName.length()>20) errorManager.add(  "firstName","Name should be up to 20 character long "
                 , "Ім'я не повинно бути довщим за 20 символів");
-        if(secondName.length()>30) ErrorManager.add(errors, "lastName","Last name should be up to 30 character long "
+        if(secondName.length()>30) errorManager.add(  "lastName","Last name should be up to 30 character long "
                 , "Прізвище не повиненне бути довщим за 30 символів");
-        if(password.length()>30) ErrorManager.add(errors, "password","password  should be up to 30 character long "
+        if(password.length()>30) errorManager.add(  "password","password  should be up to 30 character long "
                 , "Пароль не повиненен бути довщим за 30 символів");
 
-        return errors;
+        return errorManager.getErrors();
     }
 
 

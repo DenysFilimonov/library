@@ -1,13 +1,9 @@
 package com.my.library.servlets;
 
-import com.my.library.db.ConnectionPool;
 import com.my.library.db.SQLSmartQuery;
 import com.my.library.db.entities.Role;
 import com.my.library.db.entities.User;
-import com.my.library.db.DAO.RoleDAO;
-import com.my.library.db.DAO.UserDAO;
 import com.my.library.services.*;
-
 import javax.naming.OperationNotSupportedException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -16,8 +12,6 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class UserManagerCommand extends ControllerCommand {
 
@@ -27,7 +21,7 @@ public class UserManagerCommand extends ControllerCommand {
      *
      * @param req     HttpServletRequest request
      * @param resp    HttpServletResponse request
-     * @param context
+     * @param context AppContext
      * @throws SQLException     can be thrown during password validation
      * @throws ServletException throw to upper level, where it will be caught
      * @throws IOException      throw to upper level, where it will be caught
@@ -112,7 +106,7 @@ public class UserManagerCommand extends ControllerCommand {
         if(req.getParameter("setRole")!=null && !req.getParameter("setRole").equals("")
                 && req.getParameter("userId")!=null && !req.getParameter("userId").equals("")){
             User user = new User();
-            Map<String, Map<String,String>> errors = new HashMap<>();
+            ErrorManager errorManager = new ErrorManager();
             SQLSmartQuery sqUser = new SQLSmartQuery();
             sqUser.source(user.table);
             Role role = new Role();
@@ -123,13 +117,13 @@ public class UserManagerCommand extends ControllerCommand {
             sqRole.source(role.table);
             sqRole.filter("id", Integer.parseInt(req.getParameter("setRole")), SQLSmartQuery.Operators.E);
             ArrayList<Role> roles = roleDAO.get(sqRole);
-            if (users.isEmpty()) ErrorManager.add(errors, "userId", "There isn't user with this id",
+            if (users.isEmpty()) errorManager.add("userId", "There isn't user with this id",
                     "Користувача з таким ID не існує");
-            if (roles.isEmpty()) ErrorManager.add(errors, "roleId", "There isn't role with this id",
+            if (roles.isEmpty()) errorManager.add("roleId", "There isn't role with this id",
                     "Ролі з таким ID не існує");
 
-            if(!errors.isEmpty()){
-                req.setAttribute("errors", errors);
+            if(!errorManager.getErrors().isEmpty()){
+                req.setAttribute("errors", errorManager.getErrors());
                 return;
             }
                 user = users.get(0);
@@ -147,16 +141,16 @@ public class UserManagerCommand extends ControllerCommand {
         if(req.getParameter("setActive")!=null && !req.getParameter("setActive").equals("")
                 && req.getParameter("userId")!=null && !req.getParameter("userId").equals("")){
             User user = new User();
-            Map<String, Map<String,String>> errors = new HashMap<>();
+            ErrorManager errorManager = new ErrorManager();
             SQLSmartQuery sqUser = new SQLSmartQuery();
             sqUser.source(user.table);
             sqUser.source(user.table);
             sqUser.filter("id", Integer.parseInt(req.getParameter("userId")), SQLSmartQuery.Operators.E);
             ArrayList<User> users = userDAO.get(sqUser);
-            if (users.isEmpty()) ErrorManager.add(errors, "userId", "There isn't user with this id",
+            if (users.isEmpty()) errorManager.add("userId", "There isn't user with this id",
                     "Користувача з таким ID не існує");
-            if(!errors.isEmpty()){
-                req.setAttribute("errors", errors);
+            if(!errorManager.getErrors().isEmpty()){
+                req.setAttribute("errors", errorManager.getErrors());
                 return;
             }
             user = users.get(0);

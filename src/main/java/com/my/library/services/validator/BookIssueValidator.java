@@ -6,10 +6,7 @@ import com.my.library.db.ConnectionPool;
 import com.my.library.db.SQLSmartQuery;
 import com.my.library.db.entities.*;
 import com.my.library.db.DAO.*;
-import com.my.library.services.AppContext;
-import com.my.library.services.ErrorManager;
-import com.my.library.services.GetIssueTypes;
-import com.my.library.services.GetStatuses;
+import com.my.library.services.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Date;
@@ -31,17 +28,17 @@ public class BookIssueValidator implements Validator{
      * @see ErrorManager
      */
 
-    public Map<String, Map<String,String>> validate(HttpServletRequest req, AppContext context) throws SQLException {
+    public ErrorMap validate(HttpServletRequest req, AppContext context) throws SQLException {
         StatusDAO statusDAO = (StatusDAO) context.getDAO(new Status());
         IssueTypeDAO issueTypeDAO = (IssueTypeDAO) context.getDAO(new IssueType());
-        Map<String, Map<String, String>> errors = new HashMap<>();
         UsersBooks userBook = new UsersBooks();
+        ErrorManager errorManager = new ErrorManager();
         try {
             Integer.parseInt(req.getParameter("userBookId"));
                     } catch (NumberFormatException e) {
-            ErrorManager.add(errors, "isbn", "Id field should contain numbers only",
+            errorManager.add("isbn", "Id field should contain numbers only",
                     "Id поля повинні мати тільки цифри");
-            return errors;
+            return errorManager.getErrors();
         }
         SQLSmartQuery sq = new SQLSmartQuery();
         sq.source(new UsersBooks().table);
@@ -51,13 +48,13 @@ public class BookIssueValidator implements Validator{
         UsersBookDAO usersBookDAO = (UsersBookDAO) context.getDAO(new UsersBooks());
         ArrayList<UsersBooks> usersBooks = usersBookDAO.get(sq);
         if (usersBooks.isEmpty()){
-            ErrorManager.add(errors, "userId", "There isn`t order with this parameter or already processed by other user",
+            errorManager.add("userId", "There isn`t order with this parameter or already processed by other user",
                     "Заказа з такими параметрами не існує або обслуговується іншим користувачем");
-            return errors;
+            return errorManager.getErrors();
         }
 
         if (req.getParameter("isbn")==null && req.getParameter("isbn").equals("")){
-            ErrorManager.add(errors,"isbn", "ISBN is required field",
+            errorManager.add("isbn", "ISBN is required field",
                     "ISBN обов'язкове поле" );
             req.setAttribute("isbn", "");
         }
@@ -70,7 +67,7 @@ public class BookIssueValidator implements Validator{
             BookDAO bookDAO = (BookDAO) context.getDAO(book);
             ArrayList<Book> books = BookDAO.getInstance(ConnectionPool.dataSource).get(sqb);
             if(!books.get(0).getIsbn().equals(req.getParameter("isbn"))){
-                ErrorManager.add(errors,"isbn", "ISBN  does not equal the stored value",
+                errorManager.add("isbn", "ISBN  does not equal the stored value",
                         "ISBN не співпадає із збереженим значенням" );
             }
         }
@@ -80,21 +77,21 @@ public class BookIssueValidator implements Validator{
             long days = (targetDate.getTime() - issueDate.getTime()) / 1000 / 60 / 60 / 24;
             if (GetIssueTypes.get(issueTypeDAO).get("subscription").getId() == usersBooks.get(0).getIssueType().getId()) {
                 if (days > 30) {
-                    ErrorManager.add(errors, "returnDate", "Book cant be subscribed for more than 30 days",
+                    errorManager.add("returnDate", "Book cant be subscribed for more than 30 days",
                             "Не можна видати книгу на дім більш ніж на 30 діб");
                 }
             } else {
                 if (days > 1) {
-                    ErrorManager.add(errors, "returnDate", "Book cant be used in reading room more than 1 day",
+                    errorManager.add("returnDate", "Book cant be used in reading room more than 1 day",
                             "Не можна тримати книгу в читльній залі більше 1 дня");
                 }
             }
         }catch (IllegalArgumentException e){
-            ErrorManager.add(errors, "returnDate", "Illegal date format, can't be processed ",
+            errorManager.add("returnDate", "Illegal date format, can't be processed ",
                     "Не відповідний формат дати");
         }
 
-        return errors;
+        return errorManager.getErrors();
     }
 
 

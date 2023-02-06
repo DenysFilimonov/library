@@ -25,7 +25,6 @@ public class Login {
  * @return          User object if success or null
  * @see             java.security.MessageDigest
  * @see             com.my.library.servlets.AccountCommand
- * @see             ErrorManager
  * @throws          SQLException can be thrown during password validation
  * @throws          UnsupportedEncodingException can be thrown during password encryption
  * @throws          NoSuchAlgorithmException can be thrown during password encryption

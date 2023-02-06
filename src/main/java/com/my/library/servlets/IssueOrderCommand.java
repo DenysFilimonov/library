@@ -35,8 +35,9 @@ public class IssueOrderCommand extends ControllerCommand {
      */
     public String execute(HttpServletRequest req, HttpServletResponse resp, AppContext context) throws ServletException,
             SQLException, OperationNotSupportedException, IOException, NoSuchAlgorithmException, CloneNotSupportedException {
-        Map<String, Map<String, String>> errors = new HashMap<>();
         setContext(context);
+        ErrorManager errorManager = new ErrorManager();
+        ErrorMap errors = new ErrorMap();
         if(Objects.equals(req.getMethod(), "POST")){
             errors = context.getValidator(req).validate(req, context);
             if(errors.isEmpty()) {
@@ -53,7 +54,7 @@ public class IssueOrderCommand extends ControllerCommand {
         }
 
         if(!blockOrder(req)) {
-            ErrorManager.add(errors, "id", "Order canceled or already taken by other librarian ",
+            errorManager.add( "id", "Order canceled or already taken by other librarian ",
                     "Замовлення відхилене або вже оброблюється іншим оператором");
             SetWindowUrl.setUrl(ConfigurationManager.getInstance().getProperty(ConfigurationManager.ISSUE_ORDER_PAGE_PATH), req);
             return ConfigurationManager.getInstance().getProperty(ConfigurationManager.ISSUE_ORDER_PAGE_PATH);

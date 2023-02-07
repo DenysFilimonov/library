@@ -1,4 +1,5 @@
-import com.my.library.db.DAO.GenreDAO;
+package TestDao;
+
 import com.my.library.db.DAO.IssueTypeDAO;
 import com.my.library.db.SQLSmartQuery;
 import com.my.library.db.entities.IssueType;
@@ -34,7 +35,7 @@ public class DaoIssueTypeTest {
 
     @AfterEach
     public void clearDAO(){
-        GenreDAO.destroyInstance();
+        IssueTypeDAO.destroyInstance();
 
     }
 

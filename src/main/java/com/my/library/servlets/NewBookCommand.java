@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Objects;
 
 public class NewBookCommand extends ControllerCommand {
@@ -46,8 +45,11 @@ public class NewBookCommand extends ControllerCommand {
         if(Objects.equals(req.getMethod(), "POST")){
             errors = this.context.getValidator(req).validate(req, context);
             if (errors.size() ==0) {
-               if (createBook(req))
-                    return CommandMapper.getInstance().getCommand("booksManager").execute(req, resp, context);
+               if (createBook(req)) {
+                   req.setAttribute("messagePrg", "book.label.okCreated");
+                   req.setAttribute("commandPrg", "booksManager");
+                   return ConfigurationManager.getInstance().getProperty(ConfigurationManager.OK_RETURN);
+               }
                 else
                     errorManager.add("id", "Couldn't create book, try again later",
                             "Не вдалося створити книгу. Спробуйте піздніше" );

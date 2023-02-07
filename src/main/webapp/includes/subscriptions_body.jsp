@@ -69,8 +69,8 @@
 <script type="text/javascript">
     function cancelOrder(orderId){
         const urlParams = new URLSearchParams(window.location.search);
-        urlParams.set('cancelOrderId', orderId);
-        console.log(urlParams);
+        urlParams.set('command', 'cancelOrder')
+        urlParams.set('orderId', orderId);
         window.location.search = urlParams;
     }
 

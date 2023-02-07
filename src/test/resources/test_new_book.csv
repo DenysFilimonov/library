@@ -1,5 +1,0 @@
-ISBN,title,genreId,genre,authorId,firstName,secondName,country,birthday,publisherId,publisher,publisherCountry,publishingDate,quantity,caseNum,shelfNum,cellNum,fileName
-ISBN,title,genreId,genre,1,,,,,1,,,,1,8,8,8,test.jpg
-ISBN,title,genreId,genre,authorId,firstName,secondName,country,birthday,publisherId,publisher,publisherCountry,publishingDate,quantity,caseNum,shelfNum,cellNum,test.jpg
-ISBN,title,1,,2,,,,01/01/2000,2,,,01/01/2000,1,8,8,8,test.jpg
-ISBN,title,1,,2,,,,2000-1-1,2,,,2000-1-1,1,8,8,8,test.jpg

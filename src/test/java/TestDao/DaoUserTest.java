@@ -1,3 +1,5 @@
+package TestDao;
+
 import com.my.library.db.DAO.AuthorDAO;
 import com.my.library.db.DAO.UserDAO;
 import com.my.library.db.SQLSmartQuery;
@@ -14,7 +16,7 @@ import java.sql.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class DaoTestUser{
+public class DaoUserTest {
 
     public User user;
 
@@ -110,7 +112,6 @@ public class DaoTestUser{
         when(dataSource.getConnection()).thenReturn(connection);
         ResultSet resultSet = mock(ResultSet.class);
         SQLSmartQuery sqlSmartQuery = mock(SQLSmartQuery.class);
-        PreparedStatement preparedStatement = mock(PreparedStatement.class);
         when(connection.createStatement()).thenReturn(statement);
         ArgumentCaptor<String> arg1 = ArgumentCaptor.forClass(String.class);
         when(statement.executeQuery(arg1.capture())).thenReturn(resultSet);

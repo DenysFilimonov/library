@@ -37,7 +37,7 @@ public class UserRights {
      */
 
     private static void setUserRights(){
-        String[]  userRights = {"login", "catalog", "logout", "subscriptions", "account", "orderBook"};
+        String[]  userRights = {"login", "catalog", "logout", "subscriptions", "account", "orderBook", "cancelOrder"};
         ArrayList<String> readerCommands = (ArrayList<String>) Arrays.stream(userRights).collect(Collectors.toList());
         userRightsMap.put("user", readerCommands);
         String[]  guestRights = {"login", "catalog", "register"};
@@ -48,7 +48,7 @@ public class UserRights {
         ArrayList<String> librarianCommands = (ArrayList<String>) Arrays.stream(librarianRights).collect(Collectors.toList());
         userRightsMap.put("librarian", librarianCommands);
         String[]  adminRights = {"login", "catalog", "logout", "subscriptions", "account",
-                "booksManager", "deleteBook", "editBook", "newBook", "userManager"};
+                "booksManager", "deleteBook", "editBook", "newBook", "userManager", "cancelOrder"};
         ArrayList<String> adminCommands = (ArrayList<String>) Arrays.stream(adminRights).collect(Collectors.toList());
         userRightsMap.put("administrator", adminCommands);
     }

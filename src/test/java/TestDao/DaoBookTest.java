@@ -1,6 +1,7 @@
+package TestDao;
+
 import com.my.library.db.DAO.AuthorDAO;
 import com.my.library.db.DAO.BookDAO;
-import com.my.library.db.DAO.UserDAO;
 import com.my.library.db.SQLSmartQuery;
 import com.my.library.db.entities.*;
 import org.apache.commons.dbcp2.BasicDataSource;
@@ -8,12 +9,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-
 import java.sql.*;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 

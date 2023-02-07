@@ -1,3 +1,5 @@
+package TestDao;
+
 import com.my.library.db.DAO.AuthorDAO;
 import com.my.library.db.SQLSmartQuery;
 import com.my.library.db.entities.*;

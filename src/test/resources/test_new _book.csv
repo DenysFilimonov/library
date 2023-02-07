@@ -1,0 +1,18 @@
+ISBN,title,genreId,genre,authorId,firstName,secondName,country,birthday,publisherId,publisher,publisherCountry,publishingDate,quantity,caseNum,shelfNum,cellNum,fileName, isEmpty
+ISBN,title,genreId,genre,1,,,,,1,,,,1,8,8,8,test.jpg, false
+ISBN,title,genreId,genre,authorId,firstName,secondName,country,birthday,publisherId,publisher,publisherCountry,publishingDate,quantity,caseNum,shelfNum,cellNum,test.jpg,false
+ISBN,title,1,,2,,,,01/01/2000,2,,,01/01/2000,1,8,8,8,test.jpg,false
+ISBN,title,1,,2,,,,2000-1-1,2,,,2000-1-1,1,8,8,8,test.jpg, true
+ISBN,title,1,,1,,,,,1,,,2000-1-1,1,7,7,7,test.jpg,true
+,title,1,,1,,,,,1,,,2000-1-1,1,7,7,7,test.jpg,false
+ISBN,,1,,1,,,,,1,,,2000-1-1,1,7,7,7,test.jpg,false
+ISBN,title,dsfsdf,,1,,,,,1,,,2000-1-1,1,7,7,7,test.jpg,false
+ISBN,title,1,,dfsdfsdfsdf,,,,,1,,,2000-1-1,1,7,7,7,test.jpg,false
+ISBN,title,-1,,1,,,,,1,,,2000-1-1,1,7,7,7,test.jpg,false
+ISBN,tit000000000000000000000000000000000000000000000000000000000000000000000000000000000щщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщle,1,,1,,,,,1,,,2000-1-1,1,7,7,7,test.jpg,false
+ISB000000000000000000000000000000000000000000N,title,1,,1,,,,,1,,,2000-1-1,1,7,7,7,test.jpg,false
+ISBN,title,1,,2,,,,2000-1-1,2,,,2000-1-1,1,8,8,8,tesfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffft.jpg, false
+ISBN,title,,ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd,2,,,,2000-1-1,2,,,2000-1-1,1,8,8,8,test.jpg, false
+ISBN,title,1,,,cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc,,,2000-1-1,2,,,2000-1-1,1,8,8,8,test.jpg, false
+ISBN,title,1,,2,,,,2000-1-1,,ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd,,2000-1-1,1,8,8,8,test.jpg, false
+

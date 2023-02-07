@@ -1,9 +1,8 @@
-import com.my.library.db.DAO.GenreDAO;
-import com.my.library.db.DAO.IssueTypeDAO;
-import com.my.library.db.DAO.PaymentDAO;
+package TestDao;
+
+import com.my.library.db.DAO.RoleDAO;
 import com.my.library.db.SQLSmartQuery;
-import com.my.library.db.entities.IssueType;
-import com.my.library.db.entities.Payment;
+import com.my.library.db.entities.Role;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,29 +16,30 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class DaoPaymentTest{
+public class DaoRoleTest {
 
-    public Payment payment;
+    public Role role;
 
     @BeforeEach
     public void setEntity(){
-        payment = new Payment();
-        payment.setAmount(10f);
-        payment.setOrderId(1);
-        payment.setId(1);
-        payment.setDate(Date.valueOf("2022-10-01"));
-        PaymentDAO.destroyInstance();
+        role = new Role();
+        Map<String,String> roleMap = new HashMap<>();
+        roleMap.put("en", "roleEn");
+        roleMap.put("ua", "roleUa");
+        role.setRoleName(roleMap);
+        role.setId(1);
+        RoleDAO.destroyInstance();
 
     }
 
     @AfterEach
     public void clearDAO(){
-        PaymentDAO.destroyInstance();
+        RoleDAO.destroyInstance();
 
     }
 
     @Test
-    public void TestDelete() throws SQLException {
+    public void testDelete() throws SQLException {
         BasicDataSource dataSource = mock(BasicDataSource.class);
         Connection connection = mock(Connection.class);
         when(dataSource.getConnection()).thenReturn(connection);
@@ -50,13 +50,13 @@ public class DaoPaymentTest{
         when(preparedStatement.getGeneratedKeys()).thenReturn(resultSet);
         ArgumentCaptor<Integer> arg1 = ArgumentCaptor.forClass(Integer.class);
         doNothing().when(preparedStatement).setInt(eq(1), arg1.capture());
-        PaymentDAO.getInstance(dataSource).delete(this.payment);
-        assertEquals(arg1.getValue(), this.payment.getId());
+        RoleDAO.getInstance(dataSource).delete(this.role);
+        assertEquals(arg1.getValue(), this.role.getId());
         verify(preparedStatement, atLeast(1)).executeUpdate();
     }
 
     @Test
-    public void TestAdd() throws SQLException {
+    public void testAdd() throws SQLException {
         BasicDataSource dataSource = mock(BasicDataSource.class);
         Connection connection = mock(Connection.class);
         when(dataSource.getConnection()).thenReturn(connection);
@@ -67,16 +67,13 @@ public class DaoPaymentTest{
         when(preparedStatement.getGeneratedKeys()).thenReturn(resultSet);
         when(resultSet.next()).thenReturn(true);
         when(resultSet.getInt(1)).thenReturn(1);
-        ArgumentCaptor<Float> arg1 = ArgumentCaptor.forClass(Float.class);
-        doNothing().when(preparedStatement).setFloat(eq(1), arg1.capture());
-        ArgumentCaptor<Date> arg2 = ArgumentCaptor.forClass(Date.class);
-        doNothing().when(preparedStatement).setDate(eq(2), arg2.capture());
-        ArgumentCaptor<Integer> arg3 = ArgumentCaptor.forClass(Integer.class);
-        doNothing().when(preparedStatement).setInt(eq(3), arg3.capture());
-        PaymentDAO.getInstance(dataSource).add(this.payment);
-        assertEquals(arg1.getValue(), this.payment.getAmount());
-        assertEquals(arg2.getValue(), this.payment.getDate());
-        assertEquals(arg3.getValue(), this.payment.getOrderId());
+        ArgumentCaptor<String> arg1 = ArgumentCaptor.forClass(String.class);
+        doNothing().when(preparedStatement).setString(eq(1), arg1.capture());
+        ArgumentCaptor<String> arg2 = ArgumentCaptor.forClass(String.class);
+        doNothing().when(preparedStatement).setString(eq(2), arg2.capture());
+        RoleDAO.getInstance(dataSource).add(this.role);
+        assertEquals(arg1.getValue(), this.role.getRoleName().get("en"));
+        assertEquals(arg2.getValue(), this.role.getRoleName().get("ua"));
         verify(preparedStatement, atLeast(1)).executeUpdate();
         verify(preparedStatement, atLeast(1)).getGeneratedKeys();
         verify(resultSet, atLeast(1)).next();
@@ -84,7 +81,7 @@ public class DaoPaymentTest{
     }
 
     @Test
-    public void TestGet() throws SQLException {
+    public void testGet() throws SQLException {
         BasicDataSource dataSource = mock(BasicDataSource.class);
         Connection connection = mock(Connection.class);
         Statement statement = mock(Statement.class);
@@ -95,15 +92,15 @@ public class DaoPaymentTest{
         ArgumentCaptor<String> arg1 = ArgumentCaptor.forClass(String.class);
         when(statement.executeQuery(arg1.capture())).thenReturn(resultSet);
         when(resultSet.next()).thenReturn(false);
-        when(sqlSmartQuery.build()).thenReturn("SELECT * FROM payments WHERE id=1");
-        PaymentDAO.getInstance(dataSource).get(sqlSmartQuery);
+        when(sqlSmartQuery.build()).thenReturn("SELECT * FROM roles WHERE id=1");
+        RoleDAO.getInstance(dataSource).get(sqlSmartQuery);
         assertEquals(arg1.getValue(), sqlSmartQuery.build());
         verify(statement, atLeast(1)).executeQuery(anyString());
         verify(resultSet, atLeast(1)).next();
     }
 
     @Test
-    public void TestUpdate() throws SQLException {
+    public void testUpdate() throws SQLException {
         BasicDataSource dataSource = mock(BasicDataSource.class);
         Connection connection = mock(Connection.class);
         when(dataSource.getConnection()).thenReturn(connection);
@@ -113,20 +110,17 @@ public class DaoPaymentTest{
         when(preparedStatement.executeUpdate()).thenReturn(1);
         when(preparedStatement.getGeneratedKeys()).thenReturn(resultSet);
         when(resultSet.next()).thenReturn(true);
-        when(resultSet.getInt(1)).thenReturn(payment.getId());
-        ArgumentCaptor<Float> arg1 = ArgumentCaptor.forClass(Float.class);
-        doNothing().when(preparedStatement).setFloat(eq(1), arg1.capture());
-        ArgumentCaptor<Date> arg2 = ArgumentCaptor.forClass(Date.class);
-        doNothing().when(preparedStatement).setDate(eq(2), arg2.capture());
+        when(resultSet.getInt(1)).thenReturn(role.getId());
+        ArgumentCaptor<String> arg1 = ArgumentCaptor.forClass(String.class);
+        doNothing().when(preparedStatement).setString(eq(1), arg1.capture());
+        ArgumentCaptor<String> arg2 = ArgumentCaptor.forClass(String.class);
+        doNothing().when(preparedStatement).setString(eq(2), arg2.capture());
         ArgumentCaptor<Integer> arg3 = ArgumentCaptor.forClass(Integer.class);
         doNothing().when(preparedStatement).setInt(eq(3), arg3.capture());
-        ArgumentCaptor<Integer> arg4 = ArgumentCaptor.forClass(Integer.class);
-        doNothing().when(preparedStatement).setInt(eq(4), arg4.capture());
-        PaymentDAO.getInstance(dataSource).update(this.payment);
-        assertEquals(arg1.getValue(), this.payment.getAmount());
-        assertEquals(arg2.getValue(), this.payment.getDate());
-        assertEquals(arg3.getValue(), this.payment.getOrderId());
-        assertEquals(arg4.getValue(), this.payment.getId());
+        RoleDAO.getInstance(dataSource).update(this.role);
+        assertEquals(arg1.getValue(), this.role.getRoleName().get("en"));
+        assertEquals(arg2.getValue(), this.role.getRoleName().get("ua"));
+        assertEquals(arg3.getValue(), this.role.getId());
         verify(preparedStatement, atLeast(1)).executeUpdate();
     }
 

@@ -27,6 +27,7 @@ public class CommandMapper {
         commands.put("readers", new ReadersCommand());
         commands.put("returnBook", new ReturnBookCommand());
         commands.put("noRights", new NoRightsCommand());
+        commands.put("cancelOrder", new CancelOrderCommand());
 
     }
 

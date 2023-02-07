@@ -4,32 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4848fd86-92e6-432a-909d-736a85aafb12" name="Changes" comment="merge with error manager">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/CancelOrderCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/test_new _book.csv" afterDir="false" />
+    <list default="true" id="4848fd86-92e6-432a-909d-736a85aafb12" name="Changes" comment="new book validator test">
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/ValidatorIssueBookTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/resources/issue_book.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/DAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/DAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/SecurityCheck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/SecurityCheck.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/UserRights.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/UserRights.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/validator/NewBookValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/validator/NewBookValidator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/CommandMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/CommandMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/NewBookCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/NewBookCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/SubscriptionsCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/SubscriptionsCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/text.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/text.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/text_ua.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/text_ua.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/includes/subscriptions_body.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/includes/subscriptions_body.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/DaoAuthorTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/TestDao/DaoAuthorTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/DaoBookTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/TestDao/DaoBookTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/DaoGenreTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/TestDao/DaoGenreTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/DaoIssueTypeTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/TestDao/DaoIssueTypeTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/DaoPaymentTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/TestDao/DaoPaymentTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/DaoPublisherTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/TestDao/DaoPublisherTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/DaoRoleTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/TestDao/DaoRoleTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/DaoStatusTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/TestDao/DaoStatusTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/DaoTestUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/TestDao/DaoTestUser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/DaoUserBookTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/TestDao/DaoUserBookTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/TestNewBookServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/ValidatorNewBookTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/test_new_book.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/validator/BookIssueValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/validator/BookIssueValidator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/includes/header.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/includes/header.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/includes/issueBook_body.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/includes/issueBook_body.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/ValidatorNewBookTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/ValidatorNewBookTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -126,9 +109,9 @@
       <recent name="" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="" />
       <recent name="TestValidator" />
       <recent name="com.my.library.servlets" />
-      <recent name="" />
       <recent name="com.my.library.services.validator" />
       <recent name="com.my.library.services" />
     </key>
@@ -138,15 +121,7 @@
       <command value="mvn clean" />
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.ValidatorNewBookTest.testNewBook">
-    <configuration name="All in library" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="library" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="TEST_OBJECT" value="package" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="JUnit.ValidatorIssueBookTest.testNewBook">
     <configuration name="TestAccountServlet" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="library" />
       <option name="PACKAGE_NAME" value="" />
@@ -175,6 +150,16 @@
       <option name="PACKAGE_NAME" value="" />
       <option name="MAIN_CLASS_NAME" value="TestNewBookServlet" />
       <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ValidatorIssueBookTest.testNewBook" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="library" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="ValidatorIssueBookTest" />
+      <option name="METHOD_NAME" value="testNewBook(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String)" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -266,19 +251,19 @@
     <list>
       <item itemvalue="JUnit.TestDao in library" />
       <item itemvalue="JUnit.TestNewBookServlet" />
+      <item itemvalue="JUnit.ValidatorIssueBookTest.testNewBook" />
       <item itemvalue="JUnit.ValidatorNewBookTest.testNewBook" />
       <item itemvalue="JUnit.TestAccountServlet" />
-      <item itemvalue="JUnit.All in library" />
       <item itemvalue="Maven.library [package]" />
       <item itemvalue="Maven.library [test]" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.ValidatorIssueBookTest.testNewBook" />
         <item itemvalue="JUnit.ValidatorNewBookTest.testNewBook" />
         <item itemvalue="JUnit.TestDao in library" />
         <item itemvalue="JUnit.TestNewBookServlet" />
         <item itemvalue="JUnit.TestAccountServlet" />
-        <item itemvalue="JUnit.All in library" />
       </list>
     </recent_temporary>
   </component>
@@ -340,7 +325,14 @@
       <option name="project" value="LOCAL" />
       <updated>1675701902367</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="new book validator test">
+      <created>1675785494455</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1675785494455</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -403,7 +395,8 @@
     <MESSAGE value="search&amp;sort fix" />
     <MESSAGE value="jsp optimisation" />
     <MESSAGE value="merge with error manager" />
-    <option name="LAST_COMMIT_MESSAGE" value="merge with error manager" />
+    <MESSAGE value="new book validator test" />
+    <option name="LAST_COMMIT_MESSAGE" value="new book validator test" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

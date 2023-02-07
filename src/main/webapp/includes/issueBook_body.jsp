@@ -52,7 +52,7 @@
          name = "publisher"
          id="publisher"
          class="form-control"
-         value = "${book.publisher.publisher[language]} ${book.publisher.publisher[language]} ${book.publisher.country[language]}"
+         value = "${book.publisher.publisher[language]} ${book.publisher.country[language]}"
          readonly='readonly'>
    </div>
 
@@ -120,24 +120,25 @@
                 <input type ="submit" class="btn btn-primary" value=<fmt:message key="issueBook.label.issue"/>>
   </div>
 
+        <div class="container col-2">
+             </div>
+             <c:if test="${not empty errors}">
+                 <ul>
+                 <c:forEach items="${errors.keySet()}" var="error">
+                     <li>
+                     <div class="error">
+                     ${errors[error][language]}
+                     </div>
+                     </li>
+                 </c:forEach>
+                 </ul>
+             </c:if>
+        </div>
 
   </div>
   </form>
 
-    <div class="container col-2">
-     </div>
-     <c:if test="${not empty errors}">
-         <ul>
-         <c:forEach items="${errors.keySet()}" var="error">
-             <li>
-             <div class="error">
-             ${errors[error][language]}
-             </div>
-             </li>
-         </c:forEach>
-         </ul>
-     </c:if>
-</div>
+
 
 <script type="text/javascript">
 

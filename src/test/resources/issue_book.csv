@@ -1,0 +1,12 @@
+isbn,bookId, userId, userBookId,statusId,issueTypeName,issueDateShift,targetDateShift,field
+testIsbn,1,1,1,1,home,0,1,
+,1,1,1,1,home,0,1,isbn
+d,1,1,1,1,home,0,1,isbn
+testIsbn,1,1,2,1,home,0,1,userBookId
+testIsbn,1,1,1,1,home,-1,1,issueDate
+testIsbn,1,1,1,1,home,1,2,issueDate
+testIsbn,1,1,1,1,home,1,2,issueDate
+testIsbn,1,1,1,1,home,0,-1,targetDate
+testIsbn,1,1,1,1,home,0,0,targetDate
+testIsbn,1,1,1,1,home,0,35,targetDate
+testIsbn,1,1,1,1,room,0,2,targetDate

@@ -55,7 +55,7 @@ window.onload = function(e){
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 
 
-<nav class="navbar navbar-expand-lg bg-light">
+<nav class="navbar navbar-expand-lg bg-light fixed-top">
        <div class="container-fluid">
          <%@include file="user_menu.jsp"%>
        </div>
@@ -81,4 +81,8 @@ window.onload = function(e){
                 </div>
        </div>
    </nav>
+   <br>
+   <br>
+   <br>
+   <br>
    <br>

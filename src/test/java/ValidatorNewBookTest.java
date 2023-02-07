@@ -65,7 +65,6 @@ public class ValidatorNewBookTest {
         when(part.getSubmittedFileName()).thenReturn(fileName);
         when(request.getServletContext()).thenReturn(context);
         when(context.getRealPath("/")).thenReturn(Paths.get(".").toAbsolutePath().normalize() +"\\src\\main\\webapp");
-
         when(request.getMethod()).thenReturn("POST");
         when(request.getSession()).thenReturn(session);
         when(request.getPart("cover")).thenReturn(part);
@@ -76,13 +75,8 @@ public class ValidatorNewBookTest {
         when(appContext.getDAO(any(Book.class))).thenReturn(BookDAO.getInstance(ConnectionPool.dataSource) );
         when(appContext.getDAO(any(BookStore.class))).thenReturn(BookStoreDAO.getInstance(ConnectionPool.dataSource) );
         when(appContext.getDAO(any(Genre.class))).thenReturn(GenreDAO.getInstance(ConnectionPool.dataSource) );
-
         NewBookValidator validator = new NewBookValidator();
         ErrorMap errors = validator.validate(request, appContext);
         assertEquals(errors.isEmpty(), isEmpty);
-
-
     }
-
-
 }

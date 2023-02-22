@@ -16,9 +16,18 @@ public class BookDAO implements DAO<Book> {
     
     private static BookDAO instance = null;
 
+    private static Object mutex = new Object();
+
+
     public static BookDAO getInstance(BasicDataSource dataSource){
-        if (instance==null) instance = new BookDAO(dataSource);
-        return instance;
+        BookDAO result;
+        synchronized (mutex){
+            result = instance;
+            if (result==null){
+                result = instance = new BookDAO(dataSource);
+            }
+        }
+        return result;
     }
 
     public static void destroyInstance(){

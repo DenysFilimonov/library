@@ -14,10 +14,18 @@ public class UserDAO implements DAO<User> {
 
     private final BasicDataSource dataSource;
     private static UserDAO instance = null;
+    private  static Object mutex = new Object();
+
 
     public static UserDAO getInstance(BasicDataSource dataSource){
-        if (instance==null) instance = new UserDAO(dataSource);
-        return instance;
+        UserDAO result;
+        synchronized (mutex){
+            result = instance;
+            if (result==null){
+                result = instance = new UserDAO(dataSource);
+            }
+        }
+        return result;
     }
 
     public static void destroyInstance(){

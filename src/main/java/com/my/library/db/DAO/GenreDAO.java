@@ -10,19 +10,27 @@ import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class GenreDAO implements DAO<Genre> {
 
     private final BasicDataSource dataSource;
     private static GenreDAO instance = null;
+    private  static Object mutex = new Object();
 
     private GenreDAO(BasicDataSource dataSource){
         this.dataSource = dataSource;
     }
 
     public static GenreDAO getInstance(BasicDataSource dataSource){
-        if (instance==null) instance=new GenreDAO(dataSource);
-        return instance;
+        GenreDAO result;
+        synchronized (mutex){
+            result = instance;
+            if (result==null){
+                result = instance = new GenreDAO(dataSource);
+            }
+        }
+        return result;
     }
 
     public static void destroyInstance(){

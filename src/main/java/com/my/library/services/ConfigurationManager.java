@@ -37,14 +37,21 @@ public class ConfigurationManager {
     public static final String NO_RIGHTS_PAGE_PATH = "NO_RIGHTS_PAGE_PATH";
     public static final String COVER_PATH = "COVER_PATH";
 
+    private static Object mutex = new Object();
+
 
     public static ConfigurationManager getInstance() {
-        if (instance == null) {
-            instance = new ConfigurationManager();
-            instance.resourceBundle =
-                    ResourceBundle.getBundle(BUNDLE_NAME);
-        }
-        return instance;
+        ConfigurationManager result = instance;
+            synchronized (mutex) {
+                result = instance;
+                if (result == null) {
+                    instance = new ConfigurationManager();
+                    instance.resourceBundle =
+                            ResourceBundle.getBundle(BUNDLE_NAME);
+                    result = instance;
+                }
+            }
+        return result;
     }
 
     public String getProperty(String key) {

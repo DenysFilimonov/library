@@ -16,9 +16,18 @@ public class PaymentDAO implements DAO<Payment> {
     
     private final BasicDataSource dataSource;
 
+    private  static Object mutex = new Object();
+
+
     public static PaymentDAO getInstance(BasicDataSource dataSource){
-        if (instance==null) instance = new PaymentDAO(dataSource);
-        return instance;
+        PaymentDAO result;
+        synchronized (mutex){
+            result = instance;
+            if (result==null){
+                result = instance = new PaymentDAO(dataSource);
+            }
+        }
+        return result;
     }
 
     public static void destroyInstance(){

@@ -15,14 +15,22 @@ public class RoleDAO implements DAO<Role> {
 
     private final BasicDataSource dataSource;
     private static RoleDAO instance = null;
+    private  static Object mutex = new Object();
+
 
     private RoleDAO(BasicDataSource dataSource){
         this.dataSource = dataSource;
     }
 
     public static RoleDAO getInstance(BasicDataSource dataSource){
-        if (instance==null) instance=new RoleDAO(dataSource);
-        return instance;
+        RoleDAO result;
+        synchronized (mutex){
+            result = instance;
+            if (result==null){
+                result = instance = new RoleDAO(dataSource);
+            }
+        }
+        return result;
     }
 
     public static void destroyInstance(){

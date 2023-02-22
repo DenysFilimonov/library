@@ -15,14 +15,22 @@ public class StatusDAO implements DAO<Status> {
 
     private final BasicDataSource dataSource;
     private static StatusDAO instance = null;
+    private  static Object mutex = new Object();
+
 
     private StatusDAO(BasicDataSource dataSource){
         this.dataSource = dataSource;
     }
 
     public static StatusDAO getInstance(BasicDataSource dataSource){
-        if (instance==null) instance=new StatusDAO(dataSource);
-        return instance;
+        StatusDAO result;
+        synchronized (mutex){
+            result = instance;
+            if (result==null){
+                result = instance = new StatusDAO(dataSource);
+            }
+        }
+        return result;
     }
 
     public static void destroyInstance(){

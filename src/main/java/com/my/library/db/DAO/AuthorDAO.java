@@ -8,6 +8,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class AuthorDAO implements DAO<Author> {
 
@@ -15,14 +16,22 @@ public class AuthorDAO implements DAO<Author> {
     
     private final BasicDataSource dataSource;
 
+    private static Object mutex = new Object();
+
     private AuthorDAO(BasicDataSource dataSource){
         this.dataSource = dataSource;
 
     }
 
     public static AuthorDAO getInstance(BasicDataSource dataSource){
-        if (instance==null) instance=new AuthorDAO(dataSource);
-        return instance;
+        AuthorDAO result;
+        synchronized (mutex){
+            result = instance;
+            if (result==null){
+                result = instance = new AuthorDAO(dataSource);
+            }
+        }
+        return result;
     }
 
     public static void destroyInstance(){

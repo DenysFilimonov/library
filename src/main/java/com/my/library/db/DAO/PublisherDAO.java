@@ -15,14 +15,22 @@ public class PublisherDAO implements DAO<Publisher> {
 
     private final BasicDataSource dataSource;
     private static PublisherDAO instance = null;
+    private  static Object mutex = new Object();
+
 
     private PublisherDAO(BasicDataSource dataSource){
         this.dataSource = dataSource;
     }
 
     public static PublisherDAO getInstance(BasicDataSource dataSource){
-        if (instance==null) instance=new PublisherDAO(dataSource);
-        return instance;
+        PublisherDAO result;
+        synchronized (mutex){
+            result = instance;
+            if (result==null){
+                result = instance = new PublisherDAO(dataSource);
+            }
+        }
+        return result;
     }
 
     @Override

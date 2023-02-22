@@ -14,9 +14,18 @@ public class BookStoreDAO implements DAO<BookStore> {
     private final BasicDataSource dataSource;
     private static BookStoreDAO instance = null;
 
+    private static Object mutex = new Object();
+
+
     public static BookStoreDAO getInstance(BasicDataSource dataSource){
-        if (instance==null) instance = new BookStoreDAO(dataSource);
-        return instance;
+        BookStoreDAO result;
+        synchronized (mutex){
+            result = instance;
+            if (result==null){
+                result = instance = new BookStoreDAO(dataSource);
+            }
+        }
+        return result;
     }
    private BookStoreDAO(BasicDataSource dataSource){
         this.dataSource = dataSource;

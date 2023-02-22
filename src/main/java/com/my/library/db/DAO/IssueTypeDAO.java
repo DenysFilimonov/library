@@ -16,13 +16,22 @@ public class IssueTypeDAO implements DAO<IssueType> {
     private BasicDataSource dataSource;
     private static IssueTypeDAO instance = null;
 
+    private  static Object mutex = new Object();
+
+
     private IssueTypeDAO(BasicDataSource dataSource){
         this.dataSource =dataSource;
     }
 
     public static IssueTypeDAO getInstance(BasicDataSource dataSource){
-        if (instance==null) instance=new IssueTypeDAO(dataSource);
-        return instance;
+        IssueTypeDAO result;
+        synchronized (mutex){
+            result = instance;
+            if (result==null){
+                result = instance = new IssueTypeDAO(dataSource);
+            }
+        }
+        return result;
     }
 
     public static void destroyInstance(){

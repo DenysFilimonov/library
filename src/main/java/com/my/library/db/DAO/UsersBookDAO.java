@@ -15,10 +15,18 @@ public class UsersBookDAO implements DAO<UsersBooks> {
 
     private final BasicDataSource dataSource;
     private static UsersBookDAO instance = null;
+    private  static Object mutex = new Object();
+
 
     public static UsersBookDAO getInstance(BasicDataSource dataSource){
-        if (instance==null) instance = new UsersBookDAO(dataSource);
-        return instance;
+        UsersBookDAO result;
+        synchronized (mutex){
+            result = instance;
+            if (result==null){
+                result = instance = new UsersBookDAO(dataSource);
+            }
+        }
+        return result;
     }
 
     public static void destroyInstance(){

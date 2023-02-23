@@ -15,18 +15,21 @@ public class UserRights {
     }
 
     private static final Map<String, ArrayList<String>> userRightsMap = new HashMap<>();
+    private static Object mutex = new Object();
 
     private UserRights(){
 
     }
 
     public static UserRights getInstance(){
-
-        if (instance==null) {
-            setUserRights();
-            instance = new UserRights();
+        UserRights result;
+        synchronized (mutex){
+            result = instance;
+            if (result==null){
+                result = instance = new UserRights();
+            }
         }
-        return instance;
+        return result;
         }
 
     /**

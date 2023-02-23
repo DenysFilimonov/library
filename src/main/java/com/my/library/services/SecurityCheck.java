@@ -1,5 +1,6 @@
 package com.my.library.services;
 
+import com.my.library.db.DAO.UsersBookDAO;
 import com.my.library.db.entities.User;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,10 +9,17 @@ import javax.servlet.http.HttpSession;
 public class SecurityCheck {
 
     private static SecurityCheck instance;
+    private static Object mutex = new Object();
 
     public static SecurityCheck getInstance(){
-        if(instance==null) instance = new SecurityCheck();
-        return instance;
+        SecurityCheck result;
+        synchronized (mutex){
+            result = instance;
+            if (result==null){
+                result = instance = new SecurityCheck();
+            }
+        }
+        return result;
     }
 
     public boolean check(HttpServletRequest req){

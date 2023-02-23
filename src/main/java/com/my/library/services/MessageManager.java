@@ -15,13 +15,19 @@ public class MessageManager {
     public static final String SQL_EXCEPTION_ERROR_MESSAGE = "SQL_EXCEPTION_ERROR_MESSAGE";
     public static final String OTHER_EXCEPTION_ERROR_MESSAGE = "OTHER_EXCEPTION_ERROR_MESSAGE";
 
+    public static Object mutex = new Object();
+
     public static MessageManager getInstance() {
-        if (instance == null) {
-            instance = new MessageManager();
-            instance.resourceBundle =
-                    ResourceBundle.getBundle(BUNDLE_NAME);
+        MessageManager result;
+        synchronized (mutex){
+            result = instance;
+            if (result==null){
+                result = instance = new MessageManager();
+                instance.resourceBundle =
+                        ResourceBundle.getBundle(BUNDLE_NAME);
+            }
         }
-        return instance;
+        return result;
     }
 
     public String getProperty(String key) {

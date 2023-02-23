@@ -1,11 +1,14 @@
 package com.my.library.servlets;
 
+import com.my.library.services.SecurityCheck;
+
 import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 
 public class CommandMapper {
     private static CommandMapper instance = null;
     final HashMap<String, Command> commands = new HashMap<>();
+    private static Object mutex =new Object();
 
     
     private CommandMapper() {
@@ -54,9 +57,13 @@ public class CommandMapper {
     }
 
     public static CommandMapper getInstance() {
-        if (instance == null) {
-            instance = new CommandMapper();
+        CommandMapper result;
+        synchronized (mutex){
+            result = instance;
+            if (result==null){
+                result = instance = new CommandMapper();
+            }
         }
-        return instance;
+        return result;
     }
 }

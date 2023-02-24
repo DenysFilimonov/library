@@ -24,7 +24,7 @@ public class LogingFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
         HttpServletRequest req = (HttpServletRequest) request;
         User user = (User) req.getSession().getAttribute("user");
-
+       // if (true) throw new ServletException();
         if(req.getParameter("command")!=null) {
             LOGGER.info("User " + (user != null ? user.getId() : "guest") + " command = " + req.getParameter("command"));
         }

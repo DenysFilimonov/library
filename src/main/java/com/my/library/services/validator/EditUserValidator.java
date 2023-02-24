@@ -2,7 +2,7 @@ package com.my.library.services.validator;
 
 
 
-import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.*;
 import com.my.library.db.DAO.*;
 import com.my.library.services.AppContext;
@@ -78,12 +78,11 @@ public class EditUserValidator implements Validator{
             errorManager.add( "email", "Email field does not have a valid value",
                     "Не коректне значення поля email");
         else{
-            SQLSmartQuery sq = new SQLSmartQuery();
-            sq.source(new User().table);
-            sq.filter("email", email, SQLSmartQuery.Operators.E);
-            sq.logicOperator(SQLSmartQuery.LogicOperators.AND);
-            sq.filter("id", user.getId(), SQLSmartQuery.Operators.NE);
-            if(!userDAO.get(sq).isEmpty())
+            SQLBuilder sq = new SQLBuilder(new User().table).
+                    filter("email", email, SQLBuilder.Operators.E).
+                    logicOperator(SQLBuilder.LogicOperators.AND).
+                    filter("id", user.getId(), SQLBuilder.Operators.NE);
+            if(!userDAO.get(sq.build()).isEmpty())
                 errorManager.add( "email","Email number already belongs to another user "
                         , "Адресу вже привязано до іншого користувача");
         }
@@ -91,12 +90,10 @@ public class EditUserValidator implements Validator{
         if (!checkPhone(phone)) errorManager.add( "phone","Phone should have format +380XXXXXXXXX "
                 , "Номер повинен мати формат +380XXXXXXXXX");
         else{
-            SQLSmartQuery sq = new SQLSmartQuery();
-            sq.source(new User().table);
-            sq.filter("phone", phone, SQLSmartQuery.Operators.E);
-            sq.logicOperator(SQLSmartQuery.LogicOperators.AND);
-            sq.filter("id", user.getId(), SQLSmartQuery.Operators.NE);
-            if(!userDAO.get(sq).isEmpty())
+            SQLBuilder sq = new SQLBuilder(new User().table).filter("phone", phone, SQLBuilder.Operators.E).
+                    logicOperator(SQLBuilder.LogicOperators.AND).
+                    filter("id", user.getId(), SQLBuilder.Operators.NE);
+            if(!userDAO.get(sq.build()).isEmpty())
                 errorManager.add( "phone","Phone number already belongs to another user "
                         , "Номер вже привязано до іншого користувача");
         }
@@ -136,12 +133,11 @@ public class EditUserValidator implements Validator{
     }
 
     private boolean checkOldPassword(String password, int id) throws SQLException, UnsupportedEncodingException, NoSuchAlgorithmException {
-        SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(new User().table);
-        sq.filter("pass_word", PasswordHash.doHash(password), SQLSmartQuery.Operators.E);
-        sq.logicOperator(SQLSmartQuery.LogicOperators.AND);
-        sq.filter("id", id, SQLSmartQuery.Operators.E);
-        List<User> user = this.userDAO.get(sq);
+        SQLBuilder sq = new SQLBuilder(new User().table).
+                filter("pass_word", PasswordHash.doHash(password), SQLBuilder.Operators.E).
+                logicOperator(SQLBuilder.LogicOperators.AND).
+                filter("id", id, SQLBuilder.Operators.E);
+        List<User> user = this.userDAO.get(sq.build());
         return (user.size()>0);
     }
 

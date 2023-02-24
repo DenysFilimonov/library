@@ -1,6 +1,6 @@
 package com.my.library.services;
 
-import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.Genre;
 import com.my.library.db.entities.Role;
 import com.my.library.db.DAO.GenreDAO;
@@ -20,8 +20,7 @@ public class GetRoles {
      */
 
     public static Map<String, Role> get(RoleDAO roleDAO) throws SQLException {
-        SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(new Role().table);
+        SQLBuilder sq = new SQLBuilder(new Role().table).build();
         ArrayList<Role> st = roleDAO.get(sq);
         return st.stream().collect(Collectors.toMap(x->x.getRoleName().get("en"), x->x));
     }

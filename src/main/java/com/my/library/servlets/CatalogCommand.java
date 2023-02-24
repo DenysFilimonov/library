@@ -1,5 +1,5 @@
 package com.my.library.servlets;
-import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.Book;
 import com.my.library.db.entities.User;
 import com.my.library.db.entities.UsersBooks;
@@ -29,7 +29,7 @@ public class CatalogCommand extends ControllerCommand {
     public String execute(HttpServletRequest req, HttpServletResponse resp, AppContext context) throws ServletException,
              SQLException
     {   setContext(context);
-        SQLSmartQuery bookQuery;
+        SQLBuilder bookQuery;
         User user = (User) req.getSession().getAttribute("user");
 
         if(req.getMethod().equals("POST")) {
@@ -40,14 +40,14 @@ public class CatalogCommand extends ControllerCommand {
         }
         else{
             if (req.getSession().getAttribute(req.getParameter("command"))!=null)
-                bookQuery = (SQLSmartQuery) req.getSession().getAttribute(req.getParameter("command"));
+                bookQuery = (SQLBuilder) req.getSession().getAttribute(req.getParameter("command"));
             else {
                 bookQuery = prepareCatalogSQl(req);
             }
         }
         req.setAttribute("pagination", new PaginationManager(req, bookQuery, bookDAO));
         SortManager.SortManager(req, bookQuery);
-        ArrayList<Book> books = bookDAO.get(bookQuery);
+        ArrayList<Book> books = bookDAO.get(bookQuery.build());
         req.setAttribute("books", books);
         if(user!=null) {
             setOrders(req);
@@ -63,9 +63,8 @@ public class CatalogCommand extends ControllerCommand {
      * @return         SQLSmartQuery
      * @see             com.my.library.servlets.CommandMapper
      */
-    private SQLSmartQuery prepareCatalogSQl(HttpServletRequest req) {
-        SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(new Book().table);
+    private SQLBuilder prepareCatalogSQl(HttpServletRequest req) {
+        SQLBuilder sq = new SQLBuilder(new Book().table);
         String title= (req.getParameter("title")!=null && !req.getParameter("title").equals(""))?
                 req.getParameter("title"): null;
         String author = (req.getParameter("author")!=null && !req.getParameter("author").equals(""))?
@@ -76,24 +75,23 @@ public class CatalogCommand extends ControllerCommand {
             local = local.equals("ua") ? "_ua" : "";
         }
         else local="";
-        sq.filter("deleted", false, SQLSmartQuery.Operators.E);
+        sq.filter("deleted", false, SQLBuilder.Operators.E);
         if(title!=null || author!=null){
-            sq.logicOperator(SQLSmartQuery.LogicOperators.AND);
-            sq.groupOperator(SQLSmartQuery.GroupOperators.GROUP);
+            sq.logicOperator(SQLBuilder.LogicOperators.AND).groupOperator(SQLBuilder.GroupOperators.GROUP);
             if (title!=null) {
-                sq.filter("title" + local, title, SQLSmartQuery.Operators.ILIKE);
+                sq.filter("title" + local, title, SQLBuilder.Operators.ILIKE);
             }
             if (author!=null){
                if(title!=null) {
-                   sq.logicOperator(SQLSmartQuery.LogicOperators.OR);
+                   sq.logicOperator(SQLBuilder.LogicOperators.OR);
                }
-                sq.filter("first_name"+local, author, SQLSmartQuery.Operators.ILIKE);
-                sq.logicOperator(SQLSmartQuery.LogicOperators.OR);
-                sq.filter("second_name"+local, author, SQLSmartQuery.Operators.ILIKE);
+                sq.filter("first_name"+local, author, SQLBuilder.Operators.ILIKE).
+                        logicOperator(SQLBuilder.LogicOperators.OR).
+                        filter("second_name"+local, author, SQLBuilder.Operators.ILIKE);
             }
-            sq.groupOperator(SQLSmartQuery.GroupOperators.UNGROUP);
+            sq.groupOperator(SQLBuilder.GroupOperators.UNGROUP);
         }
-        sq.order("title"+local, SQLSmartQuery.SortOrder.ASC);
+        sq.order("title"+local, SQLBuilder.SortOrder.ASC);
         return sq;
     }
 
@@ -103,15 +101,14 @@ public class CatalogCommand extends ControllerCommand {
      * @return         SQLSmartQuery
      * @see             com.my.library.servlets.CommandMapper
      */
-    private SQLSmartQuery prepareOrdersSQl(HttpServletRequest req) {
-        SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(new UsersBooks().table);
+    private SQLBuilder prepareOrdersSQl(HttpServletRequest req) {
+        SQLBuilder sq = new SQLBuilder(new UsersBooks().table);
         User user = (User) req.getSession().getAttribute("user");
-        sq.filter("user_id", user.getId(), SQLSmartQuery.Operators.E);
-        sq.logicOperator(SQLSmartQuery.LogicOperators.AND);
-        sq.filter("issue_type", "return", SQLSmartQuery.Operators.NE);
-        sq.logicOperator(SQLSmartQuery.LogicOperators.AND);
-        sq.filter("issue_type", "canceled", SQLSmartQuery.Operators.NE);
+        sq.filter("user_id", user.getId(), SQLBuilder.Operators.E).
+                logicOperator(SQLBuilder.LogicOperators.AND).
+                filter("issue_type", "return", SQLBuilder.Operators.NE).
+                logicOperator(SQLBuilder.LogicOperators.AND).
+                filter("issue_type", "canceled", SQLBuilder.Operators.NE);
         return sq;
     }
 
@@ -120,8 +117,8 @@ public class CatalogCommand extends ControllerCommand {
      * @param  req      HttpServletRequest request
      */
     public  void setOrders(HttpServletRequest req) throws SQLException {
-        SQLSmartQuery ordersQuery = prepareOrdersSQl(req);
-        ArrayList<UsersBooks> orders = usersBookDAO.get(ordersQuery);
+        SQLBuilder ordersQuery = prepareOrdersSQl(req);
+        ArrayList<UsersBooks> orders = usersBookDAO.get(ordersQuery.build());
         Map<Integer, UsersBooks> ordersMap = orders.stream().
                 collect(Collectors.toMap(UsersBooks ::getBookId , x->x));
         req.setAttribute("orders", ordersMap);

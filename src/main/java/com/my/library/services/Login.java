@@ -2,7 +2,7 @@ package com.my.library.services;
 
 import com.my.library.db.ConnectionPool;
 import com.my.library.db.DTO.UserDTO;
-import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.User;
 import com.my.library.db.DAO.UserDAO;
 
@@ -41,11 +41,11 @@ public class Login {
         if (login == null | password == null) return null;
         User user = new User();
         ArrayList<User> userList = new ArrayList<>();
-        SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(user.table);
-        sq.filter("login", req.getParameter("login"), SQLSmartQuery.Operators.E );
-        sq.logicOperator(SQLSmartQuery.LogicOperators.AND);
-        sq.filter("pass_word", PasswordHash.doHash(req.getParameter("password")), SQLSmartQuery.Operators.E);
+        SQLBuilder sq = new SQLBuilder(user.table).
+                filter("login", req.getParameter("login"), SQLBuilder.Operators.E ).
+                logicOperator(SQLBuilder.LogicOperators.AND).
+                filter("pass_word", PasswordHash.doHash(req.getParameter("password")), SQLBuilder.Operators.E).
+                build();
         userList = ((UserDAO)context.getDAO(user)).get(sq);
         if (userList.size() != 1) {
             return null;

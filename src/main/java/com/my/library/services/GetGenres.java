@@ -1,9 +1,8 @@
 package com.my.library.services;
 
-import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.Genre;
 import com.my.library.db.DAO.GenreDAO;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -19,8 +18,7 @@ public class GetGenres {
      */
 
     public static Map<String, Genre> get(GenreDAO genreDAO) throws SQLException {
-        SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(new Genre().table);
+        SQLBuilder sq = new SQLBuilder(new Genre().table).build();
         ArrayList<Genre> st = genreDAO.get(sq);
         return st.stream().collect(Collectors.toMap(x->x.getGenre().get("en"), x->x));
     }

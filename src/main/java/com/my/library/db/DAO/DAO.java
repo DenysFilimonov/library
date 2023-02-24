@@ -1,6 +1,6 @@
 package com.my.library.db.DAO;
 
-import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.Entity;
 import javax.naming.OperationNotSupportedException;
 import java.sql.SQLException;
@@ -20,9 +20,9 @@ public interface DAO<T extends Entity> {
      * @param query  SQLSmartQuery object with select query builder
      * @return       integer with number of entities
      * @throws      SQLException   can be thrown during request performing
-     * @see         SQLSmartQuery
+     * @see         SQLBuilder
      */
-    int count(SQLSmartQuery query) throws SQLException;
+    int count(SQLBuilder query) throws SQLException;
 
     /**
      * Get Entity object from DataBAse
@@ -38,7 +38,7 @@ public interface DAO<T extends Entity> {
      * @param query  SQLSmartQuery object - select query builder
      * @return       ArrayList with size >=0
      * @throws       SQLException  can be thrown during request
-     * @see          SQLSmartQuery
+     * @see          SQLBuilder
      */
-    ArrayList<T> get(SQLSmartQuery query) throws SQLException, OperationNotSupportedException;
+    ArrayList<T> get(SQLBuilder query) throws SQLException, OperationNotSupportedException;
 }

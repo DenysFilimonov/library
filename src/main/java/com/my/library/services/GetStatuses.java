@@ -1,6 +1,6 @@
 package com.my.library.services;
 
-import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.Status;
 import com.my.library.db.DAO.StatusDAO;
 import java.sql.SQLException;
@@ -18,8 +18,7 @@ public class GetStatuses {
      */
 
     public static Map<String, Status> get(StatusDAO statusDAO) throws SQLException {
-        SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(new Status().table);
+        SQLBuilder sq = new SQLBuilder(new Status().table).build();
         ArrayList<Status> st = statusDAO.get(sq);
         return st.stream().collect(Collectors.toMap(x->x.getStatus().get("en"), x->x));
     }

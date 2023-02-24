@@ -1,7 +1,7 @@
 package com.my.library.services;
 
 import com.my.library.db.ConnectionPool;
-import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.Book;
 import com.my.library.db.DAO.BookDAO;
 
@@ -14,10 +14,10 @@ public class CountAvailableBooks {
      */
 
     public static int get() throws SQLException {
-        SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(new Book().table);
-        sq.field("id");
-        sq.filter("available_quantity", 0, SQLSmartQuery.Operators.G);
+        SQLBuilder sq = new SQLBuilder(new Book().table).
+                field("id").
+                filter("available_quantity", 0, SQLBuilder.Operators.G).
+                build();
         int bookCount = BookDAO.getInstance(ConnectionPool.dataSource).count(sq);
         return bookCount;
     }

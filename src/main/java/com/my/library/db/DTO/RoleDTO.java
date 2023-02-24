@@ -1,9 +1,6 @@
 package com.my.library.db.DTO;
 
-import com.my.library.db.SQLSmartQuery;
-import com.my.library.db.entities.Genre;
 import com.my.library.db.entities.Role;
-
 import javax.naming.OperationNotSupportedException;
 import java.sql.ResultSet;
 import java.sql.SQLException;

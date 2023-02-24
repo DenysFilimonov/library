@@ -1,5 +1,5 @@
 package com.my.library.servlets;
-import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.User;
 import com.my.library.db.entities.UsersBooks;
 import com.my.library.services.*;
@@ -40,7 +40,7 @@ public class CurrentOrdersCommand extends ControllerCommand {
                 cancelOrder(req);
         }
         req.setAttribute("users", GetUsers.get(userDAO));
-        req.setAttribute("usersBooks", usersBookDAO.get(prepareOrdersSQl(req)));
+        req.setAttribute("usersBooks", usersBookDAO.get(prepareOrdersSQl(req).build()));
         req.setAttribute("errors", errors);
         String page = ConfigurationManager.getInstance().getProperty(ConfigurationManager.ORDERS_PAGE_PATH);
         SetWindowUrl.setUrl(page, req);
@@ -53,20 +53,18 @@ public class CurrentOrdersCommand extends ControllerCommand {
      * @return          SQLSmartQuery
      * @throws          SQLException throw to upper level, where it will be caught
      */
-    private SQLSmartQuery prepareOrdersSQl(HttpServletRequest req) throws SQLException {
-        SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(new UsersBooks().table);
-        sq.filter("status", "order", SQLSmartQuery.Operators.E);
-        sq.logicOperator(SQLSmartQuery.LogicOperators.OR);
-        sq.groupOperator(SQLSmartQuery.GroupOperators.GROUP);
-        sq.filter("status", "process", SQLSmartQuery.Operators.E);
-        sq.logicOperator(SQLSmartQuery.LogicOperators.AND);
+    private SQLBuilder prepareOrdersSQl(HttpServletRequest req) throws SQLException {
+        SQLBuilder sq = new SQLBuilder(new UsersBooks().table);
+        sq.filter("status", "order", SQLBuilder.Operators.E);
+        sq.logicOperator(SQLBuilder.LogicOperators.OR);
+        sq.groupOperator(SQLBuilder.GroupOperators.GROUP);
+        sq.filter("status", "process", SQLBuilder.Operators.E);
+        sq.logicOperator(SQLBuilder.LogicOperators.AND);
         User user =(User) req.getSession().getAttribute("user");
-        sq.filter("librarian_id", user.getId(), SQLSmartQuery.Operators.E );
-        sq.groupOperator(SQLSmartQuery.GroupOperators.UNGROUP);
-        sq.order("case_num");
+        sq.filter("librarian_id", user.getId(), SQLBuilder.Operators.E );
+        sq.groupOperator(SQLBuilder.GroupOperators.UNGROUP);
+        sq.order("case_num", SQLBuilder.SortOrder.ASC);
         SortManager.SortManager(req, sq);
-        System.out.println(sq.build());
         return sq;
     }
 

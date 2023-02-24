@@ -1,6 +1,6 @@
 package com.my.library.services;
 
-import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.BookStore;
 import com.my.library.db.entities.Genre;
 import com.my.library.db.DAO.BookStoreDAO;
@@ -22,20 +22,11 @@ public class GetStorage {
 
     public static Map<String, Integer> get(BookStoreDAO bookStoreDAO) throws SQLException {
         Map<String, Integer> storage= new HashMap<>();
-        SQLSmartQuery sqCase = new SQLSmartQuery();
-        sqCase.source(new BookStore().table);
-        sqCase.field("case_num");
-        sqCase.setDistinct(true);
+        SQLBuilder sqCase = new SQLBuilder(new BookStore().table).field("case_num").setDistinct(true).build();
         int cases = bookStoreDAO.count(sqCase);
-        SQLSmartQuery sqShelf = new SQLSmartQuery();
-        sqShelf.source(new BookStore().table);
-        sqShelf.field("shelf_num");
-        sqShelf.setDistinct(true);
+        SQLBuilder sqShelf = new SQLBuilder(new BookStore().table).field("shelf_num").setDistinct(true).build();
         int shelves = bookStoreDAO.count(sqShelf);
-        SQLSmartQuery sqCell = new SQLSmartQuery();
-        sqCell.source(new BookStore().table);
-        sqCell.field("cell_num");
-        sqCell.setDistinct(true);
+        SQLBuilder sqCell = new SQLBuilder(new BookStore().table).field("cell_num").setDistinct(true).build();
         int cells = bookStoreDAO.count(sqCell);
         storage.put("case", cases);
         storage.put("shelf", shelves);

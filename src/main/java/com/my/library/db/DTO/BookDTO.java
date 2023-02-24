@@ -1,5 +1,5 @@
 package com.my.library.db.DTO;
-import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.*;
 import com.my.library.db.DAO.BookDAO;
 import com.my.library.db.DAO.BookStoreDAO;
@@ -66,22 +66,20 @@ public interface BookDTO {
         }
         else {
             book.setId(Integer.parseInt(req.getParameter("id")));
-            SQLSmartQuery sq = new SQLSmartQuery();
-            sq.source(book.table);
-            sq.filter("id", book.getId(), SQLSmartQuery.Operators.E);
+            SQLBuilder sq = new SQLBuilder(book.table).filter("id", book.getId(), SQLBuilder.Operators.E);
             ArrayList<Book> oldValues = ((BookDAO) context.getDAO(new Book())).get(sq);
             availableBooks= oldValues.get(0).getAvailableQuantity()+(book.getQuantity()-oldValues.get(0).getQuantity());
         }
         book.setAvailableQuantity(availableBooks);
-        SQLSmartQuery sqBs = new SQLSmartQuery();
         BookStore bs = new BookStore();
-        sqBs.source(bs.table);
-        sqBs.filter("case_num", Integer.parseInt(req.getParameter("caseNum")), SQLSmartQuery.Operators.E);
-        sqBs.logicOperator(SQLSmartQuery.LogicOperators.AND);
-        sqBs.filter("shelf_num", Integer.parseInt(req.getParameter("shelf")), SQLSmartQuery.Operators.E);
-        sqBs.logicOperator(SQLSmartQuery.LogicOperators.AND);
-        sqBs.filter("cell_num", Integer.parseInt(req.getParameter("cell")), SQLSmartQuery.Operators.E);
-        ArrayList<BookStore> bookStores = ((BookStoreDAO) context.getDAO(new BookStore())).get(sqBs);
+        SQLBuilder sqBs = new SQLBuilder(bs.table).
+                filter("case_num",
+                        Integer.parseInt(req.getParameter("caseNum")), SQLBuilder.Operators.E).
+                logicOperator(SQLBuilder.LogicOperators.AND).
+                filter("shelf_num", Integer.parseInt(req.getParameter("shelf")), SQLBuilder.Operators.E).
+                logicOperator(SQLBuilder.LogicOperators.AND).
+                filter("cell_num", Integer.parseInt(req.getParameter("cell")), SQLBuilder.Operators.E);
+        ArrayList<BookStore> bookStores = ((BookStoreDAO) context.getDAO(new BookStore())).get(sqBs.build());
         book.setBookStore(bookStores.get(0));
         book.setDeleted(req.getParameter("deleted") != null && Boolean.getBoolean(req.getParameter("deleted")));
         if(req.getParameter("cover")!=null){

@@ -1,13 +1,8 @@
 package com.my.library.db.DAO;
-
-import com.my.library.db.ConnectionPool;
 import com.my.library.db.DTO.PublisherDTO;
-import com.my.library.db.SQLSmartQuery;
-import com.my.library.db.entities.Author;
-import com.my.library.db.entities.IssueType;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.Publisher;
 import org.apache.commons.dbcp2.BasicDataSource;
-
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -121,17 +116,25 @@ public class PublisherDAO implements DAO<Publisher> {
     }
 
     @Override
-    public int count(SQLSmartQuery query) throws SQLException {
-        ArrayList<Publisher> list = get(query);
-        return list.isEmpty()? 0: list.size();
+    public int count(SQLBuilder query) throws SQLException {
+        ResultSet resultSet = null;
+        int count=0;
+        try  (Connection connection = dataSource.getConnection();
+              Statement statement = connection.createStatement()) {
+            resultSet = statement.executeQuery(query.getSQLStringCount());
+            while (resultSet.next()) {
+                count = resultSet.getInt(1);
+            }
+        }
+        return count;
     }
 
     @Override
-    public ArrayList<Publisher> get(SQLSmartQuery query) throws SQLException{
+    public ArrayList<Publisher> get(SQLBuilder query) throws SQLException{
         ArrayList<Publisher> publishers = new ArrayList<>();
         try (Connection connection = dataSource.getConnection();
             Statement statement = connection.createStatement()){
-            ResultSet resultSet = statement.executeQuery(query.build());
+            ResultSet resultSet = statement.executeQuery(query.getSQLString());
             while (resultSet.next()) {
                 publishers.add(PublisherDTO.toModel(resultSet));
             }
@@ -141,9 +144,9 @@ public class PublisherDAO implements DAO<Publisher> {
 
     @Override
     public Publisher getOne(int id) throws SQLException {
-        SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(new Publisher().table);
-        sq.filter("id", id, SQLSmartQuery.Operators.E);
+        SQLBuilder sq = new SQLBuilder(new Publisher().table).
+                filter("id", id, SQLBuilder.Operators.E).
+                build();
         ArrayList<Publisher> publishers = get(sq);
         return publishers.isEmpty()? null: publishers.get(0);
     }

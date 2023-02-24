@@ -1,6 +1,6 @@
 package com.my.library.servlets;
 
-import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.Role;
 import com.my.library.db.entities.User;
 import com.my.library.services.*;
@@ -47,9 +47,8 @@ public class UserManagerCommand extends ControllerCommand {
      */
 
     private void setRoles(HttpServletRequest req) throws SQLException {
-        SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(new Role().table);
-        ArrayList<Role> roles = roleDAO.get(sq);
+        SQLBuilder sq = new SQLBuilder(new Role().table);
+        ArrayList<Role> roles = roleDAO.get(sq.build());
         req.setAttribute("roles", roles);
     }
 
@@ -59,21 +58,21 @@ public class UserManagerCommand extends ControllerCommand {
      * @throws          SQLException can be thrown during password validation
      */
     private void setUsers(HttpServletRequest req) throws SQLException {
-        SQLSmartQuery sq = new SQLSmartQuery();
+        SQLBuilder sq;
         if(req.getMethod().equals("POST")) {
             sq = prepareCatalogSQl(req);
             req.getSession().setAttribute(req.getParameter("command"), sq);
         }
         else{
             if (req.getSession().getAttribute(req.getParameter("command"))!=null)
-                sq = (SQLSmartQuery) req.getSession().getAttribute(req.getParameter("command"));
+                sq = (SQLBuilder) req.getSession().getAttribute(req.getParameter("command"));
             else {
                 sq = prepareCatalogSQl(req);
             }
         }
         req.setAttribute("pagination", new PaginationManager(req, sq, userDAO));
         SortManager.SortManager(req, sq);
-        ArrayList<User> users = userDAO.get(sq);
+        ArrayList<User> users = userDAO.get(sq.build());
         req.setAttribute("users", users);
     }
 
@@ -82,18 +81,16 @@ public class UserManagerCommand extends ControllerCommand {
      * @param  req      HttpServletRequest request
      * @return          SQLSmartQuery class with data request params
      */
-    private SQLSmartQuery prepareCatalogSQl(HttpServletRequest req) {
-        SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(new User().table);
+    private SQLBuilder prepareCatalogSQl(HttpServletRequest req) {
+        SQLBuilder sq = new SQLBuilder(new User().table);
         String userSearchStr = req.getParameter("name");
         if (userSearchStr != null && !userSearchStr.equals("")) {
-            sq.filter("first_name", userSearchStr, SQLSmartQuery.Operators.ILIKE);
-            sq.logicOperator(SQLSmartQuery.LogicOperators.OR);
-            sq.filter("second_name", userSearchStr, SQLSmartQuery.Operators.ILIKE);
-            sq.logicOperator(SQLSmartQuery.LogicOperators.OR);
-            sq.filter("login", userSearchStr, SQLSmartQuery.Operators.ILIKE);
+            sq.filter("first_name", userSearchStr, SQLBuilder.Operators.ILIKE).
+                    filter("second_name", userSearchStr, SQLBuilder.Operators.ILIKE).
+                    logicOperator(SQLBuilder.LogicOperators.OR).
+                    filter("login", userSearchStr, SQLBuilder.Operators.ILIKE);
         }
-        sq.order("login", SQLSmartQuery.SortOrder.ASC);
+        sq.order("login", SQLBuilder.SortOrder.ASC);
         return sq;
     }
 
@@ -105,29 +102,21 @@ public class UserManagerCommand extends ControllerCommand {
     private void changeUserRole(HttpServletRequest req) throws SQLException {
         if(req.getParameter("setRole")!=null && !req.getParameter("setRole").equals("")
                 && req.getParameter("userId")!=null && !req.getParameter("userId").equals("")){
-            User user = new User();
+            User user;
             ErrorManager errorManager = new ErrorManager();
-            SQLSmartQuery sqUser = new SQLSmartQuery();
-            sqUser.source(user.table);
-            Role role = new Role();
-            SQLSmartQuery sqRole = new SQLSmartQuery();
-            sqUser.source(user.table);
-            sqUser.filter("id", Integer.parseInt(req.getParameter("userId")), SQLSmartQuery.Operators.E);
-            ArrayList<User> users = userDAO.get(sqUser);
-            sqRole.source(role.table);
-            sqRole.filter("id", Integer.parseInt(req.getParameter("setRole")), SQLSmartQuery.Operators.E);
-            ArrayList<Role> roles = roleDAO.get(sqRole);
-            if (users.isEmpty()) errorManager.add("userId", "There isn't user with this id",
+            Role role;
+            user = userDAO.getOne(Integer.parseInt(req.getParameter("userId")));
+            role = roleDAO.getOne(Integer.parseInt(req.getParameter("setRole")));
+            if (user == null) errorManager.add("userId", "There isn't user with this id",
                     "Користувача з таким ID не існує");
-            if (roles.isEmpty()) errorManager.add("roleId", "There isn't role with this id",
+            if (role ==null) errorManager.add("roleId", "There isn't role with this id",
                     "Ролі з таким ID не існує");
 
             if(!errorManager.getErrors().isEmpty()){
                 req.setAttribute("errors", errorManager.getErrors());
                 return;
             }
-                user = users.get(0);
-                user.setRole(roles.get(0));
+                user.setRole(role);
                 userDAO.update(user);
             }
         }
@@ -140,20 +129,15 @@ public class UserManagerCommand extends ControllerCommand {
     private void changeUserStatus(HttpServletRequest req) throws SQLException {
         if(req.getParameter("setActive")!=null && !req.getParameter("setActive").equals("")
                 && req.getParameter("userId")!=null && !req.getParameter("userId").equals("")){
-            User user = new User();
+            User user;
             ErrorManager errorManager = new ErrorManager();
-            SQLSmartQuery sqUser = new SQLSmartQuery();
-            sqUser.source(user.table);
-            sqUser.source(user.table);
-            sqUser.filter("id", Integer.parseInt(req.getParameter("userId")), SQLSmartQuery.Operators.E);
-            ArrayList<User> users = userDAO.get(sqUser);
-            if (users.isEmpty()) errorManager.add("userId", "There isn't user with this id",
+            user = userDAO.getOne(Integer.parseInt(req.getParameter("userId")));
+            if (user==null) errorManager.add("userId", "There isn't user with this id",
                     "Користувача з таким ID не існує");
             if(!errorManager.getErrors().isEmpty()){
                 req.setAttribute("errors", errorManager.getErrors());
                 return;
             }
-            user = users.get(0);
             user.setActive(req.getParameter("setActive").equals("true"));
             userDAO.update(user);
         }

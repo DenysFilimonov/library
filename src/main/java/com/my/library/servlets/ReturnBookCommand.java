@@ -1,13 +1,8 @@
 package com.my.library.servlets;
 
-import com.my.library.db.DAO.StatusDAO;
-import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.*;
-import com.my.library.db.DAO.BookDAO;
-import com.my.library.db.DAO.PaymentDAO;
-import com.my.library.db.DAO.UsersBookDAO;
 import com.my.library.services.*;
-
 import javax.naming.OperationNotSupportedException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -82,7 +77,7 @@ public class ReturnBookCommand extends ControllerCommand {
      */
     private String doReturn(HttpServletRequest req) throws SQLException {
         List<UsersBooks> usersBooks = getUserBook(req);
-        UsersBooks ub  = new UsersBooks();
+        UsersBooks ub;
         if(usersBooks.isEmpty()) throw new SQLException("cant find specified order with ID"+req.getParameter("userBookId"));
         ub = usersBooks.get(0);
         ub.setStatus(GetStatuses.get(statusDAO).get("return"));
@@ -105,16 +100,15 @@ public class ReturnBookCommand extends ControllerCommand {
      * @throws          SQLException can be thrown during password validation
      */
     private ArrayList<UsersBooks> getUserBook(HttpServletRequest req) throws SQLException {
-        UsersBooks ub = new UsersBooks();
-        SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(ub.table);
         String idString = req.getParameter("userBookId")==null?
                 req.getParameter("returnBook"):req.getParameter("userBookId");
         int id= Integer.parseInt(idString);
-        sq.filter("id", id, SQLSmartQuery.Operators.E);
-        sq.logicOperator(SQLSmartQuery.LogicOperators.AND);
-        sq.filter("status_id", GetStatuses.get(statusDAO).get("issued").getId(), SQLSmartQuery.Operators.E);
-        ArrayList<UsersBooks> usersBooks = usersBookDAO.get(sq);
+        UsersBooks ub = new UsersBooks();
+        SQLBuilder sq = new SQLBuilder(ub.table).
+                filter("id", id, SQLBuilder.Operators.E).
+                logicOperator(SQLBuilder.LogicOperators.AND).
+                filter("status_id", GetStatuses.get(statusDAO).get("issued").getId(), SQLBuilder.Operators.E);
+        ArrayList<UsersBooks> usersBooks = usersBookDAO.get(sq.build());
         if (!usersBooks.isEmpty()) {
            usersBooks.get(0).setReturnDate(today());
         }
@@ -159,10 +153,9 @@ public class ReturnBookCommand extends ControllerCommand {
      * @throws          SQLException can be thrown during password validation
      */
     private float getPayment(UsersBooks userBook) throws SQLException {
-        SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(new Payment().table);
-        sq.filter("order_id", userBook.getId(), SQLSmartQuery.Operators.E);
-        ArrayList<Payment> payments = paymentDAO.get(sq);
+        SQLBuilder sq = new SQLBuilder(new Payment().table).
+                filter("order_id", userBook.getId(), SQLBuilder.Operators.E);
+        ArrayList<Payment> payments = paymentDAO.get(sq.build());
         double payment = payments.isEmpty()? 0: payments.stream().mapToDouble(Payment::getAmount).sum();
         return (float) payment;
     }

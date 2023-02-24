@@ -1,7 +1,5 @@
 package com.my.library.db.DTO;
 
-import com.my.library.db.ConnectionPool;
-import com.my.library.db.SQLSmartQuery;
 import com.my.library.db.entities.Author;
 import com.my.library.db.DAO.AuthorDAO;
 import com.my.library.services.AppContext;

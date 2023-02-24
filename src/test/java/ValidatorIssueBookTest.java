@@ -1,6 +1,6 @@
 import com.my.library.db.ConnectionPool;
 import com.my.library.db.DAO.*;
-import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.*;
 import com.my.library.services.AppContext;
 import com.my.library.services.ErrorMap;
@@ -70,17 +70,17 @@ public class ValidatorIssueBookTest {
         when(request.getSession()).thenReturn(session);
         when(appContext.getValidator(request)).thenReturn(new BookIssueValidator());
         when(appContext.getDAO(any(Book.class))).thenReturn(bookDAO);
-        when(bookDAO.get(any(SQLSmartQuery.class))).thenReturn(books);
+        when(bookDAO.get(any(SQLBuilder.class))).thenReturn(books);
         when(appContext.getDAO(any(Status.class))).thenReturn(StatusDAO.getInstance(ConnectionPool.dataSource) );
         when(appContext.getDAO(any(IssueType.class))).thenReturn(IssueTypeDAO.getInstance(ConnectionPool.dataSource) );
         when(appContext.getDAO(any(UsersBooks.class))).thenReturn(usersBookDAO);
 
         try{
             final int id = Integer.parseInt(userBookId);
-            when(usersBookDAO.get(any(SQLSmartQuery.class))).thenReturn((ArrayList<UsersBooks>)
+            when(usersBookDAO.get(any(SQLBuilder.class))).thenReturn((ArrayList<UsersBooks>)
                     usersBooks.stream().filter(x->x.getId()==id).collect(Collectors.toList()));
         }catch(NumberFormatException e){
-            when(usersBookDAO.get(any(SQLSmartQuery.class))).thenReturn((ArrayList<UsersBooks>)
+            when(usersBookDAO.get(any(SQLBuilder.class))).thenReturn((ArrayList<UsersBooks>)
                     usersBooks.stream().filter(x->x.getId()==0).collect(Collectors.toList()));
         }
         BookIssueValidator validator = new BookIssueValidator();

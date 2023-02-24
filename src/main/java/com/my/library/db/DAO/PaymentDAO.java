@@ -1,12 +1,8 @@
 package com.my.library.db.DAO;
-import com.my.library.db.ConnectionPool;
 import com.my.library.db.DTO.PaymentDTO;
-import com.my.library.db.SQLSmartQuery;
-import com.my.library.db.entities.Book;
-import com.my.library.db.entities.IssueType;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.Payment;
 import org.apache.commons.dbcp2.BasicDataSource;
-
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -108,17 +104,25 @@ public class PaymentDAO implements DAO<Payment> {
     }
 
     @Override
-    public int count(SQLSmartQuery query) throws SQLException {
-        ArrayList<Payment> list = get(query);
-        return list.isEmpty()? 0: list.size();
+    public int count(SQLBuilder query) throws SQLException {
+        ResultSet resultSet = null;
+        int count=0;
+        try  (Connection connection = dataSource.getConnection();
+              Statement statement = connection.createStatement()) {
+            resultSet = statement.executeQuery(query.getSQLStringCount());
+            while (resultSet.next()) {
+                count = resultSet.getInt(1);
+            }
+        }
+        return count;
     }
 
     @Override
-    public ArrayList<Payment> get(SQLSmartQuery query) throws SQLException {
+    public ArrayList<Payment> get(SQLBuilder query) throws SQLException {
         ArrayList<Payment> payments = new ArrayList<>();
         try (Connection connection = dataSource.getConnection();
             Statement statement = connection.createStatement()){
-            ResultSet resultSet = statement.executeQuery(query.build());
+            ResultSet resultSet = statement.executeQuery(query.getSQLString());
             while (resultSet.next()) {
                 payments.add(PaymentDTO.toModel(resultSet));
             }
@@ -128,9 +132,9 @@ public class PaymentDAO implements DAO<Payment> {
 
     @Override
     public Payment getOne(int id) throws SQLException {
-        SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(new Payment().table);
-        sq.filter("id", id, SQLSmartQuery.Operators.E);
+        SQLBuilder sq = new SQLBuilder(new Payment().table).
+                filter("id", id, SQLBuilder.Operators.E).
+                build();
         ArrayList<Payment> payments = get(sq);
         return payments.isEmpty()? null: payments.get(0);
     }

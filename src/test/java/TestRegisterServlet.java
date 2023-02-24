@@ -3,7 +3,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.*;
 
 import com.my.library.db.ConnectionPool;
-import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.User;
 import com.my.library.db.DAO.UserDAO;
 import com.my.library.services.AppContext;
@@ -49,11 +49,9 @@ public class TestRegisterServlet extends Mockito {
 
         String resultPage  =new RegisterCommand().execute(request, response, context);
         Assertions.assertTrue(resultPage.contains(page));
-        SQLSmartQuery sq = new SQLSmartQuery();
         User user = new User();
-        sq.source(user.table );
-        sq.filter("login", login, SQLSmartQuery.Operators.E);
-        ArrayList<User> users = UserDAO.getInstance(ConnectionPool.dataSource).get(sq);
+        SQLBuilder sq = new SQLBuilder(user.table ).filter("login", login, SQLBuilder.Operators.E);
+        ArrayList<User> users = UserDAO.getInstance(ConnectionPool.dataSource).get(sq.build());
         if(!users.isEmpty()) UserDAO.getInstance(ConnectionPool.dataSource).delete(users.get(0));
     }
 

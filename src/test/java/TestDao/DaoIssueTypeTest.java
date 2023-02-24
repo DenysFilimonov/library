@@ -1,7 +1,7 @@
 package TestDao;
 
 import com.my.library.db.DAO.IssueTypeDAO;
-import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.IssueType;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.junit.jupiter.api.AfterEach;
@@ -91,14 +91,14 @@ public class DaoIssueTypeTest {
         Statement statement = mock(Statement.class);
         when(dataSource.getConnection()).thenReturn(connection);
         ResultSet resultSet = mock(ResultSet.class);
-        SQLSmartQuery sqlSmartQuery = mock(SQLSmartQuery.class);
+        SQLBuilder sqlSmartQuery = mock(SQLBuilder.class);
         when(connection.createStatement()).thenReturn(statement);
         ArgumentCaptor<String> arg1 = ArgumentCaptor.forClass(String.class);
         when(statement.executeQuery(arg1.capture())).thenReturn(resultSet);
         when(resultSet.next()).thenReturn(false);
-        when(sqlSmartQuery.build()).thenReturn("SELECT * FROM IssueType WHERE id=1");
+        when(sqlSmartQuery.getSQLString()).thenReturn("SELECT * FROM IssueType WHERE id=1");
         IssueTypeDAO.getInstance(dataSource).get(sqlSmartQuery);
-        assertEquals(arg1.getValue(), sqlSmartQuery.build());
+        assertEquals(arg1.getValue(), sqlSmartQuery.getSQLString());
         verify(statement, atLeast(1)).executeQuery(anyString());
         verify(resultSet, atLeast(1)).next();
     }

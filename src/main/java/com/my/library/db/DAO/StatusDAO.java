@@ -1,13 +1,8 @@
 package com.my.library.db.DAO;
-
-import com.my.library.db.ConnectionPool;
 import com.my.library.db.DTO.StatusDTO;
-import com.my.library.db.SQLSmartQuery;
-import com.my.library.db.entities.IssueType;
-import com.my.library.db.entities.Publisher;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.Status;
 import org.apache.commons.dbcp2.BasicDataSource;
-
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -103,17 +98,25 @@ public class StatusDAO implements DAO<Status> {
     }
 
     @Override
-    public int count(SQLSmartQuery query) throws SQLException {
-        ArrayList<Status> list = get(query);
-        return list.isEmpty()? 0: list.size();
+    public int count(SQLBuilder query) throws SQLException {
+        ResultSet resultSet = null;
+        int count=0;
+        try  (Connection connection = dataSource.getConnection();
+              Statement statement = connection.createStatement()) {
+            resultSet = statement.executeQuery(query.getSQLStringCount());
+            while (resultSet.next()) {
+                count = resultSet.getInt(1);
+            }
+        }
+        return count;
     }
 
     @Override
-    public ArrayList<Status> get(SQLSmartQuery query) throws SQLException{
+    public ArrayList<Status> get(SQLBuilder query) throws SQLException{
         ArrayList<Status> types = new ArrayList<>();
         try (Connection connection = dataSource.getConnection();
             Statement statement = connection.createStatement()){
-            ResultSet resultSet = statement.executeQuery(query.build());
+            ResultSet resultSet = statement.executeQuery(query.getSQLString());
             while (resultSet.next()) {
                 types.add(StatusDTO.toModel(resultSet));
             }
@@ -123,9 +126,8 @@ public class StatusDAO implements DAO<Status> {
 
     @Override
     public Status getOne(int id) throws SQLException {
-        SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(new Status().table);
-        sq.filter("id", id, SQLSmartQuery.Operators.E);
+        SQLBuilder sq = new SQLBuilder(new Status().table).
+                filter("id", id, SQLBuilder.Operators.E).build();
         ArrayList<Status> statuses = get(sq);
         return statuses.isEmpty()? null: statuses.get(0);
     }

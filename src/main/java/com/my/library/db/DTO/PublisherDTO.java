@@ -1,10 +1,9 @@
 package com.my.library.db.DTO;
 
-import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.Publisher;
 import com.my.library.db.DAO.PublisherDAO;
 import com.my.library.services.AppContext;
-
 import javax.naming.OperationNotSupportedException;
 import javax.servlet.http.HttpServletRequest;
 import java.sql.ResultSet;
@@ -48,10 +47,8 @@ public interface PublisherDTO {
         Map<String, String> country = new HashMap<>();
 
         if(req.getParameter("publisherId")!=null){
-            SQLSmartQuery sq = new SQLSmartQuery();
-            sq.source(new Publisher().table);
-            sq.filter("id", req.getParameter("publisherId"), SQLSmartQuery.Operators.E);
-            publisher = ((PublisherDAO) context.getDAO(new Publisher())).get(sq).get(0);
+            publisher = ((PublisherDAO) context.getDAO(new Publisher())).
+                    getOne(Integer.parseInt(req.getParameter("publisherId")));
         }
         else{
             publisherMap.put("en", req.getParameter("publisherEn"));

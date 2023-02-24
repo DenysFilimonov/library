@@ -4,7 +4,7 @@ import com.my.library.db.DTO.AuthorDTO;
 import com.my.library.db.DTO.BookDTO;
 import com.my.library.db.DTO.GenreDTO;
 import com.my.library.db.DTO.PublisherDTO;
-import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.*;
 import com.my.library.services.*;
 import com.my.library.services.validator.NewBookValidator;
@@ -71,17 +71,16 @@ public class NewBookCommand extends ControllerCommand {
      * 2
      */
     private void setAuthors(HttpServletRequest req) throws SQLException {
-        String authorSearchStr = req.getParameter("author")!=null? req.getParameter("author"): "a";
-        SQLSmartQuery sq= new SQLSmartQuery();
         ArrayList<Author> authors;
-        sq.source(new Author().table);
-        sq.filter("first_name", authorSearchStr, SQLSmartQuery.Operators.ILIKE);
-        sq.logicOperator(SQLSmartQuery.LogicOperators.OR);
-        sq.filter("first_name_ua", authorSearchStr, SQLSmartQuery.Operators.ILIKE);
+        String authorSearchStr = req.getParameter("author")!=null? req.getParameter("author"): "a";
+        SQLBuilder sq= new SQLBuilder(new Author().table).
+                filter("first_name", authorSearchStr, SQLBuilder.Operators.ILIKE).
+                logicOperator(SQLBuilder.LogicOperators.OR).
+                filter("first_name_ua", authorSearchStr, SQLBuilder.Operators.ILIKE);
         if(req.getSession().getAttribute("language")!=null && req.getSession().getAttribute("language")=="en" )
-            sq.order("first_name", SQLSmartQuery.SortOrder.ASC);
-        else sq.order("first_name_ua", SQLSmartQuery.SortOrder.ASC);
-        authors = authorDAO.get(sq);
+            sq.order("first_name", SQLBuilder.SortOrder.ASC);
+        else sq.order("first_name_ua", SQLBuilder.SortOrder.ASC);
+        authors = authorDAO.get(sq.build());
         req.setAttribute("authors",authors);
         }
 
@@ -93,23 +92,22 @@ public class NewBookCommand extends ControllerCommand {
      *
      */
     private void setPublishers(HttpServletRequest req) throws SQLException {
-        String publisherSearchStr = req.getParameter("publisher");
-        SQLSmartQuery sq= new SQLSmartQuery();
         ArrayList<Publisher> publishers;
-        sq.source(new Publisher().table);
+        String publisherSearchStr = req.getParameter("publisher");
+        SQLBuilder sq= new SQLBuilder(new Publisher().table);
         if (publisherSearchStr!=null) {
-            sq.filter("publisher", publisherSearchStr, SQLSmartQuery.Operators.ILIKE);
-            sq.logicOperator(SQLSmartQuery.LogicOperators.OR);
-            sq.filter("publisher_ua", publisherSearchStr, SQLSmartQuery.Operators.ILIKE);
-            sq.logicOperator(SQLSmartQuery.LogicOperators.OR);
-            sq.filter("country", publisherSearchStr, SQLSmartQuery.Operators.ILIKE);
-            sq.logicOperator(SQLSmartQuery.LogicOperators.OR);
-            sq.filter("country_ua", publisherSearchStr, SQLSmartQuery.Operators.ILIKE);
+            sq.filter("publisher", publisherSearchStr, SQLBuilder.Operators.ILIKE).
+                    logicOperator(SQLBuilder.LogicOperators.OR).
+                    filter("publisher_ua", publisherSearchStr, SQLBuilder.Operators.ILIKE).
+                    logicOperator(SQLBuilder.LogicOperators.OR).
+                    filter("country", publisherSearchStr, SQLBuilder.Operators.ILIKE).
+                    logicOperator(SQLBuilder.LogicOperators.OR).
+                    filter("country_ua", publisherSearchStr, SQLBuilder.Operators.ILIKE);
         }
         if(req.getSession().getAttribute("language")!=null && req.getSession().getAttribute("language")=="en" )
-            sq.order("publisher", SQLSmartQuery.SortOrder.ASC);
-        else sq.order("publisher_ua", SQLSmartQuery.SortOrder.ASC);
-        publishers = publisherDAO.get(sq);
+            sq.order("publisher", SQLBuilder.SortOrder.ASC);
+        else sq.order("publisher_ua", SQLBuilder.SortOrder.ASC);
+        publishers = publisherDAO.get(sq.build());
         req.setAttribute("publishers",publishers);
     }
 

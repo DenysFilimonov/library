@@ -1,10 +1,7 @@
 package com.my.library.servlets;
 
-import com.my.library.db.DAO.BookStoreDAO;
-import com.my.library.db.DAO.GenreDAO;
-import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.*;
-import com.my.library.db.DAO.BookDAO;
 import com.my.library.services.AppContext;
 import com.my.library.services.ConfigurationManager;
 
@@ -52,21 +49,18 @@ public class DeleteBookCommand extends ControllerCommand {
      * @param  req      HttpServletRequest request
      * @return          SQLSmartQuery object
      */
-    private SQLSmartQuery prepareSQL(HttpServletRequest req){
-        SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(new Book().table);
-        sq.filter("id", Integer.parseInt(req.getParameter("delete")), SQLSmartQuery.Operators.E);
-        return sq;
+    private SQLBuilder prepareSQL(HttpServletRequest req){
+        return new SQLBuilder(new Book().table).
+                filter("id", Integer.parseInt(req.getParameter("delete")), SQLBuilder.Operators.E);
     }
 
     /**
      * Perform cleanup operation with the books that marked as deleted
      */
     private void performDeletedClean() throws SQLException {
-        SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(new Book().table);
-        sq.filter("deleted", true, SQLSmartQuery.Operators.E);
-        ArrayList<Book> deletedBooks = bookDAO.get(sq);
+        SQLBuilder sq = new SQLBuilder(new Book().table).
+                filter("deleted", true, SQLBuilder.Operators.E);
+        ArrayList<Book> deletedBooks = bookDAO.get(sq.build());
         for (Book book: deletedBooks ) {
             if(book.getQuantity()== book.getAvailableQuantity())
                 bookDAO.delete(book);

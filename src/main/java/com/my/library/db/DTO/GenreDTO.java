@@ -1,5 +1,5 @@
 package com.my.library.db.DTO;
-import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.Genre;
 import com.my.library.db.DAO.GenreDAO;
 import com.my.library.services.AppContext;
@@ -35,10 +35,10 @@ public interface GenreDTO {
         Map<String,String> gr = new HashMap<>();
 
         if(req.getParameter("genreId")!=null){
-            SQLSmartQuery sq = new SQLSmartQuery();
-            sq.source(new Genre().table);
-            sq.filter("id", req.getParameter("genreId"), SQLSmartQuery.Operators.E);
-            genre = ((GenreDAO) context.getDAO(new Genre())).get(sq).get(0);
+
+            SQLBuilder sq = new SQLBuilder(new Genre().table).
+                    filter("id", req.getParameter("genreId"), SQLBuilder.Operators.E);
+            genre = ((GenreDAO) context.getDAO(new Genre())).get(sq.build()).get(0);
         }
         else{
             gr.put("en", req.getParameter("genreEn"));

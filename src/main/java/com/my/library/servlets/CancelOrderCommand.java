@@ -1,6 +1,6 @@
 package com.my.library.servlets;
 
-import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.*;
 import com.my.library.services.AppContext;
 import com.my.library.services.ConfigurationManager;
@@ -31,25 +31,19 @@ public class CancelOrderCommand extends ControllerCommand {
      */
     public String execute(HttpServletRequest req, HttpServletResponse resp, AppContext context) throws ServletException,
             SQLException, OperationNotSupportedException, IOException, NoSuchAlgorithmException, CloneNotSupportedException {
-        UsersBooks usersBooks = new UsersBooks();
         setContext(context);
         String orderId = req.getParameter("orderId");
         if(orderId!=null) {
-            SQLSmartQuery sq = new SQLSmartQuery();
-            sq.source(usersBooks.table);
-            sq.filter("id", Integer.parseInt(orderId), SQLSmartQuery.Operators.E);
-            usersBooks = usersBookDAO.get(sq).get(0);
-            usersBookDAO.delete(usersBooks);
-            SQLSmartQuery sqBook = new SQLSmartQuery();
-            Book book = new Book();
-            sqBook.source(book.table);
-            sqBook.filter("id", usersBooks.getBookId(), SQLSmartQuery.Operators.E);
-            book = bookDAO.get(sqBook).get(0);
-            book.setAvailableQuantity(book.getAvailableQuantity() + 1);
-            bookDAO.update(book);
-            req.setAttribute("messagePrg", "Order.label.okCancel");
-            req.setAttribute("commandPrg", "subscriptions");
-            return ConfigurationManager.getInstance().getProperty(ConfigurationManager.OK_RETURN);
+            UsersBooks usersBooks = usersBookDAO.getOne(Integer.parseInt(orderId));
+            if (usersBooks!=null) {
+                usersBookDAO.delete(usersBooks);
+                Book book = bookDAO.getOne(usersBooks.getBookId());
+                book.setAvailableQuantity(book.getAvailableQuantity() + 1);
+                bookDAO.update(book);
+                req.setAttribute("messagePrg", "Order.label.okCancel");
+                req.setAttribute("commandPrg", "subscriptions");
+                return ConfigurationManager.getInstance().getProperty(ConfigurationManager.OK_RETURN);
+            }
         }
         return CommandMapper.getInstance().getCommand("subscriptions").execute(req, resp, context);
     }

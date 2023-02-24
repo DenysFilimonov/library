@@ -1,6 +1,6 @@
 package com.my.library.services;
 
-import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.IssueType;
 import com.my.library.db.DAO.IssueTypeDAO;
 import java.sql.SQLException;
@@ -19,8 +19,7 @@ public class GetIssueTypes {
      */
 
     public static Map<String, IssueType> get(IssueTypeDAO issueTypeDAO) throws SQLException {
-        SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(new IssueType().table);
+        SQLBuilder sq = new SQLBuilder(new IssueType().table).build();
         ArrayList<IssueType> it = issueTypeDAO.get(sq);
         return it.stream().collect(Collectors.toMap(x->x.getIssueType().get("en"), x->x));
     }

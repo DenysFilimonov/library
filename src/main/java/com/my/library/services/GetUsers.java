@@ -1,6 +1,6 @@
 package com.my.library.services;
 
-import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.User;
 import com.my.library.db.DAO.UserDAO;
 import java.sql.SQLException;
@@ -20,8 +20,7 @@ public class GetUsers {
      */
 
     public static Map<Integer, User> get(UserDAO userDAO) throws SQLException {
-        SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(new User().table);
+        SQLBuilder sq = new SQLBuilder(new User().table).build();
         ArrayList<User> st = userDAO.get(sq);
         return st.stream().collect(Collectors.toMap(User::getId, x->{
             x.setPassword("");

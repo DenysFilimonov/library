@@ -1,7 +1,7 @@
 package com.my.library.services;
 
 import com.my.library.db.DAO.DAO;
-import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.DAO.BookDAO;
 import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
@@ -17,11 +17,11 @@ public class PaginationManager {
      * @param  req      HttpServletRequest request with pagination params
      * @param  query    SQLSmartQuery to modify with params
      * @param dao       Data Access Object
-     * @see             SQLSmartQuery
+     * @see             SQLBuilder
      * @see             DAO
      */
 
-    public PaginationManager(HttpServletRequest req, SQLSmartQuery query, DAO dao) throws SQLException {
+    public PaginationManager(HttpServletRequest req, SQLBuilder query, DAO dao) throws SQLException {
         int totalLines = dao.count(query);
         String linesOnPage = req.getParameter("linesOnPage");
         this.linesOnPage = (linesOnPage!=null && !linesOnPage.equals(""))? Integer.parseInt(linesOnPage):

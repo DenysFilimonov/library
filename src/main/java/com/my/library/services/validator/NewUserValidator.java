@@ -3,12 +3,11 @@ package com.my.library.services.validator;
 
 
 import com.my.library.db.DAO.UserDAO;
-import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.User;
 import com.my.library.services.AppContext;
 import com.my.library.services.ErrorManager;
 import com.my.library.services.ErrorMap;
-
 import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
 import java.util.*;
@@ -49,12 +48,10 @@ public class NewUserValidator implements Validator {
                     "Усі поля є обов'язковими");
             return errorManager.getErrors();
         }
-        SQLSmartQuery sq =new SQLSmartQuery();
         User user = new User();
-        sq.source(user.table);
-        sq.filter("login", login, SQLSmartQuery.Operators.E);
+        SQLBuilder sq =new SQLBuilder(user.table).filter("login", login, SQLBuilder.Operators.E);
         UserDAO userDAO = (UserDAO) context.getDAO(user);
-        if(userDAO.get(sq).size()>0){
+        if(userDAO.get(sq.build()).size()>0){
             errorManager.add(  "login","User with this login already exists",
                     "Користувач з таким ім'ям вже існує");
         }

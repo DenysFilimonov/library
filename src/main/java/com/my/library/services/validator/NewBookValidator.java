@@ -1,7 +1,7 @@
 package com.my.library.services.validator;
 
 
-import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.*;
 import com.my.library.db.DAO.*;
 import com.my.library.services.AppContext;
@@ -52,10 +52,9 @@ public class NewBookValidator  implements Validator{
                     "Isbn може мати не більше 20 знаків");
         }
         else{
-            SQLSmartQuery sq = new SQLSmartQuery();
-            sq.source(new Book().table);
-            sq.filter("isbn", req.getParameter("isbn"), SQLSmartQuery.Operators.E);
-            if(bookDAO.get(sq).size()>0) {
+            SQLBuilder sq = new SQLBuilder(new Book().table).
+                    filter("isbn", req.getParameter("isbn"), SQLBuilder.Operators.E);
+            if(bookDAO.get(sq.build()).size()>0) {
                 errorManager.add(  "isbn", "Book with same ISBN already present",
                         "Книга з цим ISBN вже представлена");
             }
@@ -193,12 +192,11 @@ public class NewBookValidator  implements Validator{
                         "Назва видавця може мати не більше 50 знаків");
             }
             else if(req.getParameter("publisherUa")!=null || !req.getParameter("publisherUa").equals("")){
-                SQLSmartQuery sqPub = new SQLSmartQuery();
-                sqPub.source(new Publisher().table);
-                sqPub.filter("publisher", req.getParameter("publisherEn"), SQLSmartQuery.Operators.E);
-                sqPub.logicOperator(SQLSmartQuery.LogicOperators.AND);
-                sqPub.filter("publisher_ua", req.getParameter("publisherUa"), SQLSmartQuery.Operators.E);
-                if(!publisherDAO.get(sqPub).isEmpty())
+                SQLBuilder sqPub = new SQLBuilder(new Publisher().table).
+                        filter("publisher", req.getParameter("publisherEn"), SQLBuilder.Operators.E).
+                        logicOperator(SQLBuilder.LogicOperators.AND).
+                        filter("publisher_ua", req.getParameter("publisherUa"), SQLBuilder.Operators.E);
+                if(!publisherDAO.get(sqPub.build()).isEmpty())
                     errorManager.add(  "publisherEn", "Publisher with this same name present, choose from the list",
                             "Видавець з таким імя'м вже присутній, виберіть зі списку");
             }
@@ -256,23 +254,24 @@ public class NewBookValidator  implements Validator{
             errorManager.add(  "cell", "Address storing fields are required  ",
                     "Поля адресного зберігання обовязкові");
         else try {
-            SQLSmartQuery sqBs = new SQLSmartQuery();
             BookStore bs = new BookStore();
-            sqBs.source(bs.table);
-            sqBs.filter("case_num", Integer.parseInt(req.getParameter("caseNum")), SQLSmartQuery.Operators.E);
-            sqBs.logicOperator(SQLSmartQuery.LogicOperators.AND);
-            sqBs.filter("shelf_num", Integer.parseInt(req.getParameter("shelf")), SQLSmartQuery.Operators.E);
-            sqBs.logicOperator(SQLSmartQuery.LogicOperators.AND);
-            sqBs.filter("cell_num", Integer.parseInt(req.getParameter("cell")), SQLSmartQuery.Operators.E);
-            ArrayList<BookStore> bookStores = bookStoreDAO.get(sqBs);
+            SQLBuilder sqBs = new SQLBuilder(bs.table).
+                    filter("case_num",
+                            Integer.parseInt(req.getParameter("caseNum")), SQLBuilder.Operators.E).
+                    logicOperator(SQLBuilder.LogicOperators.AND).
+                    filter("shelf_num",
+                            Integer.parseInt(req.getParameter("shelf")), SQLBuilder.Operators.E).
+                    logicOperator(SQLBuilder.LogicOperators.AND).
+                    filter("cell_num",
+                            Integer.parseInt(req.getParameter("cell")), SQLBuilder.Operators.E);
+            ArrayList<BookStore> bookStores = bookStoreDAO.get(sqBs.build());
             if (bookStores.isEmpty())
                 errorManager.add(  "cell", "This storing address is incorrect ",
                         "Не корректний адрес зберігання");
             else {
-                SQLSmartQuery sq = new SQLSmartQuery();
-                sq.source(new Book().table);
-                sq.filter("book_store_id", bookStores.get(0).getId(), SQLSmartQuery.Operators.E);
-                if (!bookDAO.get(sq).isEmpty())
+                SQLBuilder sq = new SQLBuilder(new Book().table).
+                        filter("book_store_id", bookStores.get(0).getId(), SQLBuilder.Operators.E);
+                if (!bookDAO.get(sq.build()).isEmpty())
                     errorManager.add(  "cell", "This storing address is occupied ",
                             "Адрес зберігання вже зайнято");
             }

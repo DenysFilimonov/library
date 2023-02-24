@@ -1,7 +1,6 @@
 package com.my.library.db.DTO;
 
 import com.my.library.db.entities.Payment;
-
 import javax.naming.OperationNotSupportedException;
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Date;

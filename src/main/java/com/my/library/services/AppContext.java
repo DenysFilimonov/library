@@ -2,7 +2,6 @@ package com.my.library.services;
 
 import com.my.library.db.ConnectionPool;
 import com.my.library.db.DAO.*;
-import com.my.library.db.SQLSmartQuery;
 import com.my.library.db.entities.*;
 import com.my.library.services.validator.*;
 import javax.servlet.http.HttpServletRequest;

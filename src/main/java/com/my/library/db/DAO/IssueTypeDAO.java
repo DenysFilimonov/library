@@ -1,13 +1,8 @@
 package com.my.library.db.DAO;
-
-import com.my.library.db.ConnectionPool;
 import com.my.library.db.DTO.IssueTypeDTO;
-import com.my.library.db.SQLSmartQuery;
-import com.my.library.db.entities.Author;
-import com.my.library.db.entities.Book;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.IssueType;
 import org.apache.commons.dbcp2.BasicDataSource;
-
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -103,17 +98,25 @@ public class IssueTypeDAO implements DAO<IssueType> {
     }
 
     @Override
-    public int count(SQLSmartQuery query) throws SQLException {
-        ArrayList<IssueType> list = get(query);
-        return list.isEmpty()? 0: list.size();
+    public int count(SQLBuilder query) throws SQLException {
+        ResultSet resultSet = null;
+        int count=0;
+        try  (Connection connection = dataSource.getConnection();
+              Statement statement = connection.createStatement()) {
+            resultSet = statement.executeQuery(query.getSQLStringCount());
+            while (resultSet.next()) {
+                count = resultSet.getInt(1);
+            }
+        }
+        return count;
     }
 
     @Override
-    public ArrayList<IssueType> get(SQLSmartQuery query) throws SQLException{
+    public ArrayList<IssueType> get(SQLBuilder query) throws SQLException{
         ArrayList<IssueType> types = new ArrayList<>();
         try(Connection connection = dataSource.getConnection();
             Statement statement = connection.createStatement()){
-            ResultSet resultSet = statement.executeQuery(query.build());
+            ResultSet resultSet = statement.executeQuery(query.getSQLString());
             while (resultSet.next()) {
                 types.add(IssueTypeDTO.toModel(resultSet));
             }
@@ -124,9 +127,9 @@ public class IssueTypeDAO implements DAO<IssueType> {
 
     @Override
     public IssueType getOne(int id) throws SQLException {
-        SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(new IssueType().table);
-        sq.filter("id", id, SQLSmartQuery.Operators.E);
+        SQLBuilder sq = new SQLBuilder(new IssueType().table).
+                filter("id", id, SQLBuilder.Operators.E).
+                build();
         ArrayList<IssueType> issueTypes = get(sq);
         return issueTypes.isEmpty()? null: issueTypes.get(0);
     }

@@ -1,10 +1,7 @@
 package com.my.library.servlets;
 
-import com.my.library.db.DAO.StatusDAO;
-import com.my.library.db.DAO.UserDAO;
-import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.*;
-import com.my.library.db.DAO.UsersBookDAO;
 import com.my.library.services.*;
 import javax.naming.OperationNotSupportedException;
 import javax.servlet.ServletException;
@@ -43,21 +40,21 @@ public class ReadersCommand extends ControllerCommand {
         if(req.getParameter("returnBook")!=null && !req.getParameter("returnBook").equals("")){
             return CommandMapper.getInstance().getCommand("returnBook").execute(req, resp, context);
         }
-        SQLSmartQuery bookQuery;
+        SQLBuilder bookQuery;
         if(req.getMethod().equals("POST")) {
             bookQuery = prepareCatalogSQl(req);
             req.getSession().setAttribute(req.getParameter("command"), bookQuery);
         }
         else{
             if (req.getSession().getAttribute(req.getParameter("command"))!=null)
-                bookQuery = (SQLSmartQuery) req.getSession().getAttribute(req.getParameter("command"));
+                bookQuery = (SQLBuilder) req.getSession().getAttribute(req.getParameter("command"));
             else {
                 bookQuery = prepareCatalogSQl(req);
             }
         }
         req.setAttribute("pagination", new PaginationManager(req, bookQuery,usersBookDAO ));
         SortManager.SortManager(req, bookQuery);
-        req.setAttribute("usersBooks", usersBookDAO.get(bookQuery));
+        req.setAttribute("usersBooks", usersBookDAO.get(bookQuery.build()));
         req.setAttribute("users", GetUsers.get(userDAO));
         page = ConfigurationManager.getInstance().getProperty(ConfigurationManager.READERS_PAGE_PATH);
         SetWindowUrl.setUrl(page, req);
@@ -71,23 +68,22 @@ public class ReadersCommand extends ControllerCommand {
      * @param  req      HttpServletRequest request
      * @return          SQLSmartQuery object with request string
      * @throws          SQLException during SQL ops
-     * @see             SQLSmartQuery
+     * @see             SQLBuilder
      */
-    public SQLSmartQuery prepareCatalogSQl(HttpServletRequest req) throws SQLException {
-        SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(new UsersBooks().table);
-        sq.filter("status_id", GetStatuses.get(statusDAO).get("issued").getId(), SQLSmartQuery.Operators.E);
+    public SQLBuilder prepareCatalogSQl(HttpServletRequest req) throws SQLException {
+        SQLBuilder sq = new SQLBuilder(new UsersBooks().table).
+                filter("status_id", GetStatuses.get(statusDAO).get("issued").getId(), SQLBuilder.Operators.E);
         String local = (String) req.getSession().getAttribute("language");
         if (local!=null) {
             local = local.equals("ua") ? "_ua" : "";
         }
         if (req.getParameter("reader")!=null && !req.getParameter("reader").equals("")){
-            sq.logicOperator(SQLSmartQuery.LogicOperators.AND);
-            sq.filter("reader", req.getParameter("reader"), SQLSmartQuery.Operators.ILIKE);
+            sq.logicOperator(SQLBuilder.LogicOperators.AND).
+                    filter("reader", req.getParameter("reader"), SQLBuilder.Operators.ILIKE);
         }
         if (req.getParameter("title")!=null && !req.getParameter("title").equals("")){
-            sq.logicOperator(SQLSmartQuery.LogicOperators.AND);
-            sq.filter("title"+local, req.getParameter("title"), SQLSmartQuery.Operators.ILIKE);
+            sq.logicOperator(SQLBuilder.LogicOperators.AND).
+                    filter("title"+local, req.getParameter("title"), SQLBuilder.Operators.ILIKE);
         }
         return sq;
     }

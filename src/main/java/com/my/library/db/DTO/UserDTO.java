@@ -1,15 +1,11 @@
 package com.my.library.db.DTO;
 
-import com.my.library.db.entities.Book;
-import com.my.library.db.entities.Entity;
 import com.my.library.db.entities.Role;
 import com.my.library.db.entities.User;
-
 import javax.naming.OperationNotSupportedException;
 import javax.servlet.http.HttpServletRequest;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 
 public interface UserDTO {
 

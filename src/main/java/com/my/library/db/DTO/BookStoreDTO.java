@@ -1,13 +1,9 @@
 package com.my.library.db.DTO;
 
 import com.my.library.db.entities.BookStore;
-import com.my.library.db.entities.Role;
-
 import javax.naming.OperationNotSupportedException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 
 public interface BookStoreDTO {
 

@@ -1,6 +1,6 @@
 package com.my.library.servlets;
 
-import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.*;
 import com.my.library.services.*;
 import com.my.library.services.validator.NewBookValidator;
@@ -61,17 +61,15 @@ public class IssueOrderCommand extends ControllerCommand {
         }
         UsersBooks userBook = getUserBook(req);
         User reader = userDAO.getOne(userBook.getUserId());
-        if(userBook!=null) {
-            req.setAttribute("book", getBook(userBook));
-            Calendar cal = Calendar.getInstance();
-            userBook.setIssueDate(cal.getTime());
-            cal.add(Calendar.DATE,
-                    userBook.getIssueType().getId() == GetIssueTypes.get(issueTypeDAO).get("subscription").getId()? 30: 1);
-            userBook.setTargetDate(cal.getTime());
-            req.setAttribute("userBook", userBook);
-            req.setAttribute("reader", reader);
+        req.setAttribute("book", getBook(userBook));
+        Calendar cal = Calendar.getInstance();
+        userBook.setIssueDate(cal.getTime());
+        cal.add(Calendar.DATE,
+                userBook.getIssueType().getId() == GetIssueTypes.get(issueTypeDAO).get("subscription").getId()? 30: 1);
+        userBook.setTargetDate(cal.getTime());
+        req.setAttribute("userBook", userBook);
+        req.setAttribute("reader", reader);
 
-        }
         req.setAttribute("errors", errors);
         SetWindowUrl.setUrl(ConfigurationManager.getInstance().getProperty(ConfigurationManager.ISSUE_ORDER_PAGE_PATH), req);
         return ConfigurationManager.getInstance().getProperty(ConfigurationManager.ISSUE_ORDER_PAGE_PATH);
@@ -87,13 +85,12 @@ public class IssueOrderCommand extends ControllerCommand {
      */
     private String doIssue(HttpServletRequest req) throws SQLException {
         UsersBooks ub = new UsersBooks();
-        SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(ub.table);
-        sq.filter("id", Integer.parseInt(req.getParameter("userBookId")), SQLSmartQuery.Operators.E);
-        sq.logicOperator(SQLSmartQuery.LogicOperators.AND);
-        sq.filter("status_id", GetStatuses.get(statusDAO).get("process").getId(), SQLSmartQuery.Operators.E);
-
-        ArrayList<UsersBooks> usersBooks = usersBookDAO.get(sq);
+        SQLBuilder sq = new SQLBuilder(ub.table).
+                filter("id",
+                        Integer.parseInt(req.getParameter("userBookId")), SQLBuilder.Operators.E).
+                logicOperator(SQLBuilder.LogicOperators.AND).
+                filter("status_id", GetStatuses.get(statusDAO).get("process").getId(), SQLBuilder.Operators.E);
+        ArrayList<UsersBooks> usersBooks = usersBookDAO.get(sq.build());
         if(usersBooks.isEmpty()) throw new SQLException();
         ub = usersBooks.get(0);
         ub.setStatus(GetStatuses.get(statusDAO).get("issued"));
@@ -114,12 +111,11 @@ public class IssueOrderCommand extends ControllerCommand {
      */
     private void clearBlock(HttpServletRequest req) throws SQLException {
         ArrayList<UsersBooks> ub;
-        SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(new UsersBooks().table);
-        sq.filter("id", Integer.parseInt(req.getParameter("cancelIssue")), SQLSmartQuery.Operators.E);
-        sq.logicOperator(SQLSmartQuery.LogicOperators.AND);
-        sq.filter("status_id", GetStatuses.get(statusDAO).get("process").getId(), SQLSmartQuery.Operators.E);
-        ub = usersBookDAO.get(sq);
+        SQLBuilder sq = new SQLBuilder(new UsersBooks().table).
+                filter("id", Integer.parseInt(req.getParameter("cancelIssue")), SQLBuilder.Operators.E).
+                logicOperator(SQLBuilder.LogicOperators.AND).
+                filter("status_id", GetStatuses.get(statusDAO).get("process").getId(), SQLBuilder.Operators.E);
+        ub = usersBookDAO.get(sq.build());
         if(!ub.isEmpty()){
             ub.get(0).setStatus(GetStatuses.get(statusDAO).get("order"));
             ub.get(0).setLibrarianId(0);
@@ -155,8 +151,7 @@ public class IssueOrderCommand extends ControllerCommand {
      * @throws          SQLException throw to upper level, where it will be caught
      */
     private Book getBook(UsersBooks usersBooks) throws SQLException {
-        Book book =  bookDAO.getOne(usersBooks.getBookId());
-        return book;
+        return bookDAO.getOne(usersBooks.getBookId());
     }
 
 
@@ -169,26 +164,26 @@ public class IssueOrderCommand extends ControllerCommand {
     private UsersBooks getUserBook(HttpServletRequest req) throws SQLException {
         ArrayList<UsersBooks> ub;
         UsersBooks usersBooks;
-        SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(new UsersBooks().table);
+        SQLBuilder sq = new SQLBuilder(new UsersBooks().table);
         try {
-            int id = Integer.parseInt(req.getParameter("userBookId"));
-            sq.groupOperator(SQLSmartQuery.GroupOperators.GROUP);
-            sq.filter("id", id, SQLSmartQuery.Operators.E);
-            sq.logicOperator(SQLSmartQuery.LogicOperators.AND);
-            sq.filter("status_id", GetStatuses.get(statusDAO).get("order").getId(), SQLSmartQuery.Operators.E);
-            sq.groupOperator(SQLSmartQuery.GroupOperators.UNGROUP);
-            sq.logicOperator(SQLSmartQuery.LogicOperators.OR);
-            sq.groupOperator(SQLSmartQuery.GroupOperators.GROUP);
-            sq.filter("id", id, SQLSmartQuery.Operators.E);
-            sq.logicOperator(SQLSmartQuery.LogicOperators.AND);
-            sq.filter("status_id", GetStatuses.get(statusDAO).get("process").getId(), SQLSmartQuery.Operators.E);
-            sq.logicOperator(SQLSmartQuery.LogicOperators.AND);
             User user = (User) req.getSession().getAttribute("user");
-            sq.filter("librarian_id", user.getId(), SQLSmartQuery.Operators.E);
-            sq.groupOperator(SQLSmartQuery.GroupOperators.UNGROUP);
-            System.out.println(sq.build());
-            ub = usersBookDAO.get(sq);
+            int id = Integer.parseInt(req.getParameter("userBookId"));
+            sq.groupOperator(SQLBuilder.GroupOperators.GROUP).
+                    filter("id", id, SQLBuilder.Operators.E).
+                    logicOperator(SQLBuilder.LogicOperators.AND).
+                    filter("status_id",
+                            GetStatuses.get(statusDAO).get("order").getId(), SQLBuilder.Operators.E).
+                    groupOperator(SQLBuilder.GroupOperators.UNGROUP).
+                    logicOperator(SQLBuilder.LogicOperators.OR).
+                    groupOperator(SQLBuilder.GroupOperators.GROUP).
+                    filter("id", id, SQLBuilder.Operators.E).
+                    logicOperator(SQLBuilder.LogicOperators.AND).
+                    filter("status_id",
+                            GetStatuses.get(statusDAO).get("process").getId(), SQLBuilder.Operators.E).
+                    logicOperator(SQLBuilder.LogicOperators.AND).
+                    filter("librarian_id", user.getId(), SQLBuilder.Operators.E).
+                    groupOperator(SQLBuilder.GroupOperators.UNGROUP);
+            ub = usersBookDAO.get(sq.build());
             usersBooks = ub.get(0);
         }catch (NumberFormatException | IndexOutOfBoundsException | NullPointerException e ){
             usersBooks = null;

@@ -1,14 +1,10 @@
 package com.my.library.db.DTO;
 
 import com.my.library.db.entities.Author;
-import com.my.library.db.entities.IssueType;
 import com.my.library.db.entities.UsersBooks;
-
 import javax.naming.OperationNotSupportedException;
-import javax.servlet.http.HttpServletRequest;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 

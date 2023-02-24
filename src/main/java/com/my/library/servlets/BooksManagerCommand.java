@@ -1,6 +1,6 @@
 package com.my.library.servlets;
 
-import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.Book;
 import com.my.library.services.*;
 import javax.servlet.ServletException;
@@ -25,7 +25,7 @@ public class BooksManagerCommand extends ControllerCommand {
     public String execute(HttpServletRequest req, HttpServletResponse resp, AppContext context) throws ServletException,
              SQLException
     {   setContext(context);
-        SQLSmartQuery bookQuery;
+        SQLBuilder bookQuery;
         if(req.getParameter("delete")!=null) new DeleteBookCommand().execute(req, resp, context);
         if(req.getMethod().equals("POST")) {
             bookQuery = prepareCatalogSQl(req);
@@ -33,14 +33,14 @@ public class BooksManagerCommand extends ControllerCommand {
         }
         else{
             if (req.getSession().getAttribute(req.getParameter("command"))!=null)
-                bookQuery = (SQLSmartQuery) req.getSession().getAttribute(req.getParameter("command"));
+                bookQuery = (SQLBuilder) req.getSession().getAttribute(req.getParameter("command"));
             else {
                 bookQuery = prepareCatalogSQl(req);
             }
         }
         req.setAttribute("pagination", new PaginationManager(req, bookQuery, bookDAO));
         SortManager.SortManager(req, bookQuery);
-        ArrayList<Book> books = bookDAO.get(bookQuery);
+        ArrayList<Book> books = bookDAO.get(bookQuery.build());
         req.setAttribute("books", books);
         req.setAttribute("genres", GetGenres.get(genreDAO));
         req.setAttribute("bookStorage", GetStorage.get(bookStoreDAO));
@@ -53,11 +53,10 @@ public class BooksManagerCommand extends ControllerCommand {
      * Prepare request string to get catalog of books incl search, sort, pagination params
      * @param  req      HttpServletRequest request
      * @return          SQLSmartQuery
-     * @see             SQLSmartQuery
+     * @see             SQLBuilder
      */
-    private SQLSmartQuery prepareCatalogSQl(HttpServletRequest req) {
-        SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(new Book().table);
+    private SQLBuilder prepareCatalogSQl(HttpServletRequest req) {
+        SQLBuilder sq = new SQLBuilder(new Book().table);
         String title= (req.getParameter("title")!=null && !req.getParameter("title").equals(""))?
                 req.getParameter("title"): null;
         String author = (req.getParameter("author")!=null && !req.getParameter("author").equals(""))?
@@ -68,22 +67,21 @@ public class BooksManagerCommand extends ControllerCommand {
             local = local.equals("ua") ? "_ua" : "";
         }
         else local="";
-        sq.filter("deleted", false, SQLSmartQuery.Operators.E);
+        sq.filter("deleted", false, SQLBuilder.Operators.E);
         if(title!=null || author!=null){
-            sq.logicOperator(SQLSmartQuery.LogicOperators.AND);
-            sq.groupOperator(SQLSmartQuery.GroupOperators.GROUP);
+            sq.logicOperator(SQLBuilder.LogicOperators.AND).groupOperator(SQLBuilder.GroupOperators.GROUP);
             if (title!=null) {
-                sq.filter("title" + local, title, SQLSmartQuery.Operators.ILIKE);
+                sq.filter("title" + local, title, SQLBuilder.Operators.ILIKE);
             }
             if (author!=null){
-                if(title!=null) sq.logicOperator(SQLSmartQuery.LogicOperators.OR);
-                sq.filter("first_name"+local, author, SQLSmartQuery.Operators.ILIKE);
-                sq.logicOperator(SQLSmartQuery.LogicOperators.OR);
-                sq.filter("second_name"+local, author, SQLSmartQuery.Operators.ILIKE);
+                if(title!=null) sq.logicOperator(SQLBuilder.LogicOperators.OR);
+                sq.filter("first_name"+local, author, SQLBuilder.Operators.ILIKE).
+                        logicOperator(SQLBuilder.LogicOperators.OR).
+                        filter("second_name"+local, author, SQLBuilder.Operators.ILIKE);
             }
-            sq.groupOperator(SQLSmartQuery.GroupOperators.UNGROUP);
+            sq.groupOperator(SQLBuilder.GroupOperators.UNGROUP);
         }
-        sq.order("title"+local, SQLSmartQuery.SortOrder.ASC);
+        sq.order("title"+local, SQLBuilder.SortOrder.ASC);
         return sq;
     }
 }

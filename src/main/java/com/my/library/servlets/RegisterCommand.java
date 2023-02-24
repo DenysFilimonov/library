@@ -1,9 +1,7 @@
 package com.my.library.servlets;
 
 import com.my.library.db.DTO.UserDTO;
-import com.my.library.db.SQLSmartQuery;
 import com.my.library.db.entities.User;
-import com.my.library.db.DAO.UserDAO;
 import com.my.library.services.*;
 import com.my.library.services.validator.NewUserValidator;
 
@@ -23,8 +21,8 @@ public class RegisterCommand extends ControllerCommand {
      *
      * @param req     HttpServletRequest request
      * @param resp    HttpServletResponse request
-     * @param context
-     * @throws SQLException
+     * @param context App context with dependency injection
+     * @throws SQLException                   throw to upper level, where it will be caught
      * @throws ServletException               throw to upper level, where it will be caught
      * @throws IOException                    throw to upper level, where it will be caught
      * @throws OperationNotSupportedException can be thrown during password validation
@@ -38,8 +36,8 @@ public class RegisterCommand extends ControllerCommand {
 
         String page = ConfigurationManager.getInstance().getProperty(ConfigurationManager.REGISTER_PAGE_PATH);
         setContext(context);
-        User user = new User();
-        Map<String, Map<String,String>> errors;
+        User user;
+        ErrorMap errors;
         if (req.getMethod().equals("POST")) {
             errors = context.getValidator(req).validate(req, context);
             if(errors.isEmpty()) {

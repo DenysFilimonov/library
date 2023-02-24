@@ -1,6 +1,6 @@
 package com.my.library.servlets;
 
-import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.*;
 import com.my.library.services.AppContext;
 import com.my.library.services.ConfigurationManager;
@@ -47,17 +47,12 @@ public class SubscriptionsCommand extends ControllerCommand {
      * @throws          SQLException can be thrown during SQL operations
      */
     public void setRequestAttributes(HttpServletRequest req) throws SQLException {
-        SQLSmartQuery sqUserBooks = new SQLSmartQuery();
         ArrayList<UsersBooks> usersBooks;
         User user = (User) req.getSession().getAttribute("user");
-        sqUserBooks.source(new UsersBooks().table);
-        sqUserBooks.filter("user_id", user.getId(), SQLSmartQuery.Operators.E);
-        sqUserBooks.order("status_id", SQLSmartQuery.SortOrder.ASC);
-        usersBooks = usersBookDAO.get(sqUserBooks);
-        SQLSmartQuery sqStatus = new SQLSmartQuery();
-        sqStatus.source(new Status().table);
-        SQLSmartQuery sqIssueTypes = new SQLSmartQuery();
-        sqIssueTypes.source(new IssueType().table);
+        SQLBuilder sqUserBooks = new SQLBuilder(new UsersBooks().table).
+                filter("user_id", user.getId(), SQLBuilder.Operators.E).
+                order("status_id", SQLBuilder.SortOrder.ASC);
+        usersBooks = usersBookDAO.get(sqUserBooks.build());
         req.setAttribute("usersBooks",usersBooks);
     }
 

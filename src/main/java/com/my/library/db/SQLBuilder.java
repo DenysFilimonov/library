@@ -1,6 +1,6 @@
 package com.my.library.db;
 
-public class SQLSmartQuery extends SQLQuery{
+public class SQLBuilder{
 
     public enum Operators {
         E("="),
@@ -77,65 +77,90 @@ public class SQLSmartQuery extends SQLQuery{
 
     private String distinct="";
 
-    public SQLSmartQuery(){
+    private String SQLString;
+    private String SQLStringCount;
 
+    public String getSQLString() {
+        return SQLString;
     }
 
-    public void source( String source) {table = " FROM "+ source + " ";}
+    public String getSQLStringCount() {
+        return SQLStringCount;
+    }
 
-    public void filter(String fieldName, String fieldValue, Operators operator){
+    public SQLBuilder(String source){
+        table = " FROM "+ source + " ";
+    }
+
+    public SQLBuilder source( String source) {
+        table = " FROM "+ source + " ";
+        return this;
+    }
+
+    public SQLBuilder filter(String fieldName, String fieldValue, Operators operator){
         if (filter.equals("")) filter += " WHERE";
         if (operator.equals(Operators.LiKE) || operator.equals(Operators.ILIKE)) filter +=" "+ fieldName+" "+ operator.label+" '%"+fieldValue+"%'";
         else filter +=" "+ fieldName+" "+ operator.label+" '"+fieldValue+"'";
+        return this;
     }
 
-    public void filter(String fieldName, Boolean fieldValue, Operators operator){
+    public SQLBuilder filter(String fieldName, Boolean fieldValue, Operators operator){
         if (filter.equals("")) filter += " WHERE";
         filter +=" "+ fieldName+" "+ operator.label+" "+fieldValue;
+        return this;
     }
 
-    public void filter(String fieldName, Integer fieldValue, Operators operator){
+    public SQLBuilder filter(String fieldName, Integer fieldValue, Operators operator){
         if (filter.equals("")) filter += " WHERE";
         filter +=" "+ fieldName+" "+ operator.label+" "+fieldValue;
+        return this;
     }
 
-    public void field(String fieldName){
+    public SQLBuilder field(String fieldName){
         if (fields=="*") fields=" "+fieldName+" ";
         else fields+=(" , "+fieldName+" ");
+        return this;
     }
 
-    public void logicOperator(LogicOperators operator){
+    public SQLBuilder logicOperator(LogicOperators operator){
         if (filter.equals("")) filter += " WHERE";
         filter+= " " + operator.label;
+        return this;
     }
 
-    public void groupOperator(GroupOperators operator){
+    public SQLBuilder groupOperator(GroupOperators operator){
         if (filter.equals("")) filter += " WHERE";
         filter+= " " + operator.label+" ";
+        return this;
     }
 
-    public void order(String fieldToOrder, SortOrder sortOrder){
-
+    public SQLBuilder order(String fieldToOrder, SortOrder sortOrder){
         order = " ORDER BY " + fieldToOrder+" "+sortOrder.label;
+        return this;
     }
-    public void limit(int limit) {
+
+    public SQLBuilder limit(int limit) {
         if (limit>0) this.limit = " LIMIT " + limit+" ";
+        return this;
     }
-    public void offset(int offset) {
+
+    public SQLBuilder offset(int offset) {
         if (offset>=0) {this.offset = " OFFSET " + offset;}
         else this.offset = "";
+        return this;
     }
 
-    public void setDistinct(boolean distinct){
+    public SQLBuilder setDistinct(boolean distinct){
         if(distinct) this.distinct = " DISTINCT ";
+        return this;
     }
 
 
-    public String build(){
-        return query+fields+table+filter+order+limit+offset;
+    public SQLBuilder build(){
+        SQLString = query+fields+table+filter+order+limit+offset;
+        SQLStringCount = query+"COUNT ("+distinct+fields+") " + table + filter;
+        return this;
     }
 
-    public String buildCount(){
-        return query+"COUNT ("+distinct+fields+") " + table + filter;
-    }
+
 }

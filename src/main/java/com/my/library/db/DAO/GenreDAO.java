@@ -1,16 +1,12 @@
 package com.my.library.db.DAO;
 
-import com.my.library.db.ConnectionPool;
 import com.my.library.db.DTO.GenreDTO;
-import com.my.library.db.SQLSmartQuery;
-import com.my.library.db.entities.Author;
-import com.my.library.db.entities.Book;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.Genre;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class GenreDAO implements DAO<Genre> {
 
@@ -96,18 +92,26 @@ public class GenreDAO implements DAO<Genre> {
     }
 
     @Override
-    public int count(SQLSmartQuery query) throws SQLException {
-        ArrayList<Genre> list = get(query);
-        return list.isEmpty()? 0: list.size();
+    public int count(SQLBuilder query) throws SQLException {
+        ResultSet resultSet = null;
+        int count=0;
+        try  (Connection connection = dataSource.getConnection();
+              Statement statement = connection.createStatement()) {
+            resultSet = statement.executeQuery(query.getSQLStringCount());
+            while (resultSet.next()) {
+                count = resultSet.getInt(1);
+            }
+        }
+        return count;
         
     }
 
     @Override
-    public ArrayList<Genre> get(SQLSmartQuery query) throws SQLException{
+    public ArrayList<Genre> get(SQLBuilder query) throws SQLException{
         ArrayList<Genre> genres = new ArrayList<>();
         try (Connection connection = dataSource.getConnection();
             Statement statement = connection.createStatement()){
-            ResultSet resultSet = statement.executeQuery(query.build());
+            ResultSet resultSet = statement.executeQuery(query.getSQLString());
             while (resultSet.next()) {
                 genres.add(GenreDTO.toModel(resultSet));
             }
@@ -117,9 +121,7 @@ public class GenreDAO implements DAO<Genre> {
 
     @Override
     public Genre getOne(int id) throws SQLException {
-        SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(new Genre().table);
-        sq.filter("id", id, SQLSmartQuery.Operators.E);
+        SQLBuilder sq = new SQLBuilder(new Genre().table).filter("id", id, SQLBuilder.Operators.E).build();
         ArrayList<Genre> genres = get(sq);
         return genres.isEmpty()? null: genres.get(0);
     }

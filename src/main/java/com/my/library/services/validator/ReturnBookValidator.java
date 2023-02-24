@@ -1,6 +1,6 @@
 package com.my.library.services.validator;
 
-import com.my.library.db.SQLSmartQuery;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.*;
 import com.my.library.db.DAO.*;
 import com.my.library.services.AppContext;
@@ -36,30 +36,29 @@ public class ReturnBookValidator implements Validator {
            errorManager.add( "isbn", "ISBN should be present",
                    "ISBN - обов'язкове поле");
       if(req.getParameter("userBookId")!=null && req.getParameter("isbn")!=null){
-          SQLSmartQuery sqBook = new SQLSmartQuery();
-          ArrayList<UsersBooks> usersBooks;
-          UsersBooks userBook = new UsersBooks();
-          SQLSmartQuery sqOrder = new SQLSmartQuery();
-          ArrayList<Book> books;
-          Book book = new Book();
-          sqOrder.source(userBook.table);
-          sqOrder.filter("id", req.getParameter("userBookId"), SQLSmartQuery.Operators.E );
-          sqOrder.logicOperator(SQLSmartQuery.LogicOperators.AND);
-          sqOrder.filter("status", "issued", SQLSmartQuery.Operators.E);
-          usersBooks = usersBookDAO.get(sqOrder);
-          if(usersBooks.isEmpty())
-              errorManager.add( "id", "There is not open order with this ID in system",
-                      "Відкритого замовлення з таким ID не існує");
-          else {
-              userBook = usersBooks.get(0);
-              sqBook.source(book.table);
-              sqBook.filter("id", userBook.getBookId(), SQLSmartQuery.Operators.E );
-              sqBook.logicOperator(SQLSmartQuery.LogicOperators.AND);
-              sqBook.filter("isbn", req.getParameter("isbn"), SQLSmartQuery.Operators.E);
-              books = bookDAO.get(sqBook);
-              if(books.isEmpty())
+          try {
+              UsersBooks userBook = new UsersBooks();
+              userBook = usersBookDAO.getOne(Integer.parseInt(req.getParameter("userBookId")));
+              if (userBook == null)
+                  errorManager.add("id", "There is not open order with this ID in system",
+                          "Відкритого замовлення з таким ID не існує");
+
+              else {
+                Book book = new Book();
+                ArrayList<Book> books = new ArrayList<>();
+                SQLBuilder sqBook = new SQLBuilder(book.table).
+                        filter("id", userBook.getBookId(), SQLBuilder.Operators.E ).
+                        logicOperator(SQLBuilder.LogicOperators.AND).
+                        filter("isbn", req.getParameter("isbn"), SQLBuilder.Operators.E);
+                books = bookDAO.get(sqBook.build());
+                if(books.isEmpty())
                   errorManager.add( "iSBN", "Book with this ISBN doesn't present, check you input",
                           "В системі не зареєстровано книги з таким ISBN");
+              }
+          }
+          catch (NumberFormatException e){
+              errorManager.add("id", "Incorrect ID format",
+                      "Не корректний формат ID");
           }
 
           return errorManager.getErrors();

@@ -1,8 +1,6 @@
 package com.my.library.db.DAO;
-import com.my.library.db.ConnectionPool;
 import com.my.library.db.DTO.BookStoreDTO;
-import com.my.library.db.SQLSmartQuery;
-import com.my.library.db.entities.Book;
+import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.BookStore;
 import org.apache.commons.dbcp2.BasicDataSource;
 
@@ -113,11 +111,11 @@ public class BookStoreDAO implements DAO<BookStore> {
     }
 
     @Override
-    public int count(SQLSmartQuery query) throws SQLException {
+    public int count(SQLBuilder query) throws SQLException {
             int count=0;
             try (Connection connection = dataSource.getConnection();
                 Statement statement = connection.createStatement()){
-                ResultSet resultSet = statement.executeQuery(query.buildCount());
+                ResultSet resultSet = statement.executeQuery(query.getSQLStringCount());
                 while (resultSet.next()) {
                     count = resultSet.getInt(1);
                 }
@@ -127,11 +125,11 @@ public class BookStoreDAO implements DAO<BookStore> {
 
 
     @Override
-    public ArrayList<BookStore> get(SQLSmartQuery query) throws SQLException {
+    public ArrayList<BookStore> get(SQLBuilder query) throws SQLException {
         ArrayList<BookStore> books = new ArrayList<>();
         try (Connection connection = dataSource.getConnection();
             Statement statement = connection.createStatement()){
-            ResultSet resultSet = statement.executeQuery(query.build());
+            ResultSet resultSet = statement.executeQuery(query.getSQLString());
             while (resultSet.next()) {
                 books.add(BookStoreDTO.toModel(resultSet));
             }
@@ -141,9 +139,8 @@ public class BookStoreDAO implements DAO<BookStore> {
 
     @Override
     public BookStore getOne(int id) throws SQLException {
-        SQLSmartQuery sq = new SQLSmartQuery();
-        sq.source(new BookStore().table);
-        sq.filter("id", id, SQLSmartQuery.Operators.E);
+        SQLBuilder sq = new SQLBuilder(new BookStore().table).
+                filter("id", id, SQLBuilder.Operators.E).build();
         ArrayList<BookStore> bookStores = get(sq);
         return bookStores.isEmpty()? null: bookStores.get(0);
     }

@@ -26,6 +26,7 @@ public class UserRights {
         synchronized (mutex){
             result = instance;
             if (result==null){
+                setUserRights();
                 result = instance = new UserRights();
             }
         }

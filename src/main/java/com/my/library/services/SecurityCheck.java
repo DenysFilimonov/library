@@ -1,15 +1,12 @@
 package com.my.library.services;
-
-import com.my.library.db.DAO.UsersBookDAO;
 import com.my.library.db.entities.User;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 public class SecurityCheck {
 
     private static SecurityCheck instance;
-    private static Object mutex = new Object();
+    private static final Object mutex = new Object();
 
     public static SecurityCheck getInstance(){
         SecurityCheck result;
@@ -24,7 +21,7 @@ public class SecurityCheck {
 
     public boolean check(HttpServletRequest req){
         if(!req.getRequestURI().contains("controller")){
-            if(req.getRequestURI().contains("index.jsp"))
+            if(req.getRequestURI().contains("index.jsp") || req.getRequestURI().contains("index.html"))
                 return true;
             else return !req.getRequestURI().contains("jsp") && !req.getRequestURI().contains("html");
         }

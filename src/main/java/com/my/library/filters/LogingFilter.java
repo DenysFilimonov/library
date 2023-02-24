@@ -6,8 +6,6 @@ import com.my.library.db.entities.User;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-
-import com.my.library.servlets.ViewController;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,7 +22,6 @@ public class LogingFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
         HttpServletRequest req = (HttpServletRequest) request;
         User user = (User) req.getSession().getAttribute("user");
-       // if (true) throw new ServletException();
         if(req.getParameter("command")!=null) {
             LOGGER.info("User " + (user != null ? user.getId() : "guest") + " command = " + req.getParameter("command"));
         }

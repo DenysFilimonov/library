@@ -29,17 +29,17 @@ public abstract class ControllerCommand implements Command{
 
     public void setContext(AppContext context) {
         this.context = context;
-        authorDAO = (AuthorDAO) context.getDAO(new Author());
-        bookDAO = (BookDAO) context.getDAO(new Book());
-        bookStoreDAO = (BookStoreDAO) context.getDAO(new BookStore());
-        genreDAO = (GenreDAO) context.getDAO(new Genre());
-        issueTypeDAO = (IssueTypeDAO) context.getDAO(new IssueType());
-        paymentDAO = (PaymentDAO) context.getDAO(new Payment());
-        publisherDAO = (PublisherDAO) context.getDAO(new Publisher());
-        roleDAO = (RoleDAO) context.getDAO(new Role());
-        statusDAO = (StatusDAO) context.getDAO(new Status());
-        userDAO = (UserDAO) context.getDAO(new User());
-        usersBookDAO = (UsersBookDAO) context.getDAO(new UsersBooks());
+        authorDAO = context.getDAO(new Author());
+        bookDAO = context.getDAO(new Book());
+        bookStoreDAO = context.getDAO(new BookStore());
+        genreDAO = context.getDAO(new Genre());
+        issueTypeDAO = context.getDAO(new IssueType());
+        paymentDAO = context.getDAO(new Payment());
+        publisherDAO = context.getDAO(new Publisher());
+        roleDAO = context.getDAO(new Role());
+        statusDAO = context.getDAO(new Status());
+        userDAO = context.getDAO(new User());
+        usersBookDAO = context.getDAO(new UsersBooks());
     }
 
     @Override

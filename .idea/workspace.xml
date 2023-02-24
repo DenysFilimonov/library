@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4848fd86-92e6-432a-909d-736a85aafb12" name="Changes" comment="SQL builder">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/my/library/filters/ExceptionFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/filters/LogingFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/filters/LogingFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml" afterDir="false" />
+    <list default="true" id="4848fd86-92e6-432a-909d-736a85aafb12" name="Changes" comment="exception filter">
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/AppContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/AppContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/ControllerCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/ControllerCommand.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -374,7 +372,14 @@
       <option name="project" value="LOCAL" />
       <updated>1677251890474</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="exception filter">
+      <created>1677254607463</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1677254607463</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -442,7 +447,8 @@
     <MESSAGE value="add synchronization to singletons" />
     <MESSAGE value="add synchronization to singleton" />
     <MESSAGE value="SQL builder" />
-    <option name="LAST_COMMIT_MESSAGE" value="SQL builder" />
+    <MESSAGE value="exception filter" />
+    <option name="LAST_COMMIT_MESSAGE" value="exception filter" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

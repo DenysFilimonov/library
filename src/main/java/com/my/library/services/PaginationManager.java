@@ -22,7 +22,7 @@ public class PaginationManager {
      */
 
     public PaginationManager(HttpServletRequest req, SQLBuilder query, DAO dao) throws SQLException {
-        int totalLines = dao.count(query);
+        int totalLines = dao.count(query.build());
         String linesOnPage = req.getParameter("linesOnPage");
         this.linesOnPage = (linesOnPage!=null && !linesOnPage.equals(""))? Integer.parseInt(linesOnPage):
                 Integer.parseInt(ConfigurationManager.getInstance().getProperty(ConfigurationManager.LINES_ON_PAGE));

@@ -4,79 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4848fd86-92e6-432a-909d-736a85aafb12" name="Changes" comment="add synchronization to singleton">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/AuthorDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/AuthorDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/BookDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/BookDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/BookStoreDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/BookStoreDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/DAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/DAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/GenreDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/GenreDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/IssueTypeDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/IssueTypeDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/PaymentDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/PaymentDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/PublisherDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/PublisherDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/RoleDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/RoleDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/StatusDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/StatusDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/UserDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/UserDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/UsersBookDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/UsersBookDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DTO/AuthorDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DTO/AuthorDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DTO/BookDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DTO/BookDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DTO/BookStoreDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DTO/BookStoreDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DTO/GenreDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DTO/GenreDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DTO/IssueTypeDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DTO/IssueTypeDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DTO/PaymentDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DTO/PaymentDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DTO/PublisherDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DTO/PublisherDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DTO/RoleDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DTO/RoleDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DTO/StatusDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DTO/StatusDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DTO/UserDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DTO/UserDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DTO/UsersBooksDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DTO/UsersBooksDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/SQLQuery.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/SQLSmartQuery.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/SQLBuilder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/AppContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/AppContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/CountAvailableBooks.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/CountAvailableBooks.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/ErrorManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/ErrorManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/GetGenres.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/GetGenres.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/GetIssueTypes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/GetIssueTypes.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/GetRoles.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/GetRoles.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/GetStatuses.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/GetStatuses.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/GetStorage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/GetStorage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/GetUsers.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/GetUsers.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/Login.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/Login.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/PaginationManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/PaginationManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/SecurityCheck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/SecurityCheck.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/SortManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/SortManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/UserRights.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/UserRights.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/validator/BookIssueValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/validator/BookIssueValidator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/validator/EditBookValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/validator/EditBookValidator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/validator/EditUserValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/validator/EditUserValidator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/validator/NewBookValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/validator/NewBookValidator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/validator/NewUserValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/validator/NewUserValidator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/validator/ReturnBookValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/validator/ReturnBookValidator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/BooksManagerCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/BooksManagerCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/CancelOrderCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/CancelOrderCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/CatalogCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/CatalogCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/CurrentOrdersCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/CurrentOrdersCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/DeleteBookCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/DeleteBookCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/EditeBookCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/EditeBookCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/IssueOrderCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/IssueOrderCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/NewBookCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/NewBookCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/OrderBookCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/OrderBookCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/ReadersCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/ReadersCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/RegisterCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/RegisterCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/ReturnBookCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/ReturnBookCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/SubscriptionsCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/SubscriptionsCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/UserManagerCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/UserManagerCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/TestDao/DaoAuthorTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/TestDao/DaoAuthorTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/TestDao/DaoBookTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/TestDao/DaoBookTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/TestDao/DaoGenreTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/TestDao/DaoGenreTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/TestDao/DaoIssueTypeTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/TestDao/DaoIssueTypeTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/TestDao/DaoPaymentTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/TestDao/DaoPaymentTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/TestDao/DaoPublisherTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/TestDao/DaoPublisherTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/TestDao/DaoRoleTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/TestDao/DaoRoleTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/TestDao/DaoStatusTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/TestDao/DaoStatusTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/TestDao/DaoUserBookTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/TestDao/DaoUserBookTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/TestDao/DaoUserTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/TestDao/DaoUserTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/TestRegisterServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/TestRegisterServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/ValidatorIssueBookTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/ValidatorIssueBookTest.java" afterDir="false" />
+    <list default="true" id="4848fd86-92e6-432a-909d-736a85aafb12" name="Changes" comment="SQL builder">
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/filters/LogingFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/filters/LogingFilter.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -185,7 +114,7 @@
       <command value="mvn clean" />
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.All in library">
+  <component name="RunManager" selected="JUnit.TestCatalogCommand">
     <configuration name="All in library" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="library" />
       <option name="PACKAGE_NAME" value="" />
@@ -225,28 +154,25 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ValidatorIssueBookTest.testNewBook" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="TestCatalogCommand" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="library" />
       <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="ValidatorIssueBookTest" />
-      <option name="METHOD_NAME" value="testNewBook(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String)" />
-      <option name="TEST_OBJECT" value="method" />
+      <option name="MAIN_CLASS_NAME" value="TestCatalogCommand" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ValidatorNewBookTest.testNewBook" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="TestDao in library" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="library" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value=".*" />
+          <option name="PATTERN" value="TestDao.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="ValidatorNewBookTest" />
-      <option name="METHOD_NAME" value="testNewBook(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String)" />
-      <option name="TEST_OBJECT" value="method" />
+      <option name="PACKAGE_NAME" value="TestDao" />
+      <option name="TEST_OBJECT" value="package" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -323,18 +249,18 @@
       <item itemvalue="JUnit.All in library" />
       <item itemvalue="JUnit.DaoUserBookTest" />
       <item itemvalue="JUnit.DaoUserBookTest.TestGetBook" />
-      <item itemvalue="JUnit.ValidatorIssueBookTest.testNewBook" />
-      <item itemvalue="JUnit.ValidatorNewBookTest.testNewBook" />
+      <item itemvalue="JUnit.TestCatalogCommand" />
+      <item itemvalue="JUnit.TestDao in library" />
       <item itemvalue="Maven.library [package]" />
       <item itemvalue="Maven.library [test]" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.TestCatalogCommand" />
+        <item itemvalue="JUnit.TestDao in library" />
         <item itemvalue="JUnit.All in library" />
         <item itemvalue="JUnit.DaoUserBookTest" />
         <item itemvalue="JUnit.DaoUserBookTest.TestGetBook" />
-        <item itemvalue="JUnit.ValidatorIssueBookTest.testNewBook" />
-        <item itemvalue="JUnit.ValidatorNewBookTest.testNewBook" />
       </list>
     </recent_temporary>
   </component>
@@ -424,7 +350,14 @@
       <option name="project" value="LOCAL" />
       <updated>1677144917193</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="SQL builder">
+      <created>1677247799834</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1677247799834</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -491,7 +424,8 @@
     <MESSAGE value="issue book validator test" />
     <MESSAGE value="add synchronization to singletons" />
     <MESSAGE value="add synchronization to singleton" />
-    <option name="LAST_COMMIT_MESSAGE" value="add synchronization to singleton" />
+    <MESSAGE value="SQL builder" />
+    <option name="LAST_COMMIT_MESSAGE" value="SQL builder" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

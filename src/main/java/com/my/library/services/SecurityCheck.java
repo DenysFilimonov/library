@@ -28,12 +28,8 @@ public class SecurityCheck {
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("user");
         String  role = user!=null? user.getRole().getRoleName().get("en"): "guest";
-        System.out.println("User rights" + UserRights.getInstance().getUserRightsMap());
         return UserRights.getInstance().getUserRightsMap().get(role).contains(req.getParameter("command")) ||
                 req.getParameter("command").equals("noRights");
 
     }
-
-
-
 }

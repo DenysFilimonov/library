@@ -14,6 +14,7 @@
   </servlet-mapping>
   <welcome-file-list>
     <welcome-file>/controller?command=catalog</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
   <filter>
     <filter-name>ExceptionFilter</filter-name>

@@ -15,7 +15,7 @@ public class MessageManager {
     public static final String SQL_EXCEPTION_ERROR_MESSAGE = "SQL_EXCEPTION_ERROR_MESSAGE";
     public static final String OTHER_EXCEPTION_ERROR_MESSAGE = "OTHER_EXCEPTION_ERROR_MESSAGE";
 
-    public static Object mutex = new Object();
+    public static final Object mutex = new Object();
 
     public static MessageManager getInstance() {
         MessageManager result;

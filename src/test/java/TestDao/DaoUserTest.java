@@ -116,12 +116,11 @@ public class DaoUserTest {
         ArgumentCaptor<String> arg1 = ArgumentCaptor.forClass(String.class);
         when(statement.executeQuery(arg1.capture())).thenReturn(resultSet);
         when(resultSet.next()).thenReturn(false);
-        when(sqlSmartQuery.getSQLString()).thenReturn("SELECT * FROM AUTHORS WHERE id=1 AND active = true");
-        AuthorDAO.getInstance(dataSource).get(sqlSmartQuery);
+        when(sqlSmartQuery.getSQLString()).thenReturn("SELECT * FROM users WHERE id=1 AND active = true");
+        UserDAO.getInstance(dataSource).get(sqlSmartQuery);
         assertEquals(arg1.getValue(), sqlSmartQuery.getSQLString());
         verify(statement, atLeast(1)).executeQuery(anyString());
         verify(resultSet, atLeast(1)).next();
-        AuthorDAO.destroyInstance();
     }
 
     @Test
@@ -166,7 +165,6 @@ public class DaoUserTest {
         assertEquals(arg8.getValue(), this.user.isActive());
         assertEquals(arg9.getValue(), this.user.getId());
         verify(preparedStatement, atLeast(1)).executeUpdate();
-        UserDAO.destroyInstance();
     }
 
 }

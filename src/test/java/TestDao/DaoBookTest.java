@@ -1,6 +1,5 @@
 package TestDao;
 
-import com.my.library.db.DAO.AuthorDAO;
 import com.my.library.db.DAO.BookDAO;
 import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.*;
@@ -140,7 +139,6 @@ public class DaoBookTest {
         assertEquals(arg1.getValue(), sqlSmartQuery.getSQLString());
         verify(statement, atLeast(1)).executeQuery(anyString());
         verify(resultSet, atLeast(1)).next();
-        AuthorDAO.destroyInstance();
     }
 
     @Test

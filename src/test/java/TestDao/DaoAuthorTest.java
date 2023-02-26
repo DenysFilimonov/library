@@ -126,7 +126,6 @@ public class DaoAuthorTest {
     public void TestUpdate() throws SQLException {
         BasicDataSource dataSource = mock(BasicDataSource.class);
         Connection connection = mock(Connection.class);
-        AuthorDAO authorDAO = AuthorDAO.getInstance(dataSource);
         when(dataSource.getConnection()).thenReturn(connection);
         ResultSet resultSet = mock(ResultSet.class);
         PreparedStatement preparedStatement = mock(PreparedStatement.class);
@@ -160,7 +159,6 @@ public class DaoAuthorTest {
         assertEquals(arg6.getValue(), this.author.getCountry().get("en"));
         assertEquals(arg7.getValue(), this.author.getCountry().get("ua"));
         assertEquals(arg8.getValue(), this.author.getId());
-        AuthorDAO.destroyInstance();
         verify(preparedStatement, atLeast(1)).executeUpdate();
     }
 

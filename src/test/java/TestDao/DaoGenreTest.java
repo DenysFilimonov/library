@@ -52,7 +52,6 @@ public class DaoGenreTest {
         GenreDAO.getInstance(dataSource).delete(this.genre);
         assertEquals(arg1.getValue(), this.genre.getId());
         verify(preparedStatement, atLeast(1)).executeUpdate();
-        GenreDAO.destroyInstance();
     }
 
     @Test

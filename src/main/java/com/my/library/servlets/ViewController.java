@@ -55,25 +55,23 @@ public class ViewController extends HttpServlet implements javax.servlet.Servlet
             LOGGER.error(e.toString(), e);
             req.setAttribute("errorMessage",
                     MessageManager.getInstance().getProperty(MessageManager.SERVLET_EXCEPTION_ERROR_MESSAGE));
-            page = ConfigurationManager.getInstance().getProperty(ConfigurationManager.ERROR_PAGE_PATH);
         } catch (IOException e) {
             LOGGER.error(e.toString(), e);
             req.setAttribute("errorMessage",
                     MessageManager.getInstance()
                             .getProperty(MessageManager.IO_EXCEPTION_ERROR_MESSAGE));
-            page = ConfigurationManager.getInstance().getProperty(ConfigurationManager.ERROR_PAGE_PATH);
         } catch (SQLException e) {
             LOGGER.error( e.toString(), e);
             req.setAttribute("errorMessage",
                     MessageManager.getInstance().getProperty(MessageManager.SQL_EXCEPTION_ERROR_MESSAGE));
-            page = ConfigurationManager.getInstance().getProperty(ConfigurationManager.ERROR_PAGE_PATH);
         }
         catch (Exception e) {
             LOGGER.error( e.toString(), e);
             req.setAttribute("errorMessage",
                     MessageManager.getInstance().getProperty(MessageManager.OTHER_EXCEPTION_ERROR_MESSAGE));
-            page = ConfigurationManager.getInstance().getProperty(ConfigurationManager.ERROR_PAGE_PATH);
         }
+        if(req.getParameter("errorMessage")!=null)
+            page = ConfigurationManager.getInstance().getProperty(ConfigurationManager.ERROR_PAGE_PATH);
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(page);
         dispatcher.forward(req, resp);
     }

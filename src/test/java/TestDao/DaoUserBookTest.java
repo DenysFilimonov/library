@@ -1,7 +1,5 @@
 package TestDao;
 
-import com.my.library.db.DAO.AuthorDAO;
-import com.my.library.db.DAO.BookDAO;
 import com.my.library.db.DAO.UsersBookDAO;
 import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.*;
@@ -120,7 +118,6 @@ public class DaoUserBookTest {
         assertEquals(arg1.getValue(), sqlSmartQuery.getSQLString());
         verify(statement, atLeast(1)).executeQuery(anyString());
         verify(resultSet, atLeast(1)).next();
-        UsersBookDAO.destroyInstance();
     }
 
     @Test
@@ -164,7 +161,6 @@ public class DaoUserBookTest {
         assertEquals(arg8.getValue(), this.book.getLibrarianId());
         assertEquals(arg9.getValue(), this.book.getId());
         verify(preparedStatement, atLeast(1)).executeUpdate();
-        UsersBookDAO.destroyInstance();
     }
 
 }

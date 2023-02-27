@@ -35,6 +35,7 @@ public class AppContext {
         if(req.getParameter("command").equalsIgnoreCase("editBook")) return (V) new EditBookValidator();
         if(req.getParameter("command").equalsIgnoreCase("register")) return (V) new NewUserValidator();
         if(req.getParameter("command").equalsIgnoreCase("orders")) return (V) new CancelOrderValidator();
+        if(req.getParameter("command").equalsIgnoreCase("restorePassword")) return (V) new EmailValidator();
         return (V) new EditUserValidator();
 
 

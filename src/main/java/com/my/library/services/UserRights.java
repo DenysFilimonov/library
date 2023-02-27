@@ -15,7 +15,7 @@ public class UserRights {
     }
 
     private static final Map<String, ArrayList<String>> userRightsMap = new HashMap<>();
-    private static Object mutex = new Object();
+    private static final Object mutex = new Object();
 
     private UserRights(){
 
@@ -44,7 +44,7 @@ public class UserRights {
         String[]  userRights = {"login", "catalog", "logout", "subscriptions", "account", "orderBook", "cancelOrder"};
         ArrayList<String> readerCommands = (ArrayList<String>) Arrays.stream(userRights).collect(Collectors.toList());
         userRightsMap.put("user", readerCommands);
-        String[]  guestRights = {"login", "catalog", "register"};
+        String[]  guestRights = {"login", "catalog", "register", "restorePassword"};
         ArrayList<String> guestCommands = (ArrayList<String>) Arrays.stream(guestRights).collect(Collectors.toList());
         userRightsMap.put("guest", guestCommands);
         String[]  librarianRights = {"login", "catalog", "logout", "subscriptions", "account",

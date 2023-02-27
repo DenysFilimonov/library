@@ -8,6 +8,8 @@ public class ConfigurationManager {
     public static final String ERROR_PAGE_PATH = "ERROR_PAGE_PATH";
     public static final String LOGIN_PAGE_PATH = "LOGIN_PAGE_PATH";
 
+    public static final String RESTORE_PASSWORD_PAGE_PATH = "RESTORE_PASSWORD_PAGE_PATH";
+
     public static final String REGISTER_PAGE_PATH = "REGISTER_PAGE_PATH";
 
     public static final String MAIN_PAGE_PATH = "MAIN_PAGE_PATH";
@@ -37,11 +39,11 @@ public class ConfigurationManager {
     public static final String NO_RIGHTS_PAGE_PATH = "NO_RIGHTS_PAGE_PATH";
     public static final String COVER_PATH = "COVER_PATH";
 
-    private static Object mutex = new Object();
+    private static final Object mutex = new Object();
 
 
     public static ConfigurationManager getInstance() {
-        ConfigurationManager result = instance;
+        ConfigurationManager result;
             synchronized (mutex) {
                 result = instance;
                 if (result == null) {

@@ -3,6 +3,7 @@ package com.my.library.servlets;
 import com.my.library.db.SQLBuilder;
 import com.my.library.db.entities.*;
 import com.my.library.services.*;
+
 import javax.naming.OperationNotSupportedException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -29,7 +30,8 @@ public class ReturnBookCommand extends ControllerCommand {
      * @see com.my.library.servlets.CommandMapper
      */
     public String execute(HttpServletRequest req, HttpServletResponse resp, AppContext context) throws ServletException,
-            SQLException, OperationNotSupportedException, IOException, NoSuchAlgorithmException, CloneNotSupportedException {
+            SQLException, OperationNotSupportedException, IOException, NoSuchAlgorithmException,
+            CloneNotSupportedException  {
         setContext(context);
         ErrorMap errors = new ErrorMap();
         ErrorManager errorManager = new ErrorManager();

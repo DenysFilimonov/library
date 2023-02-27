@@ -1,14 +1,12 @@
 package com.my.library.servlets;
 
-import com.my.library.services.SecurityCheck;
-
 import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 
 public class CommandMapper {
     private static CommandMapper instance = null;
     final HashMap<String, Command> commands = new HashMap<>();
-    private static Object mutex =new Object();
+    private final static Object mutex =new Object();
 
     
     private CommandMapper() {
@@ -31,7 +29,7 @@ public class CommandMapper {
         commands.put("returnBook", new ReturnBookCommand());
         commands.put("noRights", new NoRightsCommand());
         commands.put("cancelOrder", new CancelOrderCommand());
-
+        commands.put("restorePassword", new RestorePasswordCommand());
     }
 
     /**

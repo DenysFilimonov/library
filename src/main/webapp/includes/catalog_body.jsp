@@ -98,7 +98,7 @@
             </c:if>
                 <c:if test="${user!= null and book.availableQuantity>0 and orders[book.id]==null}">
                     <button class="btn btn-primary"
-                        onClick = "setModalParams(${book.id}, '${book.title[language]}',
+                        onClick = "setModalParams(${book.id}, '${fn:replace(book.title[language], "'", "`")}',
                         '${book.author.firstName[language]}', '${book.author.secondName[language]}',
                         '${book.cover}',  '${book.publisher.publisher[language]}',  '${book.publisher.country[language]}',
                          '${book.date}')"

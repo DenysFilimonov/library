@@ -12,8 +12,8 @@
                 <input type="password" class="form-control" id="password" name="password">
             </div>
             <c:if test="${errorMessage != null}">
-                <div class="center">
-                    <p class = "error">${errorMessage[language]}</p>
+                <div class="center mt-2">
+                    <span class = "error">${errorMessage[language]}</span>
                 </div>
             </c:if>
             <input type="submit" class="btn btn-primary mt-3 mb-1" value=<fmt:message key="login.label.button"/>>
@@ -21,5 +21,9 @@
         <div class="center">
             <a class="text-dark" href="controller?command=register"><fmt:message key="login.label.register"/></a>
         </div>
-
+        <c:if test="${errorMessage != null}">
+            <div class="center mt-2">
+                <a class="text-dark" href="controller?command=restorePassword"><fmt:message key="login.label.restore"/></a>
+            </div>
+        </c:if>
     </div>

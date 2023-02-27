@@ -1,5 +1,5 @@
 login,password,page
-admin,test2,catalog
-admin,test,login
+admin,test,catalog
+admin,test2,login
 ,,login
 null,null,login

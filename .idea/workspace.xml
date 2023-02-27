@@ -4,12 +4,28 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4848fd86-92e6-432a-909d-736a85aafb12" name="Changes" comment="Errors handle">
+    <list default="true" id="4848fd86-92e6-432a-909d-736a85aafb12" name="Changes" comment="Errors handle revert">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/MailManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/validator/EmailValidator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/RestorePasswordCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/includes/restore_body.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/restorePassword.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/MessageManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/MessageManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/SecurityCheck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/SecurityCheck.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/ViewController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/ViewController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/AppContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/AppContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/ConfigurationManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/ConfigurationManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/UserRights.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/UserRights.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/Command.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/Command.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/CommandMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/CommandMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/ReturnBookCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/ReturnBookCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/config.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/config.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/text.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/text.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/text_ua.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/text_ua.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/includes/bookManager_body.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/includes/bookManager_body.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/includes/catalog_body.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/includes/catalog_body.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/includes/login_body.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/includes/login_body.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/TestCurrentOrderServlet.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/test_login.csv" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/test_login.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,7 +61,6 @@
     <setting file="file://$PROJECT_DIR$/src/main/java/com/my/library/servlets/CurrentOrdersCommand.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/main/java/com/my/library/servlets/EditeBookCommand.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/main/java/com/my/library/servlets/RegisterCommand.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/test/java/TestCurrentOrderServlet.java" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -76,7 +91,7 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/filim/EPAM/JAVA_BASIC/library/src/test/resources&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/filim/EPAM/JAVA_BASIC/library/src/main/resources&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.46781608&quot;,
@@ -89,11 +104,11 @@
       <recent name="com.my.library.services" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\filim\EPAM\JAVA_BASIC\library\src\main\resources" />
+      <recent name="C:\Users\filim\EPAM\JAVA_BASIC\library\src\main\webapp\includes" />
+      <recent name="C:\Users\filim\EPAM\JAVA_BASIC\library\src\main\webapp" />
       <recent name="C:\Users\filim\EPAM\JAVA_BASIC\library\src\test\resources" />
       <recent name="C:\Users\filim\EPAM\JAVA_BASIC\library\src\test\java\TestValidator" />
-      <recent name="C:\Users\filim\EPAM\JAVA_BASIC\library\src\main\webapp" />
-      <recent name="C:\Users\filim\EPAM\JAVA_BASIC\library\src\main\webapp\includes" />
-      <recent name="C:\Users\filim\EPAM\JAVA_BASIC\library\src\main\webapp\COVERS" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\filim\EPAM\JAVA_BASIC\library\src\main\webapp\WEB-INF\tags" />
@@ -106,11 +121,11 @@
       <recent name="" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="com.my.library.filters" />
-      <recent name="com.my.library.db" />
-      <recent name="" />
-      <recent name="TestValidator" />
+      <recent name="com.my.library.services" />
+      <recent name="com.my.library.services.validator" />
       <recent name="com.my.library.servlets" />
+      <recent name="com.my.library.db" />
+      <recent name="com.my.library.filters" />
     </key>
   </component>
   <component name="RunAnythingCache">
@@ -118,42 +133,16 @@
       <command value="mvn clean" />
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.TestCatalogCommand">
-    <configuration name="All in library" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="library" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="TEST_OBJECT" value="package" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="DaoUserBookTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="JUnit.TestLoginServlet">
+    <configuration name="MailManager" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.my.library.services.MailManager" />
       <module name="library" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="TestDao.*" />
+          <option name="PATTERN" value="com.my.library.services.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="TestDao" />
-      <option name="MAIN_CLASS_NAME" value="TestDao.DaoUserBookTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="DaoUserBookTest.TestGetBook" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="library" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="TestDao.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="TestDao" />
-      <option name="MAIN_CLASS_NAME" value="TestDao.DaoUserBookTest" />
-      <option name="METHOD_NAME" value="TestGetBook" />
-      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -162,6 +151,15 @@
       <module name="library" />
       <option name="PACKAGE_NAME" value="" />
       <option name="MAIN_CLASS_NAME" value="TestCatalogCommand" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestCurrentOrderServlet" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="library" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="TestCurrentOrderServlet" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -177,6 +175,15 @@
       </extension>
       <option name="PACKAGE_NAME" value="TestDao" />
       <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestLoginServlet" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="library" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="TestLoginServlet" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -250,9 +257,9 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="JUnit.All in library" />
-      <item itemvalue="JUnit.DaoUserBookTest" />
-      <item itemvalue="JUnit.DaoUserBookTest.TestGetBook" />
+      <item itemvalue="Application.MailManager" />
+      <item itemvalue="JUnit.TestCurrentOrderServlet" />
+      <item itemvalue="JUnit.TestLoginServlet" />
       <item itemvalue="JUnit.TestCatalogCommand" />
       <item itemvalue="JUnit.TestDao in library" />
       <item itemvalue="Maven.library [package]" />
@@ -260,11 +267,11 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.TestLoginServlet" />
+        <item itemvalue="JUnit.TestCurrentOrderServlet" />
+        <item itemvalue="Application.MailManager" />
         <item itemvalue="JUnit.TestCatalogCommand" />
         <item itemvalue="JUnit.TestDao in library" />
-        <item itemvalue="JUnit.All in library" />
-        <item itemvalue="JUnit.DaoUserBookTest" />
-        <item itemvalue="JUnit.DaoUserBookTest.TestGetBook" />
       </list>
     </recent_temporary>
   </component>
@@ -396,7 +403,14 @@
       <option name="project" value="LOCAL" />
       <updated>1677404448477</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Errors handle revert">
+      <created>1677406299113</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1677406299113</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -446,11 +460,6 @@
         </entry>
       </map>
     </option>
-    <option name="OPEN_GENERIC_TABS">
-      <map>
-        <entry key="8b0906f4-4a5d-447c-8037-1e7acfa71c0b" value="TOOL_WINDOW" />
-      </map>
-    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="add tests DAO" />
@@ -467,7 +476,8 @@
     <MESSAGE value="exception filter" />
     <MESSAGE value="fabrica" />
     <MESSAGE value="Errors handle" />
-    <option name="LAST_COMMIT_MESSAGE" value="Errors handle" />
+    <MESSAGE value="Errors handle revert" />
+    <option name="LAST_COMMIT_MESSAGE" value="Errors handle revert" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

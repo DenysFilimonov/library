@@ -82,7 +82,6 @@ public class BookIssueValidator implements Validator{
                             "Не можна тримати книгу в читальній залі більше 1 дня");
                 }
             }
-            System.out.println(days);
             if(days<=0.01)
                 errorManager.add("targetDate", "Target date should be after issue date",
                         "Дата возврата повинна бути більше дати видачи");

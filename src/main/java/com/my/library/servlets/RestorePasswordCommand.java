@@ -1,4 +1,5 @@
 package com.my.library.servlets;
+import java.io.UnsupportedEncodingException;
 import java.util.UUID;
 
 
@@ -64,15 +65,19 @@ public class RestorePasswordCommand extends ControllerCommand {
         return page;
     }
 
-    private void restorePassword(User user) throws SQLException {
+    private void restorePassword(User user) throws SQLException, UnsupportedEncodingException, NoSuchAlgorithmException {
         final String email = user.getEmail();
         final String subject = "Password recovery";
         UUID randomUUID = UUID.randomUUID();
         final String password =randomUUID.toString().replaceAll("_", "");
         final String  body = "Dear reader, here is your new password: "+password;
-        user.setPassword(password);
+        user.setPassword(PasswordHash.doHash(password));
         userDAO.update(user);
-        MailManager.send(email, subject, body);
+        Runnable sendMale = () -> {
+            MailManager.send(email, subject, body);
+        };
+        Thread mailSenderThread = new Thread(sendMale);
+        mailSenderThread.start();
     }
 
 }

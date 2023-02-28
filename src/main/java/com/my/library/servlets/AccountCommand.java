@@ -35,9 +35,6 @@ public class AccountCommand extends ControllerCommand {
         setContext(context);
         if (Objects.equals(req.getMethod(), "POST")) {
             errors = context.getValidator(req).validate(req, this.context );
-            errors.forEach((k,v)->{
-                System.out.println(k+" "+v);
-            });
             if (errors.isEmpty()) {
                 updateUser(req);
                 req.setAttribute("messagePrg", "account.label.okUpdate");
@@ -45,9 +42,6 @@ public class AccountCommand extends ControllerCommand {
                 return ConfigurationManager.getInstance().getProperty(ConfigurationManager.OK_RETURN);
             } else {
                 req.setAttribute("errorMessages", errors);
-                errors.forEach((k,v)->{
-                    System.out.println(k+" "+v);
-                });
             }
         }
         return ConfigurationManager.getInstance().getProperty(ConfigurationManager.ACCOUNT_PAGE_PATH);

@@ -13,8 +13,13 @@ public class ConnectionPool {
     public static BasicDataSource dataSource = null;
 
         static {
-            InputStream in = new Entity().getClass().getResourceAsStream("/dbhosting.properties");
-            Properties prop = new Properties();
+            InputStream in;
+            if(System.getenv("LIBRARY_LOCAL")!=null
+                    && System.getenv("LIBRARY_LOCAL").equalsIgnoreCase("HOSTING"))
+                 in = new Entity().getClass().getResourceAsStream("/dbhosting.properties");
+            else
+                in = new Entity().getClass().getResourceAsStream("/db.properties");
+                        Properties prop = new Properties();
             try {
                 prop.load(in);
                 Class.forName( "org.postgresql.Driver" );

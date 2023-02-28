@@ -4,28 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4848fd86-92e6-432a-909d-736a85aafb12" name="Changes" comment="Errors handle revert">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/MailManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/validator/EmailValidator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/RestorePasswordCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/includes/restore_body.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/restorePassword.jsp" afterDir="false" />
+    <list default="true" id="4848fd86-92e6-432a-909d-736a85aafb12" name="Changes" comment="password recovery">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/AppContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/AppContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/ConfigurationManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/ConfigurationManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/UserRights.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/UserRights.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/Command.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/Command.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/CommandMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/CommandMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/ReturnBookCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/ReturnBookCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/config.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/config.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/text.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/text.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/text_ua.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/text_ua.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/includes/bookManager_body.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/includes/bookManager_body.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/includes/catalog_body.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/includes/catalog_body.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/includes/login_body.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/includes/login_body.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/TestCurrentOrderServlet.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/test_login.csv" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/test_login.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/ConnectionPool.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/ConnectionPool.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/BookStoreDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/BookStoreDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/index.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/index.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,7 +80,7 @@
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.46781608&quot;,
     &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;coverage&quot;
+    &quot;settings.editor.selected.configurable&quot;: &quot;terminal&quot;
   }
 }</component>
   <component name="RecentsManager">
@@ -133,7 +117,20 @@
       <command value="mvn clean" />
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.TestLoginServlet">
+  <component name="RunManager" selected="Application.BookStoreDAO">
+    <configuration name="BookStoreDAO" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.my.library.db.DAO.BookStoreDAO" />
+      <module name="library" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.my.library.db.DAO.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="MailManager" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.my.library.services.MailManager" />
       <module name="library" />
@@ -161,20 +158,6 @@
       <option name="PACKAGE_NAME" value="" />
       <option name="MAIN_CLASS_NAME" value="TestCurrentOrderServlet" />
       <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="TestDao in library" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="library" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="TestDao.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="TestDao" />
-      <option name="TEST_OBJECT" value="package" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -257,21 +240,21 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Application.BookStoreDAO" />
       <item itemvalue="Application.MailManager" />
       <item itemvalue="JUnit.TestCurrentOrderServlet" />
       <item itemvalue="JUnit.TestLoginServlet" />
       <item itemvalue="JUnit.TestCatalogCommand" />
-      <item itemvalue="JUnit.TestDao in library" />
       <item itemvalue="Maven.library [package]" />
       <item itemvalue="Maven.library [test]" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.BookStoreDAO" />
         <item itemvalue="JUnit.TestLoginServlet" />
         <item itemvalue="JUnit.TestCurrentOrderServlet" />
         <item itemvalue="Application.MailManager" />
         <item itemvalue="JUnit.TestCatalogCommand" />
-        <item itemvalue="JUnit.TestDao in library" />
       </list>
     </recent_temporary>
   </component>
@@ -410,7 +393,14 @@
       <option name="project" value="LOCAL" />
       <updated>1677406299113</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="password recovery">
+      <created>1677512253544</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1677512253544</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -477,7 +467,8 @@
     <MESSAGE value="fabrica" />
     <MESSAGE value="Errors handle" />
     <MESSAGE value="Errors handle revert" />
-    <option name="LAST_COMMIT_MESSAGE" value="Errors handle revert" />
+    <MESSAGE value="password recovery" />
+    <option name="LAST_COMMIT_MESSAGE" value="password recovery" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

@@ -12,7 +12,7 @@ public class BookStoreDAO implements DAO<BookStore> {
     private final BasicDataSource dataSource;
     private static BookStoreDAO instance = null;
 
-    private static Object mutex = new Object();
+    private static final Object mutex = new Object();
 
 
     public static BookStoreDAO getInstance(BasicDataSource dataSource){
@@ -144,6 +144,5 @@ public class BookStoreDAO implements DAO<BookStore> {
         ArrayList<BookStore> bookStores = get(sq);
         return bookStores.isEmpty()? null: bookStores.get(0);
     }
-
 }
 

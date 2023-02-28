@@ -2,7 +2,7 @@
  <html>
     <head>
        <title>HTML Meta Tag</title>
-       <meta http-equiv = "refresh" content = "1; url = /Library/controller?command=catalog" />
+       <meta http-equiv = "refresh" content = "1; url = /controller?command=catalog" />
     </head>
     <body>
        <p>Redirecting to another URL</p>

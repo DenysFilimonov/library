@@ -13,7 +13,7 @@ public class ConnectionPool {
     public static BasicDataSource dataSource = null;
 
         static {
-            InputStream in = new Entity().getClass().getResourceAsStream("/db.properties");
+            InputStream in = new Entity().getClass().getResourceAsStream("/dbhosting.properties");
             Properties prop = new Properties();
             try {
                 prop.load(in);

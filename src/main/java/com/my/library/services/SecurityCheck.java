@@ -2,6 +2,7 @@ package com.my.library.services;
 import com.my.library.db.entities.User;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Objects;
 
 public class SecurityCheck {
 
@@ -25,11 +26,18 @@ public class SecurityCheck {
                 return true;
             else return !req.getRequestURI().contains("jsp") && !req.getRequestURI().contains("html");
         }
+        if(req.getSession().getAttribute("tempUser")!=null
+                && req.getSession().getAttribute("tempPassKey")!=null){
+            System.out.println("Temp pass key = "+ req.getSession().getAttribute("tempPassKey"));
+            if(Objects.equals(req.getSession().getAttribute("tempPassKey"),
+                    req.getParameter("command")))
+                return true;
+        }
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("user");
         String  role = user!=null? user.getRole().getRoleName().get("en"): "guest";
         return UserRights.getInstance().getUserRightsMap().get(role).contains(req.getParameter("command")) ||
-                req.getParameter("command").equals("noRights");
+               ("noRights").equalsIgnoreCase( req.getParameter("command"));
 
     }
 }

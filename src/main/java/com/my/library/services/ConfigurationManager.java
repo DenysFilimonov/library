@@ -10,6 +10,8 @@ public class ConfigurationManager {
 
     public static final String RESTORE_PASSWORD_PAGE_PATH = "RESTORE_PASSWORD_PAGE_PATH";
 
+    public static final String SECURE_RESTORE_PASSWORD_PAGE_PATH = "SECURE_RESTORE_PASSWORD_PAGE_PATH";
+
     public static final String REGISTER_PAGE_PATH = "REGISTER_PAGE_PATH";
 
     public static final String MAIN_PAGE_PATH = "MAIN_PAGE_PATH";

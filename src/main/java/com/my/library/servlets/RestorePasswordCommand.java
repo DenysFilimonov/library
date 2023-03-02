@@ -1,9 +1,10 @@
 package com.my.library.servlets;
-import java.io.UnsupportedEncodingException;
+import java.io.InputStream;
+import java.util.Properties;
 import java.util.UUID;
-
-
+import com.my.library.db.DTO.UserDTO;
 import com.my.library.db.SQLBuilder;
+import com.my.library.db.entities.Entity;
 import com.my.library.db.entities.User;
 import com.my.library.services.*;
 import javax.naming.OperationNotSupportedException;
@@ -39,7 +40,7 @@ public class RestorePasswordCommand extends ControllerCommand {
         String page;
         User user = new User();
         ArrayList<User> users;
-        ErrorMap errors = new ErrorMap();
+        ErrorMap errors;
         if (req.getMethod().equals("GET"))
             page = ConfigurationManager.getInstance()
                     .getProperty(ConfigurationManager.RESTORE_PASSWORD_PAGE_PATH);
@@ -51,33 +52,45 @@ public class RestorePasswordCommand extends ControllerCommand {
                         .getProperty(ConfigurationManager.RESTORE_PASSWORD_PAGE_PATH);
             }
             else{
+                UUID randomUUID = UUID.randomUUID();
+                final String secureKey =randomUUID.toString().replaceAll("_", "");
                 SQLBuilder sq = new SQLBuilder(user.table).
                 filter("email",req.getParameter("email"), SQLBuilder.Operators.E);
                 users = userDAO.get(sq.build());
-                restorePassword(users.get(0));
+                sendLink((String) req.getSession().getAttribute("language"),
+                        req.getRequestURL().toString(), users.get(0).getEmail(), secureKey);
+                setSecureParams(req, users.get(0), secureKey);
                 req.setAttribute("messagePrg", "restore.label.okIssue");
                 req.setAttribute("commandPrg", "login");
                 page =  ConfigurationManager.getInstance().getProperty(ConfigurationManager.OK_RETURN);
             }
-
         }
         SetWindowUrl.setUrl(page, req);
         return page;
     }
 
-    private void restorePassword(User user) throws SQLException, UnsupportedEncodingException, NoSuchAlgorithmException {
-        final String email = user.getEmail();
-        final String subject = "Password recovery";
-        UUID randomUUID = UUID.randomUUID();
-        final String password =randomUUID.toString().replaceAll("_", "");
-        final String  body = "Dear reader, here is your new password: "+password;
-        user.setPassword(PasswordHash.doHash(password));
-        userDAO.update(user);
-        Runnable sendMale = () -> {
-            MailManager.send(email, subject, body);
-        };
+    private void sendLink(String language, String url,  String email, String secureKey) throws IOException {
+        InputStream in;
+        if(language!=null && language.equalsIgnoreCase("ua")){
+            in = Entity.class.getResourceAsStream("/text_ua.properties");
+        }
+        else{
+            in = Entity.class.getResourceAsStream("/text.properties");
+        }
+        Properties messages = new Properties();
+        messages.load(in);
+        final String subject = messages.getProperty("restore.subject");
+        final String  body = messages.getProperty("restore.body")+url+"?command="+secureKey;
+        Runnable sendMale = () ->  MailManager.send(email, subject, body);
         Thread mailSenderThread = new Thread(sendMale);
         mailSenderThread.start();
     }
+
+    void setSecureParams(HttpServletRequest req, User user, String secureKey) throws OperationNotSupportedException, CloneNotSupportedException {
+        CommandMapper.getInstance().commands.put(secureKey, new SecureRestorePasswordCommand());
+        req.getSession().setAttribute("tempUser", UserDTO.toView(user));
+        req.getSession().setAttribute("tempPassKey", secureKey);
+    }
+
 
 }

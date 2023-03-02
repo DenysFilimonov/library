@@ -81,10 +81,10 @@ public class RestorePasswordCommand extends ControllerCommand {
         messages.load(in);
         final String subject = messages.getProperty("restore.subject");
         final String  body = messages.getProperty("restore.body")+url+"?command="+secureKey;
-       // Runnable sendMale = () ->  MailManager.send(email, subject, body);
-        //Thread mailSenderThread = new Thread(sendMale);
-        //mailSenderThread.start();
-        MailManager.send(email, subject, body);
+        Runnable sendMale = () ->  MailManager.send(email, subject, body);
+        Thread mailSenderThread = new Thread(sendMale);
+        mailSenderThread.start();
+        //MailManager.send(email, subject, body);
     }
 
     void setSecureParams(HttpServletRequest req, User user, String secureKey) throws OperationNotSupportedException, CloneNotSupportedException {

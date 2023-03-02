@@ -4,28 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4848fd86-92e6-432a-909d-736a85aafb12" name="Changes" comment="add git ignore">
+    <list default="true" id="4848fd86-92e6-432a-909d-736a85aafb12" name="Changes" comment="hot fixes">
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/AuthorDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/AuthorDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/BookDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/BookDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/BookStoreDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/BookStoreDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/GenreDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/GenreDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/IssueTypeDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/IssueTypeDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/PaymentDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/PaymentDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/PublisherDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/PublisherDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/RoleDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/RoleDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/StatusDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/StatusDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/UserDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/UserDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/UsersBookDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/DAO/UsersBookDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/db/entities/UsersBooks.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/db/entities/UsersBooks.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/MailManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/MailManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/DeleteBookCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/DeleteBookCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/EditeBookCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/EditeBookCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/RestorePasswordCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/RestorePasswordCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/text.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/text.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/text_ua.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/text_ua.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/includes/book_modal.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/includes/book_modal.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/includes/newBook_body.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/includes/newBook_body.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -133,7 +116,7 @@
       <command value="mvn clean" />
     </option>
   </component>
-  <component name="RunManager" selected="Application.BookStoreDAO">
+  <component name="RunManager" selected="Application.MailManager">
     <configuration name="BookStoreDAO" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.my.library.db.DAO.BookStoreDAO" />
       <module name="library" />
@@ -266,10 +249,10 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.MailManager" />
         <item itemvalue="Application.BookStoreDAO" />
         <item itemvalue="JUnit.TestLoginServlet" />
         <item itemvalue="JUnit.TestCurrentOrderServlet" />
-        <item itemvalue="Application.MailManager" />
         <item itemvalue="JUnit.TestCatalogCommand" />
       </list>
     </recent_temporary>
@@ -444,7 +427,14 @@
       <option name="project" value="LOCAL" />
       <updated>1677761925357</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="hot fixes">
+      <created>1677796137069</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1677796137069</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -514,7 +504,8 @@
     <MESSAGE value="password recovery" />
     <MESSAGE value="gitignore" />
     <MESSAGE value="add git ignore" />
-    <option name="LAST_COMMIT_MESSAGE" value="add git ignore" />
+    <MESSAGE value="hot fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="hot fixes" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

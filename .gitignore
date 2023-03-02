@@ -37,5 +37,5 @@ build/
 ### Mac OS ###
 .DS_Store
 
-src/main/resources/dbhosting.properties
-src/main/resources/email.properties
+###src/main/resources/dbhosting.properties
+###src/main/resources/email.properties

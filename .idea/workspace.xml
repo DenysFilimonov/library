@@ -4,19 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4848fd86-92e6-432a-909d-736a85aafb12" name="Changes" comment="gitignore">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/validator/PasswordValidator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/SecureRestorePasswordCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/includes/secure_restore_body.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/secureRestorePassword.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/ConfigurationManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/ConfigurationManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/SecurityCheck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/SecurityCheck.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/RestorePasswordCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/servlets/RestorePasswordCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/config.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/config.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/text.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/text.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/text_ua.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/text_ua.properties" afterDir="false" />
-    </list>
+    <list default="true" id="4848fd86-92e6-432a-909d-736a85aafb12" name="Changes" comment="add some secure to pass recovering" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -427,7 +415,14 @@
       <option name="project" value="LOCAL" />
       <updated>1677601702732</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="add some secure to pass recovering">
+      <created>1677761500902</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1677761500902</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -496,7 +491,8 @@
     <MESSAGE value="Errors handle revert" />
     <MESSAGE value="password recovery" />
     <MESSAGE value="gitignore" />
-    <option name="LAST_COMMIT_MESSAGE" value="gitignore" />
+    <MESSAGE value="add some secure to pass recovering" />
+    <option name="LAST_COMMIT_MESSAGE" value="add some secure to pass recovering" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

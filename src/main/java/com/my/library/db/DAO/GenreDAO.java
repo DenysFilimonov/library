@@ -12,7 +12,7 @@ public class GenreDAO implements DAO<Genre> {
 
     private final BasicDataSource dataSource;
     private static GenreDAO instance = null;
-    private  static Object mutex = new Object();
+    private  static final Object mutex = new Object();
 
     private GenreDAO(BasicDataSource dataSource){
         this.dataSource = dataSource;
@@ -93,7 +93,8 @@ public class GenreDAO implements DAO<Genre> {
 
     @Override
     public int count(SQLBuilder query) throws SQLException {
-        ResultSet resultSet = null;
+        ResultSet resultSet;
+        query.build();
         int count=0;
         try  (Connection connection = dataSource.getConnection();
               Statement statement = connection.createStatement()) {
@@ -109,6 +110,7 @@ public class GenreDAO implements DAO<Genre> {
     @Override
     public ArrayList<Genre> get(SQLBuilder query) throws SQLException{
         ArrayList<Genre> genres = new ArrayList<>();
+        query.build();
         try (Connection connection = dataSource.getConnection();
             Statement statement = connection.createStatement()){
             ResultSet resultSet = statement.executeQuery(query.getSQLString());

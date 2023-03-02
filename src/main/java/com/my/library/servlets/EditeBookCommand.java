@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
-import java.util.Map;
 
 public class EditeBookCommand extends ControllerCommand {
     /**
@@ -44,7 +43,7 @@ public class EditeBookCommand extends ControllerCommand {
             req.setAttribute("errors", errors);
             req.setAttribute("wrongBook", req.getParameter("id"));
         }
-        req.setAttribute("messagePrg", "account.label.okIssue");
+        req.setAttribute("messagePrg", "book.label.okEdit");
         req.setAttribute("commandPrg", "booksManager");
         return ConfigurationManager.getInstance().getProperty(ConfigurationManager.OK_RETURN);
     }

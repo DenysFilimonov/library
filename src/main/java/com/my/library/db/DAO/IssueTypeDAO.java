@@ -8,10 +8,10 @@ import java.util.ArrayList;
 
 public class IssueTypeDAO implements DAO<IssueType> {
 
-    private BasicDataSource dataSource;
+    private final BasicDataSource dataSource;
     private static IssueTypeDAO instance = null;
 
-    private  static Object mutex = new Object();
+    private  static final Object mutex = new Object();
 
 
     private IssueTypeDAO(BasicDataSource dataSource){
@@ -99,7 +99,8 @@ public class IssueTypeDAO implements DAO<IssueType> {
 
     @Override
     public int count(SQLBuilder query) throws SQLException {
-        ResultSet resultSet = null;
+        ResultSet resultSet;
+        query.build();
         int count=0;
         try  (Connection connection = dataSource.getConnection();
               Statement statement = connection.createStatement()) {
@@ -113,6 +114,7 @@ public class IssueTypeDAO implements DAO<IssueType> {
 
     @Override
     public ArrayList<IssueType> get(SQLBuilder query) throws SQLException{
+        query.build();
         ArrayList<IssueType> types = new ArrayList<>();
         try(Connection connection = dataSource.getConnection();
             Statement statement = connection.createStatement()){

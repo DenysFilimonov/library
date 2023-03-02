@@ -10,7 +10,7 @@ public class StatusDAO implements DAO<Status> {
 
     private final BasicDataSource dataSource;
     private static StatusDAO instance = null;
-    private  static Object mutex = new Object();
+    private  static final Object mutex = new Object();
 
 
     private StatusDAO(BasicDataSource dataSource){
@@ -99,7 +99,8 @@ public class StatusDAO implements DAO<Status> {
 
     @Override
     public int count(SQLBuilder query) throws SQLException {
-        ResultSet resultSet = null;
+        ResultSet resultSet;
+        query.build();
         int count=0;
         try  (Connection connection = dataSource.getConnection();
               Statement statement = connection.createStatement()) {
@@ -114,6 +115,7 @@ public class StatusDAO implements DAO<Status> {
     @Override
     public ArrayList<Status> get(SQLBuilder query) throws SQLException{
         ArrayList<Status> types = new ArrayList<>();
+        query.build();
         try (Connection connection = dataSource.getConnection();
             Statement statement = connection.createStatement()){
             ResultSet resultSet = statement.executeQuery(query.getSQLString());

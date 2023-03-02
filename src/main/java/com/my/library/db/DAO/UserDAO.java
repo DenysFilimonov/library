@@ -10,7 +10,7 @@ public class UserDAO implements DAO<User> {
 
     private final BasicDataSource dataSource;
     private static UserDAO instance = null;
-    private  static Object mutex = new Object();
+    private  static final Object mutex = new Object();
 
 
     public static UserDAO getInstance(BasicDataSource dataSource){
@@ -124,7 +124,8 @@ public class UserDAO implements DAO<User> {
 
     @Override
     public int count(SQLBuilder query) throws SQLException {
-        ResultSet resultSet = null;
+        ResultSet resultSet;
+        query.build();
         int count=0;
         try  (Connection connection = dataSource.getConnection();
               Statement statement = connection.createStatement()) {
@@ -139,6 +140,7 @@ public class UserDAO implements DAO<User> {
     @Override
     public ArrayList<User> get(SQLBuilder query) throws SQLException {
         ArrayList<User> users = new ArrayList<>();
+        query.build();
         try (Connection connection = dataSource.getConnection();
             Statement statement = connection.createStatement()){
             ResultSet resultSet = statement.executeQuery(query.getSQLString());

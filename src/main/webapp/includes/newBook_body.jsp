@@ -29,7 +29,7 @@
                 <fmt:message key="bookManager.label.bookStore"/></button>
               </li>
             </ul>
-            <form method="POST" action="/Library/controller?command=newBook" name='general' enctype='multipart/form-data'>
+            <form method="POST" action="/controller?command=newBook" name='general' enctype='multipart/form-data'>
 
                     <div class="tab-content pt-3 ps-3" id="myTabContent">
                         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">

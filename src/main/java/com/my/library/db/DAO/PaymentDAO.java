@@ -12,7 +12,7 @@ public class PaymentDAO implements DAO<Payment> {
     
     private final BasicDataSource dataSource;
 
-    private  static Object mutex = new Object();
+    private  static final Object mutex = new Object();
 
 
     public static PaymentDAO getInstance(BasicDataSource dataSource){
@@ -105,7 +105,8 @@ public class PaymentDAO implements DAO<Payment> {
 
     @Override
     public int count(SQLBuilder query) throws SQLException {
-        ResultSet resultSet = null;
+        ResultSet resultSet;
+        query.build();
         int count=0;
         try  (Connection connection = dataSource.getConnection();
               Statement statement = connection.createStatement()) {
@@ -120,6 +121,7 @@ public class PaymentDAO implements DAO<Payment> {
     @Override
     public ArrayList<Payment> get(SQLBuilder query) throws SQLException {
         ArrayList<Payment> payments = new ArrayList<>();
+        query.build();
         try (Connection connection = dataSource.getConnection();
             Statement statement = connection.createStatement()){
             ResultSet resultSet = statement.executeQuery(query.getSQLString());

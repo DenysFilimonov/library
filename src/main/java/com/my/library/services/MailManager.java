@@ -7,20 +7,23 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.Properties;
 
 public class MailManager {
     private static void sendEmail(Session session, String fromEmail, String toEmail, String subject, String body){
         try {
+            String subj = new String(subject.getBytes(Charset.forName("ISO-8859-1")), Charset.forName("UTF-8"));
+            String cont = new String(body.getBytes(Charset.forName("ISO-8859-1")), Charset.forName("UTF-8"));
             MimeMessage msg = new MimeMessage(session);
             msg.addHeader("Content-type", "text/HTML; charset=UTF-8");
             msg.addHeader("format", "flowed");
             msg.addHeader("Content-Transfer-Encoding", "8bit");
             msg.setFrom(new InternetAddress(fromEmail, "NoReply-Librarian"));
             msg.setReplyTo(InternetAddress.parse( fromEmail, false));
-            msg.setSubject(subject, "UTF-8");
-            msg.setText(body, "UTF-8");
+            msg.setSubject(subj, "UTF-8");
+            msg.setText(cont, "UTF-8");
             msg.setSentDate(new Date());
             msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail, false));
             Transport.send(msg);

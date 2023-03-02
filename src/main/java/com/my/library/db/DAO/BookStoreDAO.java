@@ -113,6 +113,7 @@ public class BookStoreDAO implements DAO<BookStore> {
     @Override
     public int count(SQLBuilder query) throws SQLException {
             int count=0;
+            query.build();
             try (Connection connection = dataSource.getConnection();
                 Statement statement = connection.createStatement()){
                 ResultSet resultSet = statement.executeQuery(query.getSQLStringCount());
@@ -127,6 +128,7 @@ public class BookStoreDAO implements DAO<BookStore> {
     @Override
     public ArrayList<BookStore> get(SQLBuilder query) throws SQLException {
         ArrayList<BookStore> books = new ArrayList<>();
+        query.build();
         try (Connection connection = dataSource.getConnection();
             Statement statement = connection.createStatement()){
             ResultSet resultSet = statement.executeQuery(query.getSQLString());

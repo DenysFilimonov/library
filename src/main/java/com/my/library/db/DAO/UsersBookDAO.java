@@ -1,7 +1,6 @@
 package com.my.library.db.DAO;
 import com.my.library.db.DTO.UsersBooksDTO;
 import com.my.library.db.SQLBuilder;
-import com.my.library.db.entities.Publisher;
 import com.my.library.db.entities.UsersBooks;
 import org.apache.commons.dbcp2.BasicDataSource;
 import java.sql.*;
@@ -11,7 +10,7 @@ public class UsersBookDAO implements DAO<UsersBooks> {
 
     private final BasicDataSource dataSource;
     private static UsersBookDAO instance = null;
-    private  static Object mutex = new Object();
+    private  static final Object mutex = new Object();
 
 
     public static UsersBookDAO getInstance(BasicDataSource dataSource){
@@ -35,7 +34,8 @@ public class UsersBookDAO implements DAO<UsersBooks> {
 
    @Override
    public int count(SQLBuilder query) throws SQLException {
-       ResultSet resultSet = null;
+       ResultSet resultSet;
+       query.build();
        int count=0;
        try  (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
@@ -150,6 +150,7 @@ public class UsersBookDAO implements DAO<UsersBooks> {
     @Override
     public ArrayList<UsersBooks> get(SQLBuilder query) throws SQLException {
         ArrayList<UsersBooks> usersBooks = new ArrayList<>();
+        query.build();
         try (Connection connection = dataSource.getConnection();
             Statement statement = connection.createStatement()){
             ResultSet resultSet = statement.executeQuery(query.getSQLString());
@@ -162,7 +163,7 @@ public class UsersBookDAO implements DAO<UsersBooks> {
 
     @Override
     public UsersBooks getOne(int id) throws SQLException {
-        SQLBuilder sq = new SQLBuilder(new Publisher().table).
+        SQLBuilder sq = new SQLBuilder(new UsersBooks().table).
                 filter("id", id, SQLBuilder.Operators.E).
                 build();
         ArrayList<UsersBooks> usersBooks = get(sq);

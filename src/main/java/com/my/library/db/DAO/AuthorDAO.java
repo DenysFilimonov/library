@@ -14,7 +14,7 @@ public class AuthorDAO implements DAO<Author> {
     
     private final BasicDataSource dataSource;
 
-    private static Object mutex = new Object();
+    private static final Object mutex = new Object();
 
     private AuthorDAO(BasicDataSource dataSource){
         this.dataSource = dataSource;
@@ -118,7 +118,8 @@ public class AuthorDAO implements DAO<Author> {
 
     @Override
     public int count(SQLBuilder query) throws SQLException {
-        ResultSet resultSet = null;
+        ResultSet resultSet;
+        query.build();
         int count=0;
         try  (Connection connection = dataSource.getConnection();
               Statement statement = connection.createStatement()) {
@@ -133,6 +134,7 @@ public class AuthorDAO implements DAO<Author> {
     @Override
     public ArrayList<Author> get(SQLBuilder query) throws SQLException{
         ArrayList<Author> authors = new ArrayList<>();
+        query.build();
         try (Connection connection = dataSource.getConnection();
             Statement statement = connection.createStatement()){
             ResultSet resultSet = statement.executeQuery(query.getSQLString());

@@ -11,7 +11,7 @@
 <div class="modal fade" id="orderBook" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-    <form method="POST" action="/Library/controller?command=editBook">
+    <form method="POST" action="/controller?command=editBook">
       <div class="modal-header baseColor">
         <h5 class="modal-title" id="staticBackdropLabel"><fmt:message key="bookManager.label.modalTitle"/></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModal"></button>

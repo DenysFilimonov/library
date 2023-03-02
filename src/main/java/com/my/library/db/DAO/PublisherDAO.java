@@ -10,7 +10,7 @@ public class PublisherDAO implements DAO<Publisher> {
 
     private final BasicDataSource dataSource;
     private static PublisherDAO instance = null;
-    private  static Object mutex = new Object();
+    private  static final Object mutex = new Object();
 
 
     private PublisherDAO(BasicDataSource dataSource){
@@ -117,7 +117,8 @@ public class PublisherDAO implements DAO<Publisher> {
 
     @Override
     public int count(SQLBuilder query) throws SQLException {
-        ResultSet resultSet = null;
+        ResultSet resultSet;
+        query.build();
         int count=0;
         try  (Connection connection = dataSource.getConnection();
               Statement statement = connection.createStatement()) {
@@ -132,6 +133,7 @@ public class PublisherDAO implements DAO<Publisher> {
     @Override
     public ArrayList<Publisher> get(SQLBuilder query) throws SQLException{
         ArrayList<Publisher> publishers = new ArrayList<>();
+        query.build();
         try (Connection connection = dataSource.getConnection();
             Statement statement = connection.createStatement()){
             ResultSet resultSet = statement.executeQuery(query.getSQLString());

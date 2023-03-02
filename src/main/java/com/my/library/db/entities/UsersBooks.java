@@ -66,6 +66,10 @@ public class UsersBooks extends Entity {
             float fine =  ((date.getTime() - targetDate.getTime()) / 1000 / 60 / 60 / 24) * issueType.getPenalty();
             return fine>0? fine: 0;
         }
+        else if(targetDate!=null) {
+            float fine = ((returnDate.getTime() - targetDate.getTime()) / 1000 / 60 / 60 / 24) * issueType.getPenalty();
+            return fine > 0 ? fine : 0;
+        }
         return 0;
     }
 

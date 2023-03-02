@@ -28,7 +28,7 @@ public class DeleteBookCommand extends ControllerCommand {
     public String execute(HttpServletRequest req, HttpServletResponse resp, AppContext context) throws ServletException,
              SQLException {
         setContext(context);
-        ArrayList<Book> books = bookDAO.get(prepareSQL(req));
+        ArrayList<Book> books = bookDAO.get(prepareSQL(req).build());
         performDeletedClean();
         if(books.size()>0){
             Book book = books.get(0);

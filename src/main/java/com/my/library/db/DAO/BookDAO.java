@@ -14,7 +14,7 @@ public class BookDAO implements DAO<Book> {
     
     private static BookDAO instance = null;
 
-    private static Object mutex = new Object();
+    private static final Object mutex = new Object();
 
 
     public static BookDAO getInstance(BasicDataSource dataSource){
@@ -37,7 +37,8 @@ public class BookDAO implements DAO<Book> {
    }
 
     public int count(SQLBuilder query) throws SQLException {
-       ResultSet resultSet = null;
+       query.build();
+       ResultSet resultSet;
        int count=0;
        try  (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
@@ -68,7 +69,7 @@ public class BookDAO implements DAO<Book> {
             insertBook.setInt(8, book.getQuantity());
             insertBook.setInt(9, book.getAvailableQuantity());
             insertBook.setInt(10, book.getBookStore().getId());
-            insertBook.setString(11, book.getCover().replace(ConfigurationManager.COVER_PATH, ""));
+            insertBook.setString(11, book.getCover().replace(ConfigurationManager.getInstance().getProperty(ConfigurationManager.COVER_PATH), ""));
             int affectedRows = insertBook.executeUpdate();
             if (affectedRows == 0) {
                 throw new SQLException("Creating book failed, no rows affected.");
@@ -129,7 +130,7 @@ public class BookDAO implements DAO<Book> {
             updateBook.setInt(8, book.getQuantity());
             updateBook.setInt(9, book.getAvailableQuantity());
             updateBook.setInt(10, book.getBookStore().getId());
-            updateBook.setString(11, book.getCover().replace(ConfigurationManager.COVER_PATH, ""));
+            updateBook.setString(11, book.getCover().replace(ConfigurationManager.getInstance().getProperty(ConfigurationManager.COVER_PATH), ""));
             updateBook.setBoolean(12, book.isDeleted());
             updateBook.setInt(13, book.getId());
             int affectedRows = updateBook.executeUpdate();
@@ -143,6 +144,7 @@ public class BookDAO implements DAO<Book> {
     @Override
     public ArrayList<Book> get(SQLBuilder query) throws SQLException {
         ArrayList<Book> books = new ArrayList<>();
+        query.build();
         try (Connection connection = dataSource.getConnection();
             Statement statement = connection.createStatement()){
             ResultSet resultSet = statement.executeQuery(query.getSQLString());

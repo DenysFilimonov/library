@@ -10,7 +10,7 @@ public class RoleDAO implements DAO<Role> {
 
     private final BasicDataSource dataSource;
     private static RoleDAO instance = null;
-    private  static Object mutex = new Object();
+    private  static final Object mutex = new Object();
 
 
     private RoleDAO(BasicDataSource dataSource){
@@ -98,7 +98,8 @@ public class RoleDAO implements DAO<Role> {
 
     @Override
     public int count(SQLBuilder query) throws SQLException {
-        ResultSet resultSet = null;
+        ResultSet resultSet;
+        query.build();
         int count=0;
         try  (Connection connection = dataSource.getConnection();
               Statement statement = connection.createStatement()) {
@@ -113,6 +114,7 @@ public class RoleDAO implements DAO<Role> {
     @Override
     public ArrayList<Role> get(SQLBuilder query) throws SQLException{
         ArrayList<Role> roles = new ArrayList<>();
+        query.build();
         try (Connection connection = dataSource.getConnection();
             Statement statement = connection.createStatement()){
             ResultSet resultSet = statement.executeQuery(query.getSQLString());

@@ -1,27 +1,19 @@
 package com.my.library.services;
 
 import com.my.library.db.entities.Entity;
-import org.apache.commons.compress.utils.IOUtils;
-
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.*;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.Properties;
-import java.util.stream.Stream;
 
 public class MailManager {
     private static void sendEmail(Session session, String fromEmail, String toEmail, String subject, String body){
         try {
-            String subj = new String(subject.getBytes(Charset.forName("ISO-8859-1")), Charset.forName("UTF-8"));
-            String cont = new String(body.getBytes(Charset.forName("ISO-8859-1")), Charset.forName("UTF-8"));
+            String subj = new String(subject.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+            String cont = new String(body.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
             MimeMessage msg = new MimeMessage(session);
             msg.addHeader("Content-type", "text/HTML; charset=UTF-8");
             msg.addHeader("format", "flowed");
@@ -52,37 +44,13 @@ public class MailManager {
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.smtp.port", "587");
-        Authenticator auth = new Authenticator() {
+        Authenticator auth;
+        auth = new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(props.getProperty("email"), props.getProperty("password"));
             }
         };
-
         Session session = Session.getDefaultInstance(props, auth);
         sendEmail(session, (String) props.get("email"), toEmail,subject, emailBody);
     }
-
-    public static void main(String[] args) throws IOException {
-        //InputStream in = new Entity().getClass().getResourceAsStream("/text_ua.properties");
-        File targetFile = new File("src/main/resources/text_ua_2.properties");
-        FileWriter writer = new FileWriter("src/main/resources/text_ua_2.properties", true);
-        //File sourceFile = new File("src/main/resources/text_ua.properties");
-        //try (Stream<String> lines =
- //                    Files.lines(sourceFile.toPath(), StandardCharsets.UTF_8)) {
-//
-   //         lines.forEach(line -> {
-  //            String convertLine = new String(line.getBytes(Charset.forName("UTF-8")), Charset.forName("UTF-8"));
-      //          System.out.println(convertLine);
-   //         });
-
-
-            //writer.write(key+"="+encodedProperty+"\n");
-        //}
-
-
-
-    }
-
-
-
 }

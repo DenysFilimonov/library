@@ -56,11 +56,11 @@
                             <label for="idModal" class="form-label"><fmt:message key="bookManager.label.id"/></label>
                             <input type = "number" name ="id" id="idModal"  class="form-control" readonly="readonly"/>
                             <label for="isbnModal" class="form-label"><fmt:message key="bookManager.label.isbn"/></label>
-                            <input type = "text" name ="isbn" id="isbnModal"  required class="form-control"/>
+                            <input type = "text" name ="isbn" id="isbnModal" readonly="readonly" required class="form-control"/>
                             <label for="titleModal_en" class="form-label"><fmt:message key="bookManager.label.titleEN"/></label>
-                            <input type = "text" name ="titleEn" id="titleModal_en" required class="form-control"/>
+                            <input type = "text" name ="titleEn" id="titleModal_en" readonly="readonly" required class="form-control"/>
                             <label for="titleModal_ua" class="form-label"><fmt:message key="bookManager.label.titleUA"/></label>
-                            <input type = "text" name ="titleUa" id="titleModal_ua" required class="form-control"/>
+                            <input type = "text" name ="titleUa" id="titleModal_ua" readonly="readonly" required class="form-control"/>
                             <input type = "text" name ="cover" id="coverModal"  required class="form-control" hidden/>
                             <label for="genreSelectModal" class="form-label"><fmt:message key="bookManager.label.genreModal"/></label>
                             <select name="genreId" id="genreSelectModal" required>

@@ -5,11 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4848fd86-92e6-432a-909d-736a85aafb12" name="Changes" comment="hot fixes">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/resourseBundle/CustomResourceBundle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/resourseBundle/CustomResourceBundle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/resourseBundle/CustomResourceBundle_ua.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/resourseBundle/CustomResourceBundle_ua.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/resourseBundle/UTF8Control.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/MailManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/MailManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/text_ua.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/text_ua.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/text_ua_2.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/includes/header.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/includes/header.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/includes/book_modal.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/includes/book_modal.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,7 +32,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="sqlbuilder" />
+        <entry key="$PROJECT_DIR$" value="custom_resource_bundle" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -80,7 +82,7 @@
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.46781608",
     "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "preferences.pluginManager"
+    "settings.editor.selected.configurable": "File.Encoding"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -117,7 +119,7 @@
       <command value="mvn clean" />
     </option>
   </component>
-  <component name="RunManager" selected="Application.CustomResourceBundle_ua_UA">
+  <component name="RunManager" selected="Application.CustomResourceBundle">
     <configuration name="BookStoreDAO" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.my.library.db.DAO.BookStoreDAO" />
       <module name="library" />
@@ -248,8 +250,8 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Application.CustomResourceBundle_en_EN" />
-      <item itemvalue="Application.CustomResourceBundle_ua_UA" />
+      <item itemvalue="Application.CustomResourceBundle" />
+      <item itemvalue="Application.CustomResourceBundle_ua" />
       <item itemvalue="Application.BookStoreDAO" />
       <item itemvalue="Application.MailManager" />
       <item itemvalue="JUnit.TestLoginServlet" />
@@ -258,8 +260,6 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.CustomResourceBundle_ua_UA" />
-        <item itemvalue="Application.CustomResourceBundle_en_EN" />
         <item itemvalue="Application.MailManager" />
         <item itemvalue="Application.BookStoreDAO" />
         <item itemvalue="JUnit.TestLoginServlet" />
@@ -482,7 +482,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="master" />
+                        <option value="custom_resource_bundle" />
                       </list>
                     </value>
                   </entry>

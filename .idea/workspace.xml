@@ -5,6 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4848fd86-92e6-432a-909d-736a85aafb12" name="Changes" comment="hot fixes">
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/MailManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/MailManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/text_ua.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/text_ua.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -76,7 +79,7 @@
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.46781608",
     "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "terminal"
+    "settings.editor.selected.configurable": "File.Encoding"
   }
 }]]></component>
   <component name="RecentsManager">

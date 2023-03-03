@@ -15,7 +15,7 @@
 
   scope="session" />
  <fmt:setLocale value="${language}" />
- <fmt:setBundle basename="text" />
+ <fmt:setBundle basename="com.my.library.resourseBundle.CustomResourceBundle" />
 <!DOCTYPE html>
 
 <script language="javascript">

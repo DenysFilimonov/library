@@ -5,7 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4848fd86-92e6-432a-909d-736a85aafb12" name="Changes" comment="hot fixes">
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/filters/CharacterEncodingFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/filters/CharacterEncodingFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/library/services/MailManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/my/library/services/MailManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/text_ua.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/text_ua.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/text_ua_2.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/includes/header.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/includes/header.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,11 +105,11 @@
       <recent name="" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.my.library.resourseBundle" />
       <recent name="com.my.library.services.validator" />
       <recent name="com.my.library.servlets" />
       <recent name="com.my.library.services" />
       <recent name="com.my.library.db" />
-      <recent name="com.my.library.filters" />
     </key>
   </component>
   <component name="RunAnythingCache">
@@ -113,13 +117,39 @@
       <command value="mvn clean" />
     </option>
   </component>
-  <component name="RunManager" selected="Application.MailManager">
+  <component name="RunManager" selected="Application.CustomResourceBundle_ua_UA">
     <configuration name="BookStoreDAO" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.my.library.db.DAO.BookStoreDAO" />
       <module name="library" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.my.library.db.DAO.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CustomResourceBundle" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.my.library.resourseBundle.CustomResourceBundle" />
+      <module name="library" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.my.library.resourseBundle.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CustomResourceBundle_ua" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.my.library.resourseBundle.CustomResourceBundle_ua" />
+      <module name="library" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.my.library.resourseBundle.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -136,24 +166,6 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="TestCatalogCommand" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="library" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="TestCatalogCommand" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="TestCurrentOrderServlet" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="library" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="TestCurrentOrderServlet" />
-      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -236,21 +248,21 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Application.CustomResourceBundle_en_EN" />
+      <item itemvalue="Application.CustomResourceBundle_ua_UA" />
       <item itemvalue="Application.BookStoreDAO" />
       <item itemvalue="Application.MailManager" />
-      <item itemvalue="JUnit.TestCurrentOrderServlet" />
       <item itemvalue="JUnit.TestLoginServlet" />
-      <item itemvalue="JUnit.TestCatalogCommand" />
       <item itemvalue="Maven.library [package]" />
       <item itemvalue="Maven.library [test]" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.CustomResourceBundle_ua_UA" />
+        <item itemvalue="Application.CustomResourceBundle_en_EN" />
         <item itemvalue="Application.MailManager" />
         <item itemvalue="Application.BookStoreDAO" />
         <item itemvalue="JUnit.TestLoginServlet" />
-        <item itemvalue="JUnit.TestCurrentOrderServlet" />
-        <item itemvalue="JUnit.TestCatalogCommand" />
       </list>
     </recent_temporary>
   </component>

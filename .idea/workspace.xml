@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4848fd86-92e6-432a-909d-736a85aafb12" name="Changes" comment="clean up">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/dbhosting.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/email.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-    </list>
+    <list default="true" id="4848fd86-92e6-432a-909d-736a85aafb12" name="Changes" comment="remove cash" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -462,7 +458,21 @@
       <option name="project" value="LOCAL" />
       <updated>1678225171862</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="clean up">
+      <created>1678225509097</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1678225509097</updated>
+    </task>
+    <task id="LOCAL-00029" summary="remove cash">
+      <created>1678225769729</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1678225769729</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -534,7 +544,8 @@
     <MESSAGE value="add git ignore" />
     <MESSAGE value="hot fixes" />
     <MESSAGE value="clean up" />
-    <option name="LAST_COMMIT_MESSAGE" value="clean up" />
+    <MESSAGE value="remove cash" />
+    <option name="LAST_COMMIT_MESSAGE" value="remove cash" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

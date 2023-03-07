@@ -27,11 +27,11 @@ public class BookIssueValidator implements Validator{
      */
 
     public ErrorMap validate(HttpServletRequest req, AppContext context) throws SQLException {
-        StatusDAO statusDAO = (StatusDAO) context.getDAO(new Status());
-        IssueTypeDAO issueTypeDAO = (IssueTypeDAO) context.getDAO(new IssueType());
-        BookDAO bookDAO = (BookDAO) context.getDAO(new Book());
+        StatusDAO statusDAO = context.getDAO(new Status());
+        IssueTypeDAO issueTypeDAO = context.getDAO(new IssueType());
+        BookDAO bookDAO = context.getDAO(new Book());
         UsersBooks userBook = new UsersBooks();
-        UsersBookDAO usersBookDAO = (UsersBookDAO) context.getDAO(new UsersBooks());
+        UsersBookDAO usersBookDAO = context.getDAO(new UsersBooks());
         ErrorManager errorManager = new ErrorManager();
         try {
             Integer.parseInt(req.getParameter("userBookId"));

@@ -26,8 +26,8 @@ public class ReturnBookValidator implements Validator {
      */
 
    public ErrorMap validate(HttpServletRequest req, AppContext context) throws SQLException {
-       BookDAO bookDAO = (BookDAO) context.getDAO(new Book());
-       UsersBookDAO usersBookDAO = (UsersBookDAO) context.getDAO(new UsersBooks());
+       BookDAO bookDAO = context.getDAO(new Book());
+       UsersBookDAO usersBookDAO = context.getDAO(new UsersBooks());
        ErrorManager errorManager = new ErrorManager();
        if(req.getParameter("userBookId")==null)
            errorManager.add( "userBookId", "ID of order should be present",

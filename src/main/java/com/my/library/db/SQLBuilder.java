@@ -1,5 +1,14 @@
 package com.my.library.db;
 
+import com.my.library.db.DAO.BookDAO;
+import com.my.library.db.DAO.UserDAO;
+import com.my.library.db.entities.Book;
+import com.my.library.db.entities.User;
+import org.apache.commons.dbcp2.BasicDataSource;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+
 public class SQLBuilder{
 
     public enum Operators {
@@ -161,6 +170,17 @@ public class SQLBuilder{
         SQLStringCount = query+"COUNT ("+distinct+fields+") " + table + filter;
         return this;
     }
+
+   public static void main(String[] args) throws SQLException {
+        SQLBuilder sq = new SQLBuilder(new User().table)
+                .filter("login", "admin' or 1=1 or 'a'='a", Operators.E);
+
+       System.out.println(sq.build().SQLString);
+       ArrayList<User> users = UserDAO.getInstance(ConnectionPool.dataSource).get(sq.build());
+       for (User user : users) System.out.println(user.getLogin());
+
+
+   }
 
 
 }

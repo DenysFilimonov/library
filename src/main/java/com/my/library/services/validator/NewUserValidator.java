@@ -50,7 +50,7 @@ public class NewUserValidator implements Validator {
         }
         User user = new User();
         SQLBuilder sq =new SQLBuilder(user.table).filter("login", login, SQLBuilder.Operators.E);
-        UserDAO userDAO = (UserDAO) context.getDAO(user);
+        UserDAO userDAO = context.getDAO(user);
         if(userDAO.get(sq.build()).size()>0){
             errorManager.add(  "login","User with this login already exists",
                     "Користувач з таким ім'ям вже існує");

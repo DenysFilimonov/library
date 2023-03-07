@@ -38,9 +38,9 @@ public class NewBookValidator  implements Validator{
     public ErrorMap validate(HttpServletRequest req, AppContext context)
             throws SQLException, IOException, ServletException {
 
-        BookDAO bookDAO = (BookDAO) context.getDAO(new Book());
-        BookStoreDAO bookStoreDAO = (BookStoreDAO) context.getDAO(new BookStore());
-        PublisherDAO publisherDAO = (PublisherDAO) context.getDAO(new Publisher());
+        BookDAO bookDAO = context.getDAO(new Book());
+        BookStoreDAO bookStoreDAO = context.getDAO(new BookStore());
+        PublisherDAO publisherDAO = context.getDAO(new Publisher());
         ErrorManager errorManager = new ErrorManager();
 
         if(req.getParameter("isbn")==null || req.getParameter("isbn").equals("")){

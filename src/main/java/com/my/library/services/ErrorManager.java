@@ -6,7 +6,7 @@ public class ErrorManager {
 
 
 
-    private ErrorMap errors = new ErrorMap();
+    private final ErrorMap errors = new ErrorMap();
 
     /**
      * Add new <Key, Value> pair in error Map

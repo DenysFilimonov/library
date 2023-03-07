@@ -34,9 +34,9 @@ public class EditBookValidator implements Validator{
     public ErrorMap validate(HttpServletRequest req, AppContext context)
             throws SQLException{
         Book book = new Book();
-        BookDAO bookDAO = (BookDAO) context.getDAO(book);
+        BookDAO bookDAO = context.getDAO(book);
         BookStore bookStore = new BookStore();
-        BookStoreDAO bookStoreDAO = (BookStoreDAO) context.getDAO(bookStore);
+        BookStoreDAO bookStoreDAO = context.getDAO(bookStore);
         ErrorManager errorManager = new ErrorManager();
         if(req.getParameter("id")==null || req.getParameter("id").equals("")){
             errorManager.add( "id", "Id should be present",

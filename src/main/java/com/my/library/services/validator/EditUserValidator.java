@@ -40,7 +40,7 @@ public class EditUserValidator implements Validator{
     public ErrorMap validate(HttpServletRequest req, AppContext context) throws SQLException,
             UnsupportedEncodingException, NoSuchAlgorithmException {
         ErrorManager errorManager = new ErrorManager();
-        this.userDAO = (UserDAO) context.getDAO(new User());
+        this.userDAO = context.getDAO(new User());
         String login = req.getParameter("login");
         String firstName = req.getParameter("firstName");
         String secondName = req.getParameter("secondName");

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.mock;
@@ -31,6 +32,6 @@ public class TestSecurityRights {
          when(request.getSession()).thenReturn(session );
          when(session.getAttribute("user")).thenReturn(user);
          when(request.getParameter("command")).thenReturn(command );
-         assertTrue(SecurityCheck.getInstance().check(request)==result);
+         assertEquals(SecurityCheck.getInstance().check(request), (boolean) result);
      }
 }

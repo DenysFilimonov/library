@@ -86,7 +86,7 @@ public class ValidatorIssueBookTest {
         BookIssueValidator validator = new BookIssueValidator();
         ErrorMap errors = validator.validate(request, appContext);
         if(field!=null)
-            assert (errors.keySet().contains(field));
+            assert (errors.containsKey(field));
         else
             assert (errors.isEmpty());
 

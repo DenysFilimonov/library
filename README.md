@@ -7,7 +7,9 @@ Course project for EPAM JAVA BASIC 2022.
 Regarding the <a href= "https://github.com/DenysFilimonov/library/blob/029ccf88d5e3dc8fcd479d2964066dfd23e36d4b/Library.docx">project description</a>, 
 application implements solution of basic processes automation for offline library.
 
-Using features of Library-app readers can easily look for books in library catalog and operate with them. the library staff can perform operations with catalog, storing, releasing and retrieving books.
+Using the features of app readers can easily look for books in library catalog and operate with them. the library staff can perform operations with catalog, storing, releasing and retrieving books.
+
+Working demo of upp you could find at <a href  ="https://polar-brook-85944.herokuapp.com/controller?command=catalog">Heroku</a>
 
 <h5>Technology stack used in this project:</h5>
 

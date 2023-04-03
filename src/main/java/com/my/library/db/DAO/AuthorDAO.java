@@ -93,7 +93,7 @@ public class AuthorDAO implements DAO<Author> {
                 "second_name_ua = ?, " +
                 "birthday = ?, " +
                 "country = ?, " +
-                "country_ua = ?, " +
+                "country_ua = ? " +
                 " WHERE id = ?";
       
         try (Connection connection = dataSource.getConnection();

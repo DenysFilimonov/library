@@ -75,7 +75,7 @@ public class GenreDAO implements DAO<Genre> {
     public void update(Genre genre) throws SQLException{
         String UPDATE_STRING = "UPDATE genres SET " +
                 "genre = ?, " +
-                "genre_ua = ?, " +
+                "genre_ua = ? " +
                 " WHERE id = ?";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement updateAuthor = connection.prepareStatement(UPDATE_STRING, Statement.RETURN_GENERATED_KEYS)){

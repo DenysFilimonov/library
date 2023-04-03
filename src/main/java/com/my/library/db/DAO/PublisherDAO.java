@@ -86,7 +86,7 @@ public class PublisherDAO implements DAO<Publisher> {
                 "publisher = ?, " +
                 "publisher_ua = ?, " +
                 "country = ?, "+
-                "country_ua = ?, " +
+                "country_ua = ?  " +
                 " WHERE id = ?";
         try (Connection connection = dataSource.getConnection(); 
                 PreparedStatement updatePublisher = connection.prepareStatement(UPDATE_STRING, Statement.RETURN_GENERATED_KEYS)) {

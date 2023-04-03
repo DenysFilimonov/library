@@ -86,7 +86,7 @@ public class PaymentDAO implements DAO<Payment> {
         String UPDATE_STRING = "UPDATE payments SET " +
                 "amount=?," +
                 "payment_date=?," +
-                "order_id=?," +
+                "order_id=? " +
                 " WHERE id = ?";
         try (Connection connection = dataSource.getConnection(); 
                 PreparedStatement updatePayment = connection.prepareStatement(UPDATE_STRING, Statement.RETURN_GENERATED_KEYS)) {

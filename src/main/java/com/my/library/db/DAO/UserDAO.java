@@ -98,7 +98,7 @@ public class UserDAO implements DAO<User> {
                 "email=?," +
                 "phone=?," +
                 "role_id=?," +
-                "active=?" +
+                "active=? " +
                 " WHERE id = ?";
         try (Connection connection = dataSource.getConnection();
                 PreparedStatement updateUser = connection.prepareStatement(UPDATE_STRING, Statement.RETURN_GENERATED_KEYS)) {

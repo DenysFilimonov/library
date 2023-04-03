@@ -79,7 +79,7 @@ public class IssueTypeDAO implements DAO<IssueType> {
         String UPDATE_STRING = "UPDATE issue_types SET " +
                 "issue_type = ?, " +
                 "issue_type_ua = ?, " +
-                "penalty_fee = ?, " +
+                "penalty_fee = ? " +
                 " WHERE id = ?";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement updateIssueType = connection.prepareStatement(UPDATE_STRING, Statement.RETURN_GENERATED_KEYS)){
